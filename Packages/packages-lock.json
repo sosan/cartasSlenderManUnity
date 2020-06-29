@@ -1,44 +1,37 @@
 {
   "dependencies": {
     "com.google.android.appbundle": {
-      "version": "1.1.0",
+      "version": "1.1.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {},
       "url": "https://unityregistry-pa.googleapis.com"
     },
     "com.google.external-dependency-manager": {
-      "version": "1.2.153",
+      "version": "1.2.156",
       "depth": 0,
       "source": "registry",
       "dependencies": {},
       "url": "https://unityregistry-pa.googleapis.com"
     },
     "com.google.play.common": {
-      "version": "1.1.0",
+      "version": "1.1.1",
       "depth": 1,
       "source": "registry",
       "dependencies": {
-        "com.google.android.appbundle": "1.1.0"
+        "com.google.android.appbundle": "1.1.1"
       },
       "url": "https://unityregistry-pa.googleapis.com"
     },
     "com.google.play.instant": {
-      "version": "1.1.0",
+      "version": "1.1.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
-        "com.google.android.appbundle": "1.1.0",
-        "com.google.play.common": "1.1.0"
+        "com.google.android.appbundle": "1.1.1",
+        "com.google.play.common": "1.1.1"
       },
       "url": "https://unityregistry-pa.googleapis.com"
-    },
-    "com.unity.cinemachine": {
-      "version": "2.5.0",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
       "version": "1.2.16",

@@ -1,8 +1,7 @@
 {
   "dependencies": {
-    "com.google.external-dependency-manager": "1.2.153",
-    "com.google.play.instant": "1.1.0",
-    "com.unity.cinemachine": "2.5.0",
+    "com.google.external-dependency-manager": "1.2.156",
+    "com.google.play.instant": "1.1.1",
     "com.unity.collab-proxy": "1.2.16",
     "com.unity.ide.vscode": "1.2.1",
     "com.unity.inputsystem": "1.0.0",
