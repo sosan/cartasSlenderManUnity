@@ -206,7 +206,7 @@ public class GameLogic : MonoBehaviour
 
     public async void Click_Carta(int posicion)
     {
-        print("clicked");
+        print("clicked"+ " position=" + posicion + " lastPositionPlayer=" + lastPositionPlayer);
         if (isBegin == true || /*clickedCard == true ||*/ posicion < 0 || posicion > 9) return;
 
 
@@ -218,6 +218,8 @@ public class GameLogic : MonoBehaviour
             return;
         }
 
+        print("clicked2");
+
         if (lastPositionPlayer == -1 )
         { 
             lastPositionPlayer = posicion - 1;
@@ -225,7 +227,7 @@ public class GameLogic : MonoBehaviour
         }
         else
         {
-
+            print("clicked3");
             if (lastPositionPlayer == posicion - 1) return; 
            
             switch(lastPositionPlayer)
@@ -241,6 +243,8 @@ public class GameLogic : MonoBehaviour
                 case 8: if (posicion == 1 || posicion == 2 || posicion == 4 || posicion == 5) { MalClick(posicion); return; } break;
             
             }
+
+            print("clicked3.1");
 
 
 
@@ -266,6 +270,7 @@ public class GameLogic : MonoBehaviour
         //clickedCard = true;
 
         DisableRaycastTarget();
+        print("clicked4");
 
         canvasCartas[posicion - 1].sortingOrder = 1;
 
@@ -291,7 +296,7 @@ public class GameLogic : MonoBehaviour
         outlineCards[lastPositionPlayer].enabled = false;
         outlineCards[lastPositionPlayer].GetComponent<Image>().enabled = false;
 
-        canvasCartas[posicion - 1].sortingOrder = 1;
+        
         lastPositionPlayer = currentPositionPlayer;
 
         cartas[currentPositionPlayer].raycastTarget = true;
@@ -337,9 +342,9 @@ public class GameLogic : MonoBehaviour
         keysScaleY[0] = new Keyframe(0f, cartasRect[posicion].localScale.y);
         keysScaleZ[0] = new Keyframe(0f, cartasRect[posicion].localScale.z);
 
-        keysScaleX[1] = new Keyframe(0.5f, 1);
-        keysScaleY[1] = new Keyframe(0.5f, 1);
-        keysScaleZ[1] = new Keyframe(0.5f, 1);
+        keysScaleX[1] = new Keyframe(0.3f, 1);
+        keysScaleY[1] = new Keyframe(0.3f, 1);
+        keysScaleZ[1] = new Keyframe(0.3f, 1);
 
         AnimationCurve curvex = new AnimationCurve(keysX);
         AnimationCurve curvey = new AnimationCurve(keysY);
@@ -361,9 +366,12 @@ public class GameLogic : MonoBehaviour
         anim.AddClip(clip, clip.name);
         anim.Play(clip.name);
         await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip(clip.name).length * 1000 ));
+        anim.RemoveClip(clip);
 
+        isAugmented = false;
         EnableRaycastTarget();
-        
+        canvasCartas[posicion].sortingOrder = 0;
+
 
     }
 
