@@ -1146,6 +1146,7 @@ GameObject:
   - component: {fileID: 524402006}
   - component: {fileID: 524402008}
   - component: {fileID: 524402009}
+  - component: {fileID: 524402011}
   m_Layer: 5
   m_Name: carta_2
   m_TagString: Untagged
@@ -1273,6 +1274,23 @@ MonoBehaviour:
   clickParticle: {fileID: 895202614}
   particleRec: {fileID: 895202612}
   gameLogic: {fileID: 608581419}
+--- !u!114 &524402011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524402004}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &608581418
 GameObject:
   m_ObjectHideFlags: 0
@@ -1324,6 +1342,16 @@ MonoBehaviour:
   - {fileID: 2070350696}
   - {fileID: 1890092484}
   - {fileID: 1640352931}
+  canvasCartas:
+  - {fileID: 1370207524}
+  - {fileID: 524402009}
+  - {fileID: 1546179514}
+  - {fileID: 2015137156}
+  - {fileID: 1285021258}
+  - {fileID: 2089271986}
+  - {fileID: 2070350700}
+  - {fileID: 1890092488}
+  - {fileID: 1640352935}
   poolImages: []
   imagesCartas:
   - {fileID: 21300000, guid: 06f318cc698151744afe2e1e6ba6a3a4, type: 3}
@@ -2609,6 +2637,7 @@ GameObject:
   - component: {fileID: 1285021255}
   - component: {fileID: 1285021257}
   - component: {fileID: 1285021258}
+  - component: {fileID: 1285021260}
   m_Layer: 5
   m_Name: carta_5
   m_TagString: Untagged
@@ -2736,6 +2765,23 @@ MonoBehaviour:
   clickParticle: {fileID: 895202614}
   particleRec: {fileID: 895202612}
   gameLogic: {fileID: 608581419}
+--- !u!114 &1285021260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285021253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &1370207518
 GameObject:
   m_ObjectHideFlags: 0
@@ -2750,6 +2796,7 @@ GameObject:
   - component: {fileID: 1370207520}
   - component: {fileID: 1370207522}
   - component: {fileID: 1370207524}
+  - component: {fileID: 1370207525}
   m_Layer: 5
   m_Name: carta_1
   m_TagString: Untagged
@@ -2877,6 +2924,23 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1370207525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370207518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &1475511488
 GameObject:
   m_ObjectHideFlags: 0
@@ -2935,6 +2999,7 @@ GameObject:
   - component: {fileID: 1546179511}
   - component: {fileID: 1546179513}
   - component: {fileID: 1546179514}
+  - component: {fileID: 1546179516}
   m_Layer: 5
   m_Name: carta_3
   m_TagString: Untagged
@@ -3062,6 +3127,23 @@ MonoBehaviour:
   clickParticle: {fileID: 895202614}
   particleRec: {fileID: 895202612}
   gameLogic: {fileID: 608581419}
+--- !u!114 &1546179516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546179509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &1609764519
 GameObject:
   m_ObjectHideFlags: 0
@@ -3214,6 +3296,7 @@ GameObject:
   - component: {fileID: 1640352932}
   - component: {fileID: 1640352934}
   - component: {fileID: 1640352935}
+  - component: {fileID: 1640352937}
   m_Layer: 5
   m_Name: carta_9
   m_TagString: Untagged
@@ -3341,6 +3424,23 @@ MonoBehaviour:
   clickParticle: {fileID: 895202614}
   particleRec: {fileID: 895202612}
   gameLogic: {fileID: 608581419}
+--- !u!114 &1640352937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640352930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &1664197274
 GameObject:
   m_ObjectHideFlags: 0
@@ -3920,6 +4020,7 @@ GameObject:
   - component: {fileID: 1890092485}
   - component: {fileID: 1890092487}
   - component: {fileID: 1890092488}
+  - component: {fileID: 1890092490}
   m_Layer: 5
   m_Name: carta_8
   m_TagString: Untagged
@@ -4047,6 +4148,23 @@ MonoBehaviour:
   clickParticle: {fileID: 895202614}
   particleRec: {fileID: 895202612}
   gameLogic: {fileID: 608581419}
+--- !u!114 &1890092490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890092483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &1892781620
 GameObject:
   m_ObjectHideFlags: 0
@@ -4273,6 +4391,7 @@ GameObject:
   - component: {fileID: 2015137153}
   - component: {fileID: 2015137155}
   - component: {fileID: 2015137156}
+  - component: {fileID: 2015137158}
   m_Layer: 5
   m_Name: carta_4
   m_TagString: Untagged
@@ -4400,6 +4519,23 @@ MonoBehaviour:
   clickParticle: {fileID: 895202614}
   particleRec: {fileID: 895202612}
   gameLogic: {fileID: 608581419}
+--- !u!114 &2015137158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015137151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!21 &2040940172
 Material:
   serializedVersion: 6
@@ -4604,6 +4740,7 @@ GameObject:
   - component: {fileID: 2070350697}
   - component: {fileID: 2070350699}
   - component: {fileID: 2070350700}
+  - component: {fileID: 2070350702}
   m_Layer: 5
   m_Name: carta_7
   m_TagString: Untagged
@@ -4731,6 +4868,23 @@ MonoBehaviour:
   clickParticle: {fileID: 895202614}
   particleRec: {fileID: 895202612}
   gameLogic: {fileID: 608581419}
+--- !u!114 &2070350702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2070350695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &2084444877
 GameObject:
   m_ObjectHideFlags: 0
@@ -4852,6 +5006,7 @@ GameObject:
   - component: {fileID: 2089271983}
   - component: {fileID: 2089271985}
   - component: {fileID: 2089271986}
+  - component: {fileID: 2089271988}
   m_Layer: 5
   m_Name: carta_6
   m_TagString: Untagged
@@ -4979,6 +5134,23 @@ MonoBehaviour:
   clickParticle: {fileID: 895202614}
   particleRec: {fileID: 895202612}
   gameLogic: {fileID: 608581419}
+--- !u!114 &2089271988
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089271981}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &2109414563
 GameObject:
   m_ObjectHideFlags: 0

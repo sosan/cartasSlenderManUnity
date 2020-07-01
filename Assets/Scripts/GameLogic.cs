@@ -19,6 +19,7 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private int lastPositionPlayer = -1;
     [SerializeField] private Image[] cartas = null;
     [SerializeField] private RectTransform[] cartasRect = null;
+    [SerializeField] private Canvas[] canvasCartas = null;
     [SerializeField] private List<Sprite> poolImages = new List<Sprite>();
     [SerializeField] private Sprite[] imagesCartas = null;
 
@@ -40,6 +41,9 @@ public class GameLogic : MonoBehaviour
 
     private short rangoYMin = -240;
     private short rangoYMax = 240;
+
+    private bool isAugmented = false;
+
 
 
 
@@ -201,9 +205,18 @@ public class GameLogic : MonoBehaviour
 
 
     public async void Click_Carta(int posicion)
-    { 
-
+    {
+        print("clicked");
         if (isBegin == true || /*clickedCard == true ||*/ posicion < 0 || posicion > 9) return;
+
+
+        if (isAugmented == true)
+        {
+            isAugmented = false;
+            ProcessCardAugmeted(posicion - 1, "desaugmentar_carta");
+
+            return;
+        }
 
         if (lastPositionPlayer == -1 )
         { 
@@ -248,7 +261,13 @@ public class GameLogic : MonoBehaviour
 
         }
 
+        isAugmented = true;
+
         //clickedCard = true;
+
+        DisableRaycastTarget();
+
+        canvasCartas[posicion - 1].sortingOrder = 1;
 
         AnimationClip clip = GenerateClipAnimation(posicion - 1, "giro_carta_siguiente", true);
         
@@ -271,11 +290,11 @@ public class GameLogic : MonoBehaviour
         animsCards[lastPositionPlayer].Stop();
         outlineCards[lastPositionPlayer].enabled = false;
         outlineCards[lastPositionPlayer].GetComponent<Image>().enabled = false;
-        
-        
+
+        canvasCartas[posicion - 1].sortingOrder = 1;
         lastPositionPlayer = currentPositionPlayer;
 
-        
+        cartas[currentPositionPlayer].raycastTarget = true;
         cartas[currentPositionPlayer].color = Color.white;
         outlineCards[currentPositionPlayer].enabled = true;
         outlineCards[currentPositionPlayer].GetComponent<Image>().enabled = true;
@@ -283,8 +302,69 @@ public class GameLogic : MonoBehaviour
         animsCards[currentPositionPlayer].Play("carta_outline");
         await UniTask.Delay(TimeSpan.FromSeconds(animsCards[currentPositionPlayer].GetClip("carta_outline").length));
         //clickedCard = false;
+
         
-    
+
+
+    }
+
+
+    private async void ProcessCardAugmeted(int posicion, string nombreClip)
+    {
+
+        AnimationClip clip = new AnimationClip();
+        clip.name = nombreClip;
+        clip.legacy = true;
+        clip.wrapMode = WrapMode.Once;
+
+        Keyframe[] keysX = new Keyframe[2];
+        Keyframe[] keysY = new Keyframe[2];
+        Keyframe[] keysZ = new Keyframe[2];
+
+        keysX[0] = new Keyframe(0f, cartasRect[posicion].anchoredPosition.x);
+        keysY[0] = new Keyframe(0f, cartasRect[posicion].anchoredPosition.y);
+        keysZ[0] = new Keyframe(0f, 0);
+
+        keysX[1] = new Keyframe(0.5f, posicionPlayer[posicion].anchoredPosition.x);
+        keysY[1] = new Keyframe(0.5f, posicionPlayer[posicion].anchoredPosition.y);
+        keysZ[1] = new Keyframe(0.5f, 0);
+
+        Keyframe[] keysScaleX = new Keyframe[2];
+        Keyframe[] keysScaleY = new Keyframe[2];
+        Keyframe[] keysScaleZ = new Keyframe[2];
+
+        keysScaleX[0] = new Keyframe(0f, cartasRect[posicion].localScale.x);
+        keysScaleY[0] = new Keyframe(0f, cartasRect[posicion].localScale.y);
+        keysScaleZ[0] = new Keyframe(0f, cartasRect[posicion].localScale.z);
+
+        keysScaleX[1] = new Keyframe(0.5f, 1);
+        keysScaleY[1] = new Keyframe(0.5f, 1);
+        keysScaleZ[1] = new Keyframe(0.5f, 1);
+
+        AnimationCurve curvex = new AnimationCurve(keysX);
+        AnimationCurve curvey = new AnimationCurve(keysY);
+        AnimationCurve curvez = new AnimationCurve(keysZ);
+
+        AnimationCurve curveScalex = new AnimationCurve(keysScaleX);
+        AnimationCurve curveScaley = new AnimationCurve(keysScaleY);
+        AnimationCurve curveScalez = new AnimationCurve(keysScaleZ);
+
+        string nombreCarta = "carta_" + (posicion + 1);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.x", curvex);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.y", curvey);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.z", curvez);
+
+        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.x", curveScalex);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.y", curveScaley);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.z", curveScalez);
+
+        anim.AddClip(clip, clip.name);
+        anim.Play(clip.name);
+        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip(clip.name).length * 1000 ));
+
+        EnableRaycastTarget();
+        
+
     }
 
     private AnimationClip GenerateClipAnimation(int posicion, string nombreClip, bool isCurrentCard)
@@ -413,6 +493,26 @@ public class GameLogic : MonoBehaviour
     
     
     
+    }
+
+    private void DisableRaycastTarget()
+    {
+        for (ushort i = 0; i < cartas.Length; i++)
+        {
+            cartas[i].raycastTarget = false;
+        
+        }
+    
+    }
+
+    private void EnableRaycastTarget()
+    {
+        for (ushort i = 0; i < cartas.Length; i++)
+        {
+            cartas[i].raycastTarget = true;
+
+        }
+
     }
 
     private async void MalClick(int posicion)
