@@ -160,8 +160,8 @@ public class GameLogic : MonoBehaviour
                 AnimationCurve curvex = new AnimationCurve(keysX);
                 AnimationCurve curvey = new AnimationCurve(keysY);
 
-                AnimationUtility.SetKeyRightTangentMode(curvex, 0, AnimationUtility.TangentMode.Free);
-                AnimationUtility.SetKeyRightTangentMode(curvey, 0, AnimationUtility.TangentMode.Free);
+            //AnimationUtility.SetKeyRightTangentMode(curvex, 0, AnimationUtility.TangentMode.Free);
+            //AnimationUtility.SetKeyRightTangentMode(curvey, 0, AnimationUtility.TangentMode.Free);
 
                 AnimationCurve curveRotx = new AnimationCurve(keysRotX);
                 AnimationCurve curveRoty = new AnimationCurve(keysRotY);
@@ -203,7 +203,7 @@ public class GameLogic : MonoBehaviour
     public async void Click_Carta(int posicion)
     { 
 
-        if (isBegin == true || clickedCard == true || posicion < 0 || posicion > 9) return;
+        if (isBegin == true || /*clickedCard == true ||*/ posicion < 0 || posicion > 9) return;
 
         if (lastPositionPlayer == -1 )
         { 
@@ -235,22 +235,22 @@ public class GameLogic : MonoBehaviour
 
             //string nombreclipLastPosition = "carta_giro_" + (lastPositionPlayer + 1);
 
-            AnimationClip clipTemp = GenerateClipAnimation(lastPositionPlayer, "giro_carta_lastposition");
+            AnimationClip clipTemp = GenerateClipAnimation(lastPositionPlayer, "giro_carta_lastposition", false);
 
             anim.AddClip(clipTemp, clipTemp.name);
             anim.Play(clipTemp.name);
 
             //anim.Play(nombreclipLastPosition);
             await UniTask.Delay(TimeSpan.FromSeconds(anim.GetClip(clipTemp.name).length));
-            //cartas[lastPositionPlayer].color = Color.black;
+            cartasRect[lastPositionPlayer].rotation = Quaternion.Euler(0,0,0);
             cartas[lastPositionPlayer].sprite = backgroundCard;
             anim.RemoveClip(clipTemp);
 
         }
 
-        clickedCard = true;
+        //clickedCard = true;
 
-        AnimationClip clip = GenerateClipAnimation(posicion - 1, "giro_carta_siguiente");
+        AnimationClip clip = GenerateClipAnimation(posicion - 1, "giro_carta_siguiente", true);
         
         float fullDurationClip = clip.length * 1000; //anim.GetClip("carta_giro").length * 1000;
         float restDurationClip = fullDurationClip - 100;
@@ -264,8 +264,10 @@ public class GameLogic : MonoBehaviour
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(restDurationClip));
         
-        anim.RemoveClip(clip);
+        //comentario temporal
+        //anim.RemoveClip(clip);
 
+        cartasRect[currentPositionPlayer].rotation = Quaternion.Euler(0, 0, 0);
         animsCards[lastPositionPlayer].Stop();
         outlineCards[lastPositionPlayer].enabled = false;
         outlineCards[lastPositionPlayer].GetComponent<Image>().enabled = false;
@@ -280,36 +282,52 @@ public class GameLogic : MonoBehaviour
 
         animsCards[currentPositionPlayer].Play("carta_outline");
         await UniTask.Delay(TimeSpan.FromSeconds(animsCards[currentPositionPlayer].GetClip("carta_outline").length));
-        clickedCard = false;
+        //clickedCard = false;
         
     
     }
 
-    private AnimationClip GenerateClipAnimation(int posicion, string nombreClip)
-    { 
+    private AnimationClip GenerateClipAnimation(int posicion, string nombreClip, bool isCurrentCard)
+    {
+        
         AnimationClip clip = new AnimationClip();
         clip.name = nombreClip;
         clip.legacy = true;
         clip.wrapMode = WrapMode.Once;
 
-        Keyframe[] keysX = new Keyframe[3];
-        Keyframe[] keysY = new Keyframe[1];
-        Keyframe[] keysZ = new Keyframe[1];
+        Keyframe[] keysX = new Keyframe[4];
+        Keyframe[] keysY = new Keyframe[4];
+        Keyframe[] keysZ = new Keyframe[4];
 
         float x = cartasRect[posicion].anchoredPosition.x;
 
-        keysX[0] = new Keyframe(0f, x );
-        keysX[1] = new Keyframe(0.05f, x -= 44);
-        keysX[2] = new Keyframe(0.15f, x += 44);
-        
-        keysY[0] = new Keyframe(0f, cartasRect[posicion].anchoredPosition.y );
+        keysX[0] = new Keyframe(0f, x);
+        keysY[0] = new Keyframe(0f, cartasRect[posicion].anchoredPosition.y);
         keysZ[0] = new Keyframe(0f, 0);
 
-        
-        Keyframe[] keysRotX = new Keyframe[1];
+        keysX[1] = new Keyframe(0.05f, x -= 44);
+        keysY[1] = new Keyframe(0.05f, cartasRect[posicion].anchoredPosition.y);
+        keysZ[1] = new Keyframe(0.05f, 0);
+
+        keysX[2] = new Keyframe(0.15f, x += 44);
+        keysY[2] = new Keyframe(0.15f, cartasRect[posicion].anchoredPosition.y);
+        keysZ[2] = new Keyframe(0.15f, 0);
+
+        keysX[3] = new Keyframe(0.20f, 0);
+        keysY[3] = new Keyframe(0.20f, 0);
+        keysZ[3] = new Keyframe(0.20f, 0);
+
+
+
+
+        //keysY[0] = new Keyframe(0f, cartasRect[posicion].anchoredPosition.y );
+        //keysZ[0] = new Keyframe(0f, 0);
+
+
+        Keyframe[] keysRotX = new Keyframe[4];
         Keyframe[] keysRotY = new Keyframe[4];
-        Keyframe[] keysRotZ = new Keyframe[1];
-        Keyframe[] keysRotW = new Keyframe[1];
+        Keyframe[] keysRotZ = new Keyframe[4];
+        Keyframe[] keysRotW = new Keyframe[4];
 
         //float rotX = cartasRect[posicion - 1].localRotation.x;
 
@@ -321,10 +339,27 @@ public class GameLogic : MonoBehaviour
         keysRotZ[0] = new Keyframe(0f, angle0.z );
         keysRotW[0] = new Keyframe(0f, angle0.w );
 
-        
+
+        keysRotX[1] = new Keyframe(0.03f, angle0.x);
         keysRotY[1] = new Keyframe(0.03f, angle0.y);
+        keysRotZ[1] = new Keyframe(0.03f, angle0.z);
+        keysRotW[1] = new Keyframe(0.03f, angle0.w);
+
+        keysRotX[2] = new Keyframe(0.10f, angle90.x);
         keysRotY[2] = new Keyframe(0.10f, angle90.y);
-        keysRotY[3] = new Keyframe(0.20f, angle0.y );
+        keysRotZ[2] = new Keyframe(0.10f, angle90.z);
+        keysRotW[2] = new Keyframe(0.10f, angle90.w);
+
+        keysRotX[3] = new Keyframe(0.20f, angle0.x);
+        keysRotY[3] = new Keyframe(0.20f, angle0.y);
+        keysRotZ[3] = new Keyframe(0.20f, angle0.z);
+        keysRotW[3] = new Keyframe(0.20f, angle0.w);
+
+
+
+        //keysRotY[1] = new Keyframe(0.03f, angle0.y);
+        //keysRotY[2] = new Keyframe(0.10f, angle90.y);
+        //keysRotY[3] = new Keyframe(0.20f, angle0.y );
         
         
 
@@ -338,6 +373,23 @@ public class GameLogic : MonoBehaviour
         AnimationCurve curveRotz = new AnimationCurve(keysRotZ);
         AnimationCurve curveRotw = new AnimationCurve(keysRotW);
 
+        Keyframe[] keysScaleX = new Keyframe[2];
+        Keyframe[] keysScaleY = new Keyframe[2];
+        Keyframe[] keysScaleZ = new Keyframe[1];
+
+        keysScaleX[0] = new Keyframe(0.15f, 1);
+        keysScaleX[1] = new Keyframe(0.20f, 4);
+
+        keysScaleY[0] = new Keyframe(0.15f, 1);
+        keysScaleY[1] = new Keyframe(0.20f, 4);
+
+        keysScaleZ[0] = new Keyframe(0.15f, 1);
+
+        AnimationCurve curveScalex = new AnimationCurve(keysScaleX);
+        AnimationCurve curveScaley = new AnimationCurve(keysScaleY);
+        AnimationCurve curveScalez = new AnimationCurve(keysScaleZ);
+
+
         string nombreCarta = "carta_" + (posicion + 1);
         clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.x", curvex);
         clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.y", curvey);
@@ -347,6 +399,13 @@ public class GameLogic : MonoBehaviour
         clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.y", curveRoty);
         clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.z", curveRotz);
         clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.w", curveRotw);
+
+        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.x", curveScalex);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.y", curveScaley);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.z", curveScalez);
+
+
+
 
         clip.EnsureQuaternionContinuity();
 

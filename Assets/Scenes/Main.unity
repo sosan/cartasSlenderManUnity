@@ -1145,6 +1145,7 @@ GameObject:
   - component: {fileID: 524402007}
   - component: {fileID: 524402006}
   - component: {fileID: 524402008}
+  - component: {fileID: 524402009}
   m_Layer: 5
   m_Name: carta_2
   m_TagString: Untagged
@@ -1236,6 +1237,27 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!223 &524402009
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524402004}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!114 &524402010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2586,6 +2608,7 @@ GameObject:
   - component: {fileID: 1285021256}
   - component: {fileID: 1285021255}
   - component: {fileID: 1285021257}
+  - component: {fileID: 1285021258}
   m_Layer: 5
   m_Name: carta_5
   m_TagString: Untagged
@@ -2677,6 +2700,27 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!223 &1285021258
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285021253}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!114 &1285021259
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2705,6 +2749,7 @@ GameObject:
   - component: {fileID: 1370207521}
   - component: {fileID: 1370207520}
   - component: {fileID: 1370207522}
+  - component: {fileID: 1370207524}
   m_Layer: 5
   m_Name: carta_1
   m_TagString: Untagged
@@ -2811,6 +2856,27 @@ MonoBehaviour:
   clickParticle: {fileID: 895202614}
   particleRec: {fileID: 895202612}
   gameLogic: {fileID: 608581419}
+--- !u!223 &1370207524
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1370207518}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!1 &1475511488
 GameObject:
   m_ObjectHideFlags: 0
@@ -2868,6 +2934,7 @@ GameObject:
   - component: {fileID: 1546179512}
   - component: {fileID: 1546179511}
   - component: {fileID: 1546179513}
+  - component: {fileID: 1546179514}
   m_Layer: 5
   m_Name: carta_3
   m_TagString: Untagged
@@ -2959,6 +3026,27 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!223 &1546179514
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546179509}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!114 &1546179515
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3125,6 +3213,7 @@ GameObject:
   - component: {fileID: 1640352933}
   - component: {fileID: 1640352932}
   - component: {fileID: 1640352934}
+  - component: {fileID: 1640352935}
   m_Layer: 5
   m_Name: carta_9
   m_TagString: Untagged
@@ -3216,6 +3305,27 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!223 &1640352935
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640352930}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!114 &1640352936
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3809,6 +3919,7 @@ GameObject:
   - component: {fileID: 1890092486}
   - component: {fileID: 1890092485}
   - component: {fileID: 1890092487}
+  - component: {fileID: 1890092488}
   m_Layer: 5
   m_Name: carta_8
   m_TagString: Untagged
@@ -3900,6 +4011,27 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!223 &1890092488
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890092483}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!114 &1890092489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4140,6 +4272,7 @@ GameObject:
   - component: {fileID: 2015137154}
   - component: {fileID: 2015137153}
   - component: {fileID: 2015137155}
+  - component: {fileID: 2015137156}
   m_Layer: 5
   m_Name: carta_4
   m_TagString: Untagged
@@ -4231,6 +4364,27 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!223 &2015137156
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015137151}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!114 &2015137157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4449,6 +4603,7 @@ GameObject:
   - component: {fileID: 2070350698}
   - component: {fileID: 2070350697}
   - component: {fileID: 2070350699}
+  - component: {fileID: 2070350700}
   m_Layer: 5
   m_Name: carta_7
   m_TagString: Untagged
@@ -4540,6 +4695,27 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!223 &2070350700
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2070350695}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!114 &2070350701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4675,6 +4851,7 @@ GameObject:
   - component: {fileID: 2089271984}
   - component: {fileID: 2089271983}
   - component: {fileID: 2089271985}
+  - component: {fileID: 2089271986}
   m_Layer: 5
   m_Name: carta_6
   m_TagString: Untagged
@@ -4766,6 +4943,27 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!223 &2089271986
+Canvas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2089271981}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 2
+  m_Camera: {fileID: 0}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 1
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
 --- !u!114 &2089271987
 MonoBehaviour:
   m_ObjectHideFlags: 0
