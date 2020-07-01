@@ -342,9 +342,9 @@ public class GameLogic : MonoBehaviour
         keysScaleY[0] = new Keyframe(0f, cartasRect[posicion].localScale.y);
         keysScaleZ[0] = new Keyframe(0f, cartasRect[posicion].localScale.z);
 
-        keysScaleX[1] = new Keyframe(0.3f, 1);
-        keysScaleY[1] = new Keyframe(0.3f, 1);
-        keysScaleZ[1] = new Keyframe(0.3f, 1);
+        keysScaleX[1] = new Keyframe(0.25f, 1);
+        keysScaleY[1] = new Keyframe(0.25f, 1);
+        keysScaleZ[1] = new Keyframe(0.25f, 1);
 
         AnimationCurve curvex = new AnimationCurve(keysX);
         AnimationCurve curvey = new AnimationCurve(keysY);
@@ -382,6 +382,7 @@ public class GameLogic : MonoBehaviour
         clip.name = nombreClip;
         clip.legacy = true;
         clip.wrapMode = WrapMode.Once;
+        string nombreCarta = "carta_" + (posicion + 1);
 
         Keyframe[] keysX = new Keyframe[4];
         Keyframe[] keysY = new Keyframe[4];
@@ -401,11 +402,23 @@ public class GameLogic : MonoBehaviour
         keysY[2] = new Keyframe(0.15f, cartasRect[posicion].anchoredPosition.y);
         keysZ[2] = new Keyframe(0.15f, 0);
 
-        keysX[3] = new Keyframe(0.20f, 0);
-        keysY[3] = new Keyframe(0.20f, 0);
-        keysZ[3] = new Keyframe(0.20f, 0);
 
+        if (isCurrentCard == true)
+        {
 
+            keysX[3] = new Keyframe(0.20f, 0);
+            keysY[3] = new Keyframe(0.20f, 0);
+            keysZ[3] = new Keyframe(0.20f, 0);
+
+        }
+        else
+        {
+
+            keysX[3] = new Keyframe(0.20f, x);
+            keysY[3] = new Keyframe(0.20f, cartasRect[posicion].anchoredPosition.y);
+            keysZ[3] = new Keyframe(0.20f, 0);
+
+        }
 
 
         //keysY[0] = new Keyframe(0f, cartasRect[posicion].anchoredPosition.y );
@@ -443,13 +456,34 @@ public class GameLogic : MonoBehaviour
         keysRotZ[3] = new Keyframe(0.20f, angle0.z);
         keysRotW[3] = new Keyframe(0.20f, angle0.w);
 
-
-
         //keysRotY[1] = new Keyframe(0.03f, angle0.y);
         //keysRotY[2] = new Keyframe(0.10f, angle90.y);
         //keysRotY[3] = new Keyframe(0.20f, angle0.y );
-        
-        
+        if (isCurrentCard == true)
+        {
+            Keyframe[] keysScaleX = new Keyframe[2];
+            Keyframe[] keysScaleY = new Keyframe[2];
+            Keyframe[] keysScaleZ = new Keyframe[1];
+
+            keysScaleX[0] = new Keyframe(0.15f, 1);
+            keysScaleX[1] = new Keyframe(0.20f, 4);
+
+            keysScaleY[0] = new Keyframe(0.15f, 1);
+            keysScaleY[1] = new Keyframe(0.20f, 4);
+
+            keysScaleZ[0] = new Keyframe(0.15f, 1);
+
+            AnimationCurve curveScalex = new AnimationCurve(keysScaleX);
+            AnimationCurve curveScaley = new AnimationCurve(keysScaleY);
+            AnimationCurve curveScalez = new AnimationCurve(keysScaleZ);
+
+            clip.SetCurve(nombreCarta, typeof(Transform), "localScale.x", curveScalex);
+            clip.SetCurve(nombreCarta, typeof(Transform), "localScale.y", curveScaley);
+            clip.SetCurve(nombreCarta, typeof(Transform), "localScale.z", curveScalez);
+
+
+        }
+
 
 
         AnimationCurve curvex = new AnimationCurve(keysX);
@@ -461,24 +495,6 @@ public class GameLogic : MonoBehaviour
         AnimationCurve curveRotz = new AnimationCurve(keysRotZ);
         AnimationCurve curveRotw = new AnimationCurve(keysRotW);
 
-        Keyframe[] keysScaleX = new Keyframe[2];
-        Keyframe[] keysScaleY = new Keyframe[2];
-        Keyframe[] keysScaleZ = new Keyframe[1];
-
-        keysScaleX[0] = new Keyframe(0.15f, 1);
-        keysScaleX[1] = new Keyframe(0.20f, 4);
-
-        keysScaleY[0] = new Keyframe(0.15f, 1);
-        keysScaleY[1] = new Keyframe(0.20f, 4);
-
-        keysScaleZ[0] = new Keyframe(0.15f, 1);
-
-        AnimationCurve curveScalex = new AnimationCurve(keysScaleX);
-        AnimationCurve curveScaley = new AnimationCurve(keysScaleY);
-        AnimationCurve curveScalez = new AnimationCurve(keysScaleZ);
-
-
-        string nombreCarta = "carta_" + (posicion + 1);
         clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.x", curvex);
         clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.y", curvey);
         clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.z", curvez);
@@ -488,13 +504,7 @@ public class GameLogic : MonoBehaviour
         clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.z", curveRotz);
         clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.w", curveRotw);
 
-        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.x", curveScalex);
-        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.y", curveScaley);
-        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.z", curveScalez);
-
-
-
-
+        
         clip.EnsureQuaternionContinuity();
 
         return clip;
