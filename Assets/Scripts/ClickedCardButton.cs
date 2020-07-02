@@ -26,7 +26,7 @@ public class ClickedCardButton : MonoBehaviour, IPointerClickHandler
 
         if (clickParticle == false || gameLogic == false) return;
 
-        if (gameLogic.clickedCard == true || gameLogic.isBegin == true) return;
+        if (gameLogic.clickedCard == true || gameLogic.estaMezclando == true) return;
 
         if (clickParticle.isPlaying == false)
         {

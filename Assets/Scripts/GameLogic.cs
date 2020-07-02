@@ -34,16 +34,15 @@ public class GameLogic : MonoBehaviour
 
     private List<int> listCards = new List<int>();
     public bool clickedCard = false;
-    public bool isBegin = true;
+    public bool estaMezclando = true;
 
-    private short rangoXMin = -400;
-    private short rangoXMax = 400;
+    [SerializeField] private short rangoXMin = -400;
+    [SerializeField] private short rangoXMax = 400;
 
-    private short rangoYMin = -240;
-    private short rangoYMax = 240;
+    [SerializeField] private short rangoYMin = -240;
+    [SerializeField] private short rangoYMax = 240;
 
     private bool isAugmented = false;
-    private Vector2 mousePos = Vector2.zero;
 
 
 
@@ -69,14 +68,16 @@ public class GameLogic : MonoBehaviour
     
 
     private void GenerateCartasMezcla()
-    { 
-        AnimationClip clip = new AnimationClip();
-        clip.name = "cartas_mezcla_runtime";
-        clip.legacy = true;
-    
-        clip.wrapMode = WrapMode.Once;
+    {
+        AnimationClip clip = new AnimationClip
+        {
+            name = "cartas_mezcla_runtime",
+            legacy = true,
 
-        for(ushort i = 0; i < cartas.Length; i++ )
+            wrapMode = WrapMode.Once
+        };
+
+        for (ushort i = 0; i < cartas.Length; i++ )
         { 
             Keyframe[] keysX = new Keyframe[6];
             Keyframe[] keysY = new Keyframe[6];
@@ -162,7 +163,7 @@ public class GameLogic : MonoBehaviour
     // Start is called before the first frame update
     private async void Start()
     {
-        isBegin = true;
+        estaMezclando = true;
         await UniTask.Delay(TimeSpan.FromSeconds(1));
 
         Click_NewGame();
@@ -175,11 +176,12 @@ public class GameLogic : MonoBehaviour
 # if UNITY_EDITOR
         print("clicked"+ " position=" + posicion + " lastPositionPlayer=" + lastPositionPlayer);
 #endif
-        if (isBegin == true || /*clickedCard == true ||*/ posicion < 0 || posicion > 9) return;
+        if (estaMezclando == true || posicion < 0 || posicion > 9) return;
 
 
         if (isAugmented == true)
         {
+            print("augmented");
             isAugmented = false;
             ProcessCardAugmeted(posicion - 1, "desaugmentar_carta");
 
@@ -187,15 +189,18 @@ public class GameLogic : MonoBehaviour
         }
 
         if (lastPositionPlayer == -1 )
-        { 
+        {
+            print("lastposition");
             lastPositionPlayer = posicion - 1;
 
         }
         else
         {
-            if (lastPositionPlayer == posicion - 1) return; 
-           
-            switch(lastPositionPlayer)
+
+            print("lastposition 1");
+            if (lastPositionPlayer == posicion - 1) return;
+            print("lastposition 2");
+            switch (lastPositionPlayer)
             {
                 case 0: if (posicion == 5 || posicion == 6 || posicion == 8 || posicion == 9) { MalClick(posicion); return; } break;
                 case 1: if (posicion == 4 || posicion == 6 || posicion == 7 || posicion == 9) { MalClick(posicion); return; } break;
@@ -208,8 +213,8 @@ public class GameLogic : MonoBehaviour
                 case 8: if (posicion == 1 || posicion == 2 || posicion == 4 || posicion == 5) { MalClick(posicion); return; } break;
             
             }
-
-
+            print("lastposition 3");
+            
             outlineCards[lastPositionPlayer].GetComponent<Image>().enabled = false;
 
             //string nombreclipLastPosition = "carta_giro_" + (lastPositionPlayer + 1);
@@ -229,6 +234,7 @@ public class GameLogic : MonoBehaviour
 
         isAugmented = true;
 
+        print("dentro1");
         //clickedCard = true;
 
         DisableRaycastTarget();
@@ -278,10 +284,12 @@ public class GameLogic : MonoBehaviour
     private async void ProcessCardAugmeted(int posicion, string nombreClip)
     {
 
-        AnimationClip clip = new AnimationClip();
-        clip.name = nombreClip;
-        clip.legacy = true;
-        clip.wrapMode = WrapMode.Once;
+        AnimationClip clip = new AnimationClip
+        {
+            name = nombreClip,
+            legacy = true,
+            wrapMode = WrapMode.Once
+        };
 
         Keyframe[] keysX = new Keyframe[2];
         Keyframe[] keysY = new Keyframe[2];
@@ -303,9 +311,9 @@ public class GameLogic : MonoBehaviour
         keysScaleY[0] = new Keyframe(0f, cartasRect[posicion].localScale.y);
         keysScaleZ[0] = new Keyframe(0f, cartasRect[posicion].localScale.z);
 
-        keysScaleX[1] = new Keyframe(0.25f, 1);
-        keysScaleY[1] = new Keyframe(0.25f, 1);
-        keysScaleZ[1] = new Keyframe(0.25f, 1);
+        keysScaleX[1] = new Keyframe(0.20f, 1);
+        keysScaleY[1] = new Keyframe(0.20f, 1);
+        keysScaleZ[1] = new Keyframe(0.20f, 1);
 
         AnimationCurve curvex = new AnimationCurve(keysX);
         AnimationCurve curvey = new AnimationCurve(keysY);
@@ -338,11 +346,13 @@ public class GameLogic : MonoBehaviour
 
     private AnimationClip GenerateClipAnimation(int posicion, string nombreClip, bool isCurrentCard)
     {
-        
-        AnimationClip clip = new AnimationClip();
-        clip.name = nombreClip;
-        clip.legacy = true;
-        clip.wrapMode = WrapMode.Once;
+
+        AnimationClip clip = new AnimationClip
+        {
+            name = nombreClip,
+            legacy = true,
+            wrapMode = WrapMode.Once
+        };
         string nombreCarta = "carta_" + (posicion + 1);
 
         Keyframe[] keysX = new Keyframe[4];
@@ -511,23 +521,25 @@ public class GameLogic : MonoBehaviour
     public async void Click_NewGame()
     { 
         poolImages.Clear();
-        isBegin = true;
+        estaMezclando = true;
         lastPositionPlayer = -1;
         currentPositionPlayer = -1;
+
+        EnableRaycastTarget();
 
         for (ushort i = 0; i < cartas.Length; i++)
         {
             outlineCards[i].enabled = false;
+            cartas[i].sprite = backgroundCard;
+            canvasCartas[i].sortingOrder = 0;
 
         }
 
 
-        { 
-        
-            anim.RemoveClip("cartas_mezcla_runtime");
-            GenerateCartasMezcla();
-        }
-        
+        ScaleAllCards(1);
+
+        anim.RemoveClip("cartas_mezcla_runtime");
+        GenerateCartasMezcla();
 
         anim.Play("cartas_mezcla_runtime");
         await UniTask.Delay(TimeSpan.FromSeconds( anim.GetClip("cartas_mezcla_runtime").length ));
@@ -536,14 +548,14 @@ public class GameLogic : MonoBehaviour
         for(ushort i = 0; i < cartas.Length; i++)
         {
             cartasRect[i].rotation = Quaternion.Euler(0,0,0);
-            InsertarCarta(i);
+            InsertarCarta();
            
         
         }
-        isBegin = false;
+        estaMezclando = false;
     }
 
-    private void InsertarCarta(int i)
+    private void InsertarCarta()
     { 
         bool insertado = false;
 
@@ -563,6 +575,18 @@ public class GameLogic : MonoBehaviour
                        
         }
 
+    
+    }
+
+    private void ScaleAllCards(int scale)
+    {
+        for (ushort i = 0; i < cartasRect.Length; i++)
+        {
+
+            cartasRect[i].localScale = new Vector3(scale, scale, scale);
+        
+        }
+    
     
     }
 
