@@ -13,7 +13,7 @@ public class GameLogic : MonoBehaviour
 {
 
 
-    private InputActions inputActions;
+    //private InputActions inputActions;
 
     [SerializeField] private int currentPositionPlayer = -1;
     [SerializeField] private int lastPositionPlayer = -1;
@@ -43,7 +43,7 @@ public class GameLogic : MonoBehaviour
     private short rangoYMax = 240;
 
     private bool isAugmented = false;
-
+    private Vector2 mousePos = Vector2.zero;
 
 
 
@@ -51,10 +51,8 @@ public class GameLogic : MonoBehaviour
     {
         Application.targetFrameRate = 60;
 
-        inputActions = new InputActions();
-        //inputActions.PlayerMovement.clicked.performed += Clicked
+        
 
-    
 
         for (ushort i = 0; i < cartas.Length; i++)
         {
@@ -68,8 +66,7 @@ public class GameLogic : MonoBehaviour
 
     }
 
-
-
+    
 
     private void GenerateCartasMezcla()
     { 
@@ -109,83 +106,51 @@ public class GameLogic : MonoBehaviour
 
         
 
-            Quaternion angle0 = Quaternion.Euler(0, 0, 0);
-            Quaternion angle90 = Quaternion.AngleAxis(90, Vector3.forward);
-            Quaternion angle180 = Quaternion.Euler(0, 0, 180);
-            Quaternion angle270 = Quaternion.Euler(0, 0, 270);
-            Quaternion angle360 = Quaternion.Euler(0, 0, 360);
+            Quaternion initialRotation = Quaternion.Euler(0, 0, 0);
 
-            Quaternion rot = Quaternion.identity;
+            Quaternion rotationCard = Quaternion.identity;
             float angle = 90f;
-            Vector3 axis = Vector3.forward;
+            Vector3 axisForward = Vector3.forward;
             float timeSumed = 0.03f;
 
             for(int k = 0; k < 7; k++)
             {
-                rot = Quaternion.AngleAxis(angle * k, axis);
-            
+                rotationCard = Quaternion.AngleAxis(angle * k, axisForward);
 
-                //create the keys
-                keysRotX[k] = new Keyframe(timeRot, rot.x);
-                keysRotY[k] = new Keyframe(timeRot, rot.y);
-                keysRotZ[k] = new Keyframe(timeRot, rot.z);
-                keysRotW[k] = new Keyframe(timeRot, rot.w);
+                keysRotX[k] = new Keyframe(timeRot, rotationCard.x);
+                keysRotY[k] = new Keyframe(timeRot, rotationCard.y);
+                keysRotZ[k] = new Keyframe(timeRot, rotationCard.z);
+                keysRotW[k] = new Keyframe(timeRot, rotationCard.w);
 
                 timeRot += timeSumed;
             }
 
 
-            keysRotX[10] = new Keyframe(timeRot, angle0.x);
-            keysRotY[10] = new Keyframe(timeRot, angle0.y);
-            keysRotZ[10] = new Keyframe(timeRot, angle0.z);
-            keysRotW[10] = new Keyframe(timeRot, angle0.w);
+            keysRotX[10] = new Keyframe(timeRot, initialRotation.x);
+            keysRotY[10] = new Keyframe(timeRot, initialRotation.y);
+            keysRotZ[10] = new Keyframe(timeRot, initialRotation.z);
+            keysRotW[10] = new Keyframe(timeRot, initialRotation.w);
+
+            AnimationCurve curvex = new AnimationCurve(keysX);
+            AnimationCurve curvey = new AnimationCurve(keysY);
 
 
-            //keysRotX[1] = new Keyframe(, angle90.x );
-            //keysRotY[1] = new Keyframe(timeRot += timeSumed, angle90.y );
-            //keysRotZ[1] = new Keyframe(timeRot += timeSumed, angle90.z );
-            //keysRotW[1] = new Keyframe(timeRot += timeSumed, angle90.w );
+            AnimationCurve curveRotx = new AnimationCurve(keysRotX);
+            AnimationCurve curveRoty = new AnimationCurve(keysRotY);
+            AnimationCurve curveRotz = new AnimationCurve(keysRotZ);
+            AnimationCurve curveRotw = new AnimationCurve(keysRotW);
 
-
-        
-                // keysRotZ[2] = new Keyframe(timeRot += timeSumed, angle180.z);
-                // keysRotZ[3] = new Keyframe(timeRot += timeSumed, angle270.z);
-                // keysRotZ[4] = new Keyframe(timeRot += timeSumed, angle360.z);
-                // keysRotZ[5] = new Keyframe(timeRot += timeSumed, angle90.z);
-                // keysRotZ[6] = new Keyframe(timeRot += timeSumed, angle180.z);
-                // keysRotZ[7] = new Keyframe(timeRot += timeSumed, angle270.z);
-                // keysRotZ[8] = new Keyframe(timeRot += timeSumed, angle360.z);
-                // keysRotZ[9] = new Keyframe(timeRot += timeSumed, angle90.z);
-                // keysRotZ[10] = new Keyframe(timeRot += timeSumed, angle0.z);
-
-            
-
-
-                AnimationCurve curvex = new AnimationCurve(keysX);
-                AnimationCurve curvey = new AnimationCurve(keysY);
-
-            //AnimationUtility.SetKeyRightTangentMode(curvex, 0, AnimationUtility.TangentMode.Free);
-            //AnimationUtility.SetKeyRightTangentMode(curvey, 0, AnimationUtility.TangentMode.Free);
-
-                AnimationCurve curveRotx = new AnimationCurve(keysRotX);
-                AnimationCurve curveRoty = new AnimationCurve(keysRotY);
-                AnimationCurve curveRotz = new AnimationCurve(keysRotZ);
-                AnimationCurve curveRotw = new AnimationCurve(keysRotW);
-            
-
-
-                string nombreCarta = "carta_" + (i + 1);
-                clip.SetCurve(nombreCarta, typeof(RectTransform), "m_AnchoredPosition.x", curvex);
-                clip.SetCurve(nombreCarta, typeof(RectTransform), "m_AnchoredPosition.y", curvey);
+            string nombreCarta = "carta_" + (i + 1);
+            clip.SetCurve(nombreCarta, typeof(RectTransform), "m_AnchoredPosition.x", curvex);
+            clip.SetCurve(nombreCarta, typeof(RectTransform), "m_AnchoredPosition.y", curvey);
 
 
 
-                clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.x", curveRotx);
-                clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.y", curveRoty);
-                clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.z", curveRotz);
-                clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.w", curveRotw);
+            clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.x", curveRotx);
+            clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.y", curveRoty);
+            clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.z", curveRotz);
+            clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.w", curveRotw);
 
-                //clip.EnsureQuaternionContinuity();
 
         }
         anim.AddClip(clip, clip.name);
@@ -206,7 +171,10 @@ public class GameLogic : MonoBehaviour
 
     public async void Click_Carta(int posicion)
     {
+
+# if UNITY_EDITOR
         print("clicked"+ " position=" + posicion + " lastPositionPlayer=" + lastPositionPlayer);
+#endif
         if (isBegin == true || /*clickedCard == true ||*/ posicion < 0 || posicion > 9) return;
 
 
@@ -218,8 +186,6 @@ public class GameLogic : MonoBehaviour
             return;
         }
 
-        print("clicked2");
-
         if (lastPositionPlayer == -1 )
         { 
             lastPositionPlayer = posicion - 1;
@@ -227,7 +193,6 @@ public class GameLogic : MonoBehaviour
         }
         else
         {
-            print("clicked3");
             if (lastPositionPlayer == posicion - 1) return; 
            
             switch(lastPositionPlayer)
@@ -243,9 +208,6 @@ public class GameLogic : MonoBehaviour
                 case 8: if (posicion == 1 || posicion == 2 || posicion == 4 || posicion == 5) { MalClick(posicion); return; } break;
             
             }
-
-            print("clicked3.1");
-
 
 
             outlineCards[lastPositionPlayer].GetComponent<Image>().enabled = false;
@@ -270,7 +232,6 @@ public class GameLogic : MonoBehaviour
         //clickedCard = true;
 
         DisableRaycastTarget();
-        print("clicked4");
 
         canvasCartas[posicion - 1].sortingOrder = 1;
 
@@ -287,9 +248,9 @@ public class GameLogic : MonoBehaviour
         cartas[currentPositionPlayer].sprite = poolImages[currentPositionPlayer];
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(restDurationClip));
-        
+
         //comentario temporal
-        //anim.RemoveClip(clip);
+        anim.RemoveClip(clip);
 
         cartasRect[currentPositionPlayer].rotation = Quaternion.Euler(0, 0, 0);
         animsCards[lastPositionPlayer].Stop();

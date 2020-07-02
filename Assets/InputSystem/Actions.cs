@@ -43,6 +43,14 @@ namespace GlobalActions
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""mousemovement"",
+                    ""type"": ""Value"",
+                    ""id"": ""1424bfa5-189a-408c-8f0c-f0927148e002"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -177,6 +185,17 @@ namespace GlobalActions
                     ""action"": ""clicked"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ede9c42a-2a77-4eb5-a809-e5f497141a43"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""mousemovement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -188,6 +207,7 @@ namespace GlobalActions
             m_PlayerMovement_awsd = m_PlayerMovement.FindAction("awsd", throwIfNotFound: true);
             m_PlayerMovement_arrows = m_PlayerMovement.FindAction("arrows", throwIfNotFound: true);
             m_PlayerMovement_clicked = m_PlayerMovement.FindAction("clicked", throwIfNotFound: true);
+            m_PlayerMovement_mousemovement = m_PlayerMovement.FindAction("mousemovement", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -240,6 +260,7 @@ namespace GlobalActions
         private readonly InputAction m_PlayerMovement_awsd;
         private readonly InputAction m_PlayerMovement_arrows;
         private readonly InputAction m_PlayerMovement_clicked;
+        private readonly InputAction m_PlayerMovement_mousemovement;
         public struct PlayerMovementActions
         {
             private @InputActions m_Wrapper;
@@ -247,6 +268,7 @@ namespace GlobalActions
             public InputAction @awsd => m_Wrapper.m_PlayerMovement_awsd;
             public InputAction @arrows => m_Wrapper.m_PlayerMovement_arrows;
             public InputAction @clicked => m_Wrapper.m_PlayerMovement_clicked;
+            public InputAction @mousemovement => m_Wrapper.m_PlayerMovement_mousemovement;
             public InputActionMap Get() { return m_Wrapper.m_PlayerMovement; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -265,6 +287,9 @@ namespace GlobalActions
                     @clicked.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnClicked;
                     @clicked.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnClicked;
                     @clicked.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnClicked;
+                    @mousemovement.started -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMousemovement;
+                    @mousemovement.performed -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMousemovement;
+                    @mousemovement.canceled -= m_Wrapper.m_PlayerMovementActionsCallbackInterface.OnMousemovement;
                 }
                 m_Wrapper.m_PlayerMovementActionsCallbackInterface = instance;
                 if (instance != null)
@@ -278,6 +303,9 @@ namespace GlobalActions
                     @clicked.started += instance.OnClicked;
                     @clicked.performed += instance.OnClicked;
                     @clicked.canceled += instance.OnClicked;
+                    @mousemovement.started += instance.OnMousemovement;
+                    @mousemovement.performed += instance.OnMousemovement;
+                    @mousemovement.canceled += instance.OnMousemovement;
                 }
             }
         }
@@ -287,6 +315,7 @@ namespace GlobalActions
             void OnAwsd(InputAction.CallbackContext context);
             void OnArrows(InputAction.CallbackContext context);
             void OnClicked(InputAction.CallbackContext context);
+            void OnMousemovement(InputAction.CallbackContext context);
         }
     }
 }
