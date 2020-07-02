@@ -20,8 +20,10 @@ public class MouseManager : MonoBehaviour
     {
         inputActions = new InputActions();
         inputActions.PlayerMovement.clicked.started += Clicked;
+#if UNITY_STANDALONE || UNITY_EDITOR
         inputActions.PlayerMovement.mousemovement.performed += MouseMovement;
         inputActions.PlayerMovement.mousemovement.Enable();
+#endif
         inputActions.PlayerMovement.clicked.Enable();
     }
 
@@ -48,8 +50,15 @@ public class MouseManager : MonoBehaviour
     private void Clicked(InputAction.CallbackContext obj)
     {
 
+#if UNITY_EDITOR
         print("clicked");
-        
+#endif
+
+#if UNITY_ANDROID && !(UNITY_STANDALONE || UNITY_EDITOR)
+        vectorMousePos = Touchscreen.current.position.ReadValue();
+        vectorMousePos.z = 10;
+#endif
+
 
         Vector3 currentMousePos = camara.ScreenToWorldPoint(vectorMousePos);
         particleRec.position = currentMousePos;

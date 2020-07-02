@@ -181,7 +181,9 @@ public class GameLogic : MonoBehaviour
 
         if (isAugmented == true)
         {
+# if UNITY_EDITOR
             print("augmented");
+#endif
             isAugmented = false;
             ProcessCardAugmeted(posicion - 1, "desaugmentar_carta");
 
@@ -190,16 +192,21 @@ public class GameLogic : MonoBehaviour
 
         if (lastPositionPlayer == -1 )
         {
+# if UNITY_EDITOR
             print("lastposition");
+#endif
             lastPositionPlayer = posicion - 1;
 
         }
         else
         {
-
+# if UNITY_EDITOR
             print("lastposition 1");
+#endif
             if (lastPositionPlayer == posicion - 1) return;
+# if UNITY_EDITOR
             print("lastposition 2");
+#endif
             switch (lastPositionPlayer)
             {
                 case 0: if (posicion == 5 || posicion == 6 || posicion == 8 || posicion == 9) { MalClick(posicion); return; } break;
@@ -213,8 +220,10 @@ public class GameLogic : MonoBehaviour
                 case 8: if (posicion == 1 || posicion == 2 || posicion == 4 || posicion == 5) { MalClick(posicion); return; } break;
             
             }
+# if UNITY_EDITOR
             print("lastposition 3");
-            
+#endif
+
             outlineCards[lastPositionPlayer].GetComponent<Image>().enabled = false;
 
             //string nombreclipLastPosition = "carta_giro_" + (lastPositionPlayer + 1);
@@ -234,7 +243,6 @@ public class GameLogic : MonoBehaviour
 
         isAugmented = true;
 
-        print("dentro1");
         //clickedCard = true;
 
         DisableRaycastTarget();
@@ -298,22 +306,22 @@ public class GameLogic : MonoBehaviour
         keysX[0] = new Keyframe(0f, cartasRect[posicion].anchoredPosition.x);
         keysY[0] = new Keyframe(0f, cartasRect[posicion].anchoredPosition.y);
         keysZ[0] = new Keyframe(0f, 0);
-
-        keysX[1] = new Keyframe(0.5f, posicionPlayer[posicion].anchoredPosition.x);
-        keysY[1] = new Keyframe(0.5f, posicionPlayer[posicion].anchoredPosition.y);
-        keysZ[1] = new Keyframe(0.5f, 0);
-
+        
+        keysX[1] = new Keyframe(0.3f, posicionPlayer[posicion].anchoredPosition.x);
+        keysY[1] = new Keyframe(0.3f, posicionPlayer[posicion].anchoredPosition.y);
+        keysZ[1] = new Keyframe(0.3f, 0);
+        
         Keyframe[] keysScaleX = new Keyframe[2];
         Keyframe[] keysScaleY = new Keyframe[2];
         Keyframe[] keysScaleZ = new Keyframe[2];
-
+        
         keysScaleX[0] = new Keyframe(0f, cartasRect[posicion].localScale.x);
         keysScaleY[0] = new Keyframe(0f, cartasRect[posicion].localScale.y);
         keysScaleZ[0] = new Keyframe(0f, cartasRect[posicion].localScale.z);
-
-        keysScaleX[1] = new Keyframe(0.20f, 1);
-        keysScaleY[1] = new Keyframe(0.20f, 1);
-        keysScaleZ[1] = new Keyframe(0.20f, 1);
+        
+        keysScaleX[1] = new Keyframe(0.15f, 1);
+        keysScaleY[1] = new Keyframe(0.15f, 1);
+        keysScaleZ[1] = new Keyframe(0.15f, 1);
 
         AnimationCurve curvex = new AnimationCurve(keysX);
         AnimationCurve curvey = new AnimationCurve(keysY);
@@ -335,7 +343,7 @@ public class GameLogic : MonoBehaviour
         anim.AddClip(clip, clip.name);
         anim.Play(clip.name);
         await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip(clip.name).length * 1000 ));
-        anim.RemoveClip(clip);
+        //anim.RemoveClip(clip);
 
         isAugmented = false;
         EnableRaycastTarget();

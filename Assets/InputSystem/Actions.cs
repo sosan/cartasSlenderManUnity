@@ -188,6 +188,17 @@ namespace GlobalActions
                 },
                 {
                     ""name"": """",
+                    ""id"": ""758a0fad-c27d-455c-bed2-22ba95d84460"",
+                    ""path"": ""<Pointer>/press"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""clicked"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""ede9c42a-2a77-4eb5-a809-e5f497141a43"",
                     ""path"": ""<Mouse>/position"",
                     ""interactions"": """",
