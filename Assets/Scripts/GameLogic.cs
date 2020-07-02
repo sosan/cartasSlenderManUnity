@@ -253,7 +253,7 @@ public class GameLogic : MonoBehaviour
         currentPositionPlayer = posicion - 1;
         cartas[currentPositionPlayer].sprite = poolImages[currentPositionPlayer];
 
-        await UniTask.Delay(TimeSpan.FromMilliseconds(restDurationClip));
+        await UniTask.Delay(TimeSpan.FromMilliseconds(restDurationClip + 200));
 
         //comentario temporal
         anim.RemoveClip(clip);
@@ -524,6 +524,7 @@ public class GameLogic : MonoBehaviour
         estaMezclando = true;
         lastPositionPlayer = -1;
         currentPositionPlayer = -1;
+        isAugmented = false;
 
         EnableRaycastTarget();
 
