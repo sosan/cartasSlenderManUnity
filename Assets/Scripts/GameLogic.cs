@@ -26,7 +26,7 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private Canvas[] canvasCartas = null;
     [SerializeField] private List<Sprite> poolImages = new List<Sprite>();
     [SerializeField] private Sprite[] imagesCartas = null;
-
+    [SerializeField] private CanvasGroup canvasGroupJuego = null;
     [SerializeField] private RectTransform[] posicionPlayer = null;
     [SerializeField] private RectTransform recPlayer = null;
     [SerializeField] private Animation anim = null;
@@ -43,6 +43,9 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private Sprite[] imagesPersonajes = null;
     [SerializeField] private Canvas[] canvasCartasPersonajes = null;
     [SerializeField] private List<Sprite> poolImagesPersonajes = new List<Sprite>();
+    [SerializeField] private CanvasGroup canvasGroupEleccionPersonakes = null;
+    [SerializeField] private RectTransform[] posicionPersonajes = null;
+
 
     private List<int> listCards = new List<int>();
     private List<int> listCardsPersonajes = new List<int>();
@@ -63,7 +66,8 @@ public class GameLogic : MonoBehaviour
     {
         Application.targetFrameRate = 60;
 
-        
+        canvasGroupJuego.alpha = 0;
+        canvasGroupEleccionPersonakes.alpha = 0;
 
 
         for (ushort i = 0; i < cartas.Length; i++)
@@ -74,7 +78,7 @@ public class GameLogic : MonoBehaviour
 
         }
 
-        GenerateCartasPersonajesMezcla("cartaspersonajes_mezcla_runtime");
+        //GenerateCartasPersonajesMezcla("cartaspersonajes_mezcla_runtime");
         GenerateCartasJuegosMezcla();
 
     }
@@ -182,7 +186,7 @@ public class GameLogic : MonoBehaviour
             wrapMode = WrapMode.Once
         };
 
-        for (ushort i = 0; i < cartas.Length; i++)
+        for (ushort i = 0; i < cartasPersonajes.Length; i++)
         {
             Keyframe[] keysX = new Keyframe[6];
             Keyframe[] keysY = new Keyframe[6];
@@ -195,14 +199,14 @@ public class GameLogic : MonoBehaviour
             keysX[2] = new Keyframe(0.38f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
             keysX[3] = new Keyframe(0.58f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
             keysX[4] = new Keyframe(timeRot, 500);
-            keysX[5] = new Keyframe(1.40f, posicionPlayer[i].anchoredPosition.x);
+            keysX[5] = new Keyframe(1.40f, posicionPersonajes[i].anchoredPosition.x);
 
             keysY[0] = new Keyframe(0f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
             keysY[1] = new Keyframe(0.18f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
             keysY[2] = new Keyframe(0.38f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
             keysY[3] = new Keyframe(0.58f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
             keysY[4] = new Keyframe(timeRot, 250);
-            keysY[5] = new Keyframe(1.40f, posicionPlayer[i].anchoredPosition.y);
+            keysY[5] = new Keyframe(1.40f, posicionPersonajes[i].anchoredPosition.y);
 
 
             Keyframe[] keysRotX = new Keyframe[11];
@@ -246,7 +250,7 @@ public class GameLogic : MonoBehaviour
             AnimationCurve curveRotz = new AnimationCurve(keysRotZ);
             AnimationCurve curveRotw = new AnimationCurve(keysRotW);
 
-            string nombreCarta = "--Juego/personaje_" + (i + 1);
+            string nombreCarta = "--Personajes/personaje_" + (i + 1);
             clip.SetCurve(nombreCarta, typeof(RectTransform), "m_AnchoredPosition.x", curvex);
             clip.SetCurve(nombreCarta, typeof(RectTransform), "m_AnchoredPosition.y", curvey);
 
@@ -266,10 +270,10 @@ public class GameLogic : MonoBehaviour
     // Start is called before the first frame update
     private async void Start()
     {
-        estaMezclando = true;
-        await UniTask.Delay(TimeSpan.FromSeconds(1));
+        //estaMezclando = true;
+        //await UniTask.Delay(TimeSpan.FromSeconds(1));
 
-        Click_NewGame();
+        //Click_NewGame();
     }
 
 
@@ -634,8 +638,8 @@ public class GameLogic : MonoBehaviour
     {
         poolImagesPersonajes.Clear();
 
-        anim.Play("aparecerCanvasPersoanjes");
-        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasPersoanjes").length * 1000  ));
+        anim.Play("aparecerCanvasPersonajes");
+        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasPersonajes").length * 1000  ));
 
         estaMezclando = true;
         currentPositionPlayer = -1;
@@ -713,7 +717,9 @@ public class GameLogic : MonoBehaviour
 
 
     public void Click_NewGame()
-    { 
+    {
+        canvasGroupJuego.alpha = 0;
+        canvasGroupEleccionPersonakes.alpha = 0;
 
         //seccion elegir player
         SeccionElegirPersonaje();
