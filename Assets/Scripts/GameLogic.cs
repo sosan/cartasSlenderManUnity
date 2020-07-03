@@ -15,8 +15,8 @@ public class GameLogic : MonoBehaviour
 
     //private InputActions inputActions;
 
-    [SerializeField] private int currentPositionPlayer = -1;
-    [SerializeField] private int lastPositionPlayer = -1;
+    [SerializeField] public int currentPositionPlayer = -1;
+    [SerializeField] public int lastPositionPlayer = -1;
     [SerializeField] private Image[] cartas = null;
     [SerializeField] private RectTransform[] cartasRect = null;
     [SerializeField] private Canvas[] canvasCartas = null;
@@ -42,7 +42,7 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private short rangoYMin = -240;
     [SerializeField] private short rangoYMax = 240;
 
-    private bool isAugmented = false;
+    public bool isAugmented = false;
 
 
 
@@ -184,8 +184,8 @@ public class GameLogic : MonoBehaviour
 # if UNITY_EDITOR
             print("augmented");
 #endif
-            isAugmented = false;
-            ProcessCardAugmeted(posicion - 1, "desaugmentar_carta");
+            currentPositionPlayer = posicion - 1;
+            ProcessCardAugmeted(currentPositionPlayer, "desaugmentar_carta");
 
             return;
         }
@@ -289,9 +289,10 @@ public class GameLogic : MonoBehaviour
     }
 
 
-    private async void ProcessCardAugmeted(int posicion, string nombreClip)
+    public async void ProcessCardAugmeted(int posicion, string nombreClip)
     {
 
+        isAugmented = false;
         AnimationClip clip = new AnimationClip
         {
             name = nombreClip,

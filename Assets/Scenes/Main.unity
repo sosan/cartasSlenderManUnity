@@ -1406,7 +1406,12 @@ MonoBehaviour:
   malClickSprite: {fileID: 21300000, guid: 088caa14cb71e434a9ef4c5f7c8f68a7, type: 3}
   backgroundCard: {fileID: 21300000, guid: 0a7184808265dc748a900a73acc616a7, type: 3}
   clickedCard: 0
-  isBegin: 1
+  estaMezclando: 1
+  rangoXMin: -400
+  rangoXMax: 400
+  rangoYMin: -240
+  rangoYMax: 240
+  isAugmented: 0
 --- !u!4 &608581420
 Transform:
   m_ObjectHideFlags: 0
@@ -2825,6 +2830,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43d474ff60c422d42ac91da60958c0ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameLogic: {fileID: 608581419}
   camara: {fileID: 519420031}
   clickParticle: {fileID: 895202614}
   particleRec: {fileID: 895202612}

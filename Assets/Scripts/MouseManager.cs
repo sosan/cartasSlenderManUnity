@@ -10,6 +10,7 @@ public class MouseManager : MonoBehaviour
 
 
     private InputActions inputActions;
+    [SerializeField] private GameLogic gameLogic = null;
     [SerializeField] private Camera camara = null;
     [SerializeField] private ParticleSystem clickParticle = null;
     [SerializeField] private RectTransform particleRec = null;
@@ -58,6 +59,15 @@ public class MouseManager : MonoBehaviour
         vectorMousePos = Touchscreen.current.position.ReadValue();
         vectorMousePos.z = 10;
 #endif
+
+
+        if (gameLogic.isAugmented == true)
+        {
+            
+            gameLogic.ProcessCardAugmeted(gameLogic.currentPositionPlayer, "desaugmentar_carta");
+
+
+        }
 
 
         Vector3 currentMousePos = camara.ScreenToWorldPoint(vectorMousePos);
