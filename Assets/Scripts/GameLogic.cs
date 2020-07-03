@@ -15,8 +15,12 @@ public class GameLogic : MonoBehaviour
 
     //private InputActions inputActions;
 
+    
+
     [SerializeField] public int currentPositionPlayer = -1;
     [SerializeField] public int lastPositionPlayer = -1;
+    
+    [Header("Juego")]
     [SerializeField] private Image[] cartas = null;
     [SerializeField] private RectTransform[] cartasRect = null;
     [SerializeField] private Canvas[] canvasCartas = null;
@@ -30,9 +34,18 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private Animation[] animsCards = null;
     [SerializeField] private Outline[] outlineCards = null;
     [SerializeField] private Sprite malClickSprite = null;
-    [SerializeField] private Sprite backgroundCard = null;
+    [SerializeField] private Sprite blackBackgroundCard = null;
+    [SerializeField] private Sprite whiteBackgroundCard = null;
+
+    [Header("Eleccion Persoanjes")]
+    [SerializeField] private Image[] cartasPersonajes = null;
+    [SerializeField] private RectTransform[] cartasRectPersonajes = null;
+    [SerializeField] private Sprite[] imagesPersonajes = null;
+    [SerializeField] private Canvas[] canvasCartasPersonajes = null;
+    [SerializeField] private List<Sprite> poolImagesPersonajes = new List<Sprite>();
 
     private List<int> listCards = new List<int>();
+    private List<int> listCardsPersonajes = new List<int>();
     public bool clickedCard = false;
     public bool estaMezclando = true;
 
@@ -61,13 +74,14 @@ public class GameLogic : MonoBehaviour
 
         }
 
-        GenerateCartasMezcla();
+        GenerateCartasPersonajesMezcla("cartaspersonajes_mezcla_runtime");
+        GenerateCartasJuegosMezcla();
 
     }
 
     
 
-    private void GenerateCartasMezcla()
+    private void GenerateCartasJuegosMezcla()
     {
         AnimationClip clip = new AnimationClip
         {
@@ -141,7 +155,7 @@ public class GameLogic : MonoBehaviour
             AnimationCurve curveRotz = new AnimationCurve(keysRotZ);
             AnimationCurve curveRotw = new AnimationCurve(keysRotW);
 
-            string nombreCarta = "carta_" + (i + 1);
+            string nombreCarta = "--Juego/carta_" + (i + 1);
             clip.SetCurve(nombreCarta, typeof(RectTransform), "m_AnchoredPosition.x", curvex);
             clip.SetCurve(nombreCarta, typeof(RectTransform), "m_AnchoredPosition.y", curvey);
 
@@ -158,7 +172,96 @@ public class GameLogic : MonoBehaviour
             
     }
 
+    private void GenerateCartasPersonajesMezcla(string nombreClip)
+    {
+        AnimationClip clip = new AnimationClip
+        {
+            name = nombreClip,
+            legacy = true,
 
+            wrapMode = WrapMode.Once
+        };
+
+        for (ushort i = 0; i < cartas.Length; i++)
+        {
+            Keyframe[] keysX = new Keyframe[6];
+            Keyframe[] keysY = new Keyframe[6];
+
+            float timeRot = 1.05f;
+
+
+            keysX[0] = new Keyframe(0f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
+            keysX[1] = new Keyframe(0.18f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
+            keysX[2] = new Keyframe(0.38f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
+            keysX[3] = new Keyframe(0.58f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
+            keysX[4] = new Keyframe(timeRot, 500);
+            keysX[5] = new Keyframe(1.40f, posicionPlayer[i].anchoredPosition.x);
+
+            keysY[0] = new Keyframe(0f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
+            keysY[1] = new Keyframe(0.18f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
+            keysY[2] = new Keyframe(0.38f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
+            keysY[3] = new Keyframe(0.58f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
+            keysY[4] = new Keyframe(timeRot, 250);
+            keysY[5] = new Keyframe(1.40f, posicionPlayer[i].anchoredPosition.y);
+
+
+            Keyframe[] keysRotX = new Keyframe[11];
+            Keyframe[] keysRotY = new Keyframe[11];
+            Keyframe[] keysRotZ = new Keyframe[11];
+            Keyframe[] keysRotW = new Keyframe[11];
+
+
+
+            Quaternion initialRotation = Quaternion.Euler(0, 0, 0);
+
+            Quaternion rotationCard = Quaternion.identity;
+            float angle = 90f;
+            Vector3 axisForward = Vector3.forward;
+            float timeSumed = 0.03f;
+
+            for (int k = 0; k < 7; k++)
+            {
+                rotationCard = Quaternion.AngleAxis(angle * k, axisForward);
+
+                keysRotX[k] = new Keyframe(timeRot, rotationCard.x);
+                keysRotY[k] = new Keyframe(timeRot, rotationCard.y);
+                keysRotZ[k] = new Keyframe(timeRot, rotationCard.z);
+                keysRotW[k] = new Keyframe(timeRot, rotationCard.w);
+
+                timeRot += timeSumed;
+            }
+
+
+            keysRotX[10] = new Keyframe(timeRot, initialRotation.x);
+            keysRotY[10] = new Keyframe(timeRot, initialRotation.y);
+            keysRotZ[10] = new Keyframe(timeRot, initialRotation.z);
+            keysRotW[10] = new Keyframe(timeRot, initialRotation.w);
+
+            AnimationCurve curvex = new AnimationCurve(keysX);
+            AnimationCurve curvey = new AnimationCurve(keysY);
+
+
+            AnimationCurve curveRotx = new AnimationCurve(keysRotX);
+            AnimationCurve curveRoty = new AnimationCurve(keysRotY);
+            AnimationCurve curveRotz = new AnimationCurve(keysRotZ);
+            AnimationCurve curveRotw = new AnimationCurve(keysRotW);
+
+            string nombreCarta = "--Juego/personaje_" + (i + 1);
+            clip.SetCurve(nombreCarta, typeof(RectTransform), "m_AnchoredPosition.x", curvex);
+            clip.SetCurve(nombreCarta, typeof(RectTransform), "m_AnchoredPosition.y", curvey);
+
+
+
+            clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.x", curveRotx);
+            clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.y", curveRoty);
+            clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.z", curveRotz);
+            clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.w", curveRotw);
+
+
+        }
+        anim.AddClip(clip, clip.name);
+
+    }
 
     // Start is called before the first frame update
     private async void Start()
@@ -236,7 +339,7 @@ public class GameLogic : MonoBehaviour
             //anim.Play(nombreclipLastPosition);
             await UniTask.Delay(TimeSpan.FromSeconds(anim.GetClip(clipTemp.name).length));
             cartasRect[lastPositionPlayer].rotation = Quaternion.Euler(0,0,0);
-            cartas[lastPositionPlayer].sprite = backgroundCard;
+            cartas[lastPositionPlayer].sprite = blackBackgroundCard;
             anim.RemoveClip(clipTemp);
 
         }
@@ -332,7 +435,7 @@ public class GameLogic : MonoBehaviour
         AnimationCurve curveScaley = new AnimationCurve(keysScaleY);
         AnimationCurve curveScalez = new AnimationCurve(keysScaleZ);
 
-        string nombreCarta = "carta_" + (posicion + 1);
+        string nombreCarta = "--Juego/carta_" + (posicion + 1);
         clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.x", curvex);
         clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.y", curvey);
         clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.z", curvez);
@@ -362,7 +465,7 @@ public class GameLogic : MonoBehaviour
             legacy = true,
             wrapMode = WrapMode.Once
         };
-        string nombreCarta = "carta_" + (posicion + 1);
+        string nombreCarta = "--Juego/carta_" + (posicion + 1);
 
         Keyframe[] keysX = new Keyframe[4];
         Keyframe[] keysY = new Keyframe[4];
@@ -527,9 +630,52 @@ public class GameLogic : MonoBehaviour
 
     }
 
-    public async void Click_NewGame()
-    { 
+    private async void SeccionElegirPersonaje()
+    {
+        poolImagesPersonajes.Clear();
+
+        anim.Play("aparecerCanvasPersoanjes");
+        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasPersoanjes").length * 1000  ));
+
+        estaMezclando = true;
+        currentPositionPlayer = -1;
+        isAugmented = false;
+
+        for (ushort i = 0; i < cartasPersonajes.Length; i++)
+        {
+            ////outlineCardsPersonajes[i].enabled = false;
+            cartasPersonajes[i].sprite = whiteBackgroundCard;
+            canvasCartasPersonajes[i].sortingOrder = 0;
+
+        }
+
+        ScaleAllPersonajesCards(1);
+        //anim.RemoveClip("cartaspersonajes_mezcla_runtime");
+        GenerateCartasPersonajesMezcla("cartaspersonajes_mezcla_runtime");
+
+        anim.Play("cartaspersonajes_mezcla_runtime");
+        await UniTask.Delay(TimeSpan.FromSeconds(anim.GetClip("cartaspersonajes_mezcla_runtime").length));
+
+        listCardsPersonajes.Clear();
+        for (ushort i = 0; i < cartasPersonajes.Length; i++)
+        {
+            cartasRectPersonajes[i].rotation = Quaternion.Euler(0, 0, 0);
+            InsertarCartaPersonaje();
+
+
+        }
+        estaMezclando = false;
+    }
+
+    private async void SeccionJuego()
+    {
+
         poolImages.Clear();
+
+        anim.Play("aparecerCanvasJuego");
+        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasJuego").length * 1000));
+
+
         estaMezclando = true;
         lastPositionPlayer = -1;
         currentPositionPlayer = -1;
@@ -540,29 +686,62 @@ public class GameLogic : MonoBehaviour
         for (ushort i = 0; i < cartas.Length; i++)
         {
             outlineCards[i].enabled = false;
-            cartas[i].sprite = backgroundCard;
+            cartas[i].sprite = blackBackgroundCard;
             canvasCartas[i].sortingOrder = 0;
 
         }
 
 
-        ScaleAllCards(1);
+        ScaleAllGameCards(1);
 
         anim.RemoveClip("cartas_mezcla_runtime");
-        GenerateCartasMezcla();
+        GenerateCartasJuegosMezcla();
 
         anim.Play("cartas_mezcla_runtime");
-        await UniTask.Delay(TimeSpan.FromSeconds( anim.GetClip("cartas_mezcla_runtime").length ));
+        await UniTask.Delay(TimeSpan.FromSeconds(anim.GetClip("cartas_mezcla_runtime").length));
 
         listCards.Clear();
-        for(ushort i = 0; i < cartas.Length; i++)
+        for (ushort i = 0; i < cartas.Length; i++)
         {
-            cartasRect[i].rotation = Quaternion.Euler(0,0,0);
+            cartasRect[i].rotation = Quaternion.Euler(0, 0, 0);
             InsertarCarta();
-           
-        
+
+
         }
         estaMezclando = false;
+    }
+
+
+    public void Click_NewGame()
+    { 
+
+        //seccion elegir player
+        SeccionElegirPersonaje();
+
+        //SeccionJuego();
+
+    }
+
+
+    private void InsertarCartaPersonaje()
+    {
+
+        bool insertado = false;
+
+        while (insertado == false)
+        {
+            int rnd = UnityEngine.Random.Range(0, imagesPersonajes.Length);
+            if (listCardsPersonajes.Contains(rnd) == false)
+            {
+
+                listCardsPersonajes.Add(rnd);
+                poolImagesPersonajes.Add(imagesPersonajes[rnd]);
+
+                insertado = true;
+            }
+
+        }
+
     }
 
     private void InsertarCarta()
@@ -588,7 +767,7 @@ public class GameLogic : MonoBehaviour
     
     }
 
-    private void ScaleAllCards(int scale)
+    private void ScaleAllGameCards(int scale)
     {
         for (ushort i = 0; i < cartasRect.Length; i++)
         {
@@ -598,6 +777,18 @@ public class GameLogic : MonoBehaviour
         }
     
     
+    }
+
+    private void ScaleAllPersonajesCards(int scale)
+    {
+        for (ushort i = 0; i < cartasRectPersonajes.Length; i++)
+        {
+
+            cartasRectPersonajes[i].localScale = new Vector3(scale, scale, scale);
+
+        }
+
+
     }
 
 
