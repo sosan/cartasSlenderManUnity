@@ -14,6 +14,8 @@ public class LanguageManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI[] textos = null;
     [SerializeField] public ParticleSystem[] particulas = null;
     //[SerializeField] private Canvas canvas = null;
+    [SerializeField] private CanvasGroup canvasGroupSelectPersonajes = null;
+    [SerializeField] private CanvasGroup canvasGroupSelectLanguage = null;
 
     [SerializeField] private RectTransform[] posiciones = null;
     [SerializeField] private RectTransform cuadro = null;
@@ -24,7 +26,6 @@ public class LanguageManager : MonoBehaviour
 
         if (PlayerPrefs.HasKey("idioma") == true)
         {
-
 
             string t = PlayerPrefs.GetString("idioma");
 
@@ -39,7 +40,12 @@ public class LanguageManager : MonoBehaviour
 
         }
 
+        canvasGroupSelectLanguage.alpha = 0;
+        //canvasGroupSelectPersonajes.alpha = 1;
+
         gameLogic.Click_NewGame();
+
+
 
 
     }
@@ -50,9 +56,33 @@ public class LanguageManager : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
+
+    public async void ClickedSetEnglish()
     {
-        
+        Localization.language = "english";
+        PlayerPrefs.SetString("idioma", "english");
+        particulas[0].Play();
+        await UniTask.Delay(300);
+        canvasGroupSelectLanguage.alpha = 0;
+        //canvasGroupSelectPersonajes.alpha = 1;
+        gameLogic.Click_NewGame();
     }
+
+
+    public async void ClickedSetSpanish()
+    {
+
+        Localization.language = "espanol";
+        PlayerPrefs.SetString("idioma", "espanol");
+        particulas[1].Play();
+        await UniTask.Delay(300);
+
+        canvasGroupSelectLanguage.alpha = 0;
+        //canvasGroupSelectPersonajes.alpha = 1;
+        gameLogic.Click_NewGame();
+
+    }
+
+    
+
 }

@@ -268,7 +268,7 @@ public class GameLogic : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    private async void Start()
+    private void Start()
     {
         //estaMezclando = true;
         //await UniTask.Delay(TimeSpan.FromSeconds(1));
@@ -805,6 +805,14 @@ public class GameLogic : MonoBehaviour
 #else
     Application.Quit();
 #endif
+    
+    
+    }
+
+
+    public void ClickedSelectPersonaje(int posicion)
+    { 
+    
     
     
     }
