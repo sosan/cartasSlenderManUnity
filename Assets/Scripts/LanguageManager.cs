@@ -40,8 +40,7 @@ public class LanguageManager : MonoBehaviour
 
         }
 
-        canvasGroupSelectLanguage.alpha = 0;
-        //canvasGroupSelectPersonajes.alpha = 1;
+        DesactivarCanvasIdiomas();
 
         gameLogic.Click_NewGame();
 
@@ -57,14 +56,21 @@ public class LanguageManager : MonoBehaviour
     }
 
 
+    private void DesactivarCanvasIdiomas()
+    {
+        canvasGroupSelectLanguage.alpha = 0;
+        canvasGroupSelectLanguage.blocksRaycasts = false;
+        canvasGroupSelectLanguage.interactable = false;
+
+    }
+
     public async void ClickedSetEnglish()
     {
+        DesactivarCanvasIdiomas();
         Localization.language = "english";
         PlayerPrefs.SetString("idioma", "english");
         particulas[0].Play();
         await UniTask.Delay(300);
-        canvasGroupSelectLanguage.alpha = 0;
-        //canvasGroupSelectPersonajes.alpha = 1;
         gameLogic.Click_NewGame();
     }
 
@@ -72,13 +78,13 @@ public class LanguageManager : MonoBehaviour
     public async void ClickedSetSpanish()
     {
 
+        DesactivarCanvasIdiomas();
         Localization.language = "espanol";
         PlayerPrefs.SetString("idioma", "espanol");
         particulas[1].Play();
         await UniTask.Delay(300);
 
-        canvasGroupSelectLanguage.alpha = 0;
-        //canvasGroupSelectPersonajes.alpha = 1;
+        
         gameLogic.Click_NewGame();
 
     }

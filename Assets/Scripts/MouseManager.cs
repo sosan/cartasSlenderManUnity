@@ -12,8 +12,12 @@ public class MouseManager : MonoBehaviour
     private InputActions inputActions;
     [SerializeField] private GameLogic gameLogic = null;
     [SerializeField] private Camera camara = null;
-    [SerializeField] private ParticleSystem clickParticle = null;
-    [SerializeField] private RectTransform particleRec = null;
+    [SerializeField] private ParticleSystem clickParticleJuego = null;
+    [SerializeField] private RectTransform particleRecJuego = null;
+
+
+    [SerializeField] private ParticleSystem clickParticleElegirPersonaje = null;
+    [SerializeField] private RectTransform particleRecElegirPersonaje = null;
 
     private Vector3 vectorMousePos = Vector3.zero;
 
@@ -51,6 +55,8 @@ public class MouseManager : MonoBehaviour
     private void Clicked(InputAction.CallbackContext obj)
     {
 
+        
+
 #if UNITY_EDITOR
         print("clicked");
 #endif
@@ -71,8 +77,24 @@ public class MouseManager : MonoBehaviour
 
 
         Vector3 currentMousePos = camara.ScreenToWorldPoint(vectorMousePos);
-        particleRec.position = currentMousePos;
-        clickParticle.Play();
+
+        if (gameLogic.isCanvasElegirPersonajeActive == true)
+        { 
+            particleRecElegirPersonaje.position = currentMousePos;
+            clickParticleElegirPersonaje.Play();
+            return;
+        
+        }
+
+        if (gameLogic.isCanvasJuegoActive == true)
+        {
+            particleRecJuego.position = currentMousePos;
+            clickParticleJuego.Play();
+            return;
+
+        }
+
+
     }
 
 

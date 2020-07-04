@@ -1834,6 +1834,8 @@ MonoBehaviour:
   rangoYMin: -240
   rangoYMax: 240
   isAugmented: 0
+  isCanvasJuegoActive: 0
+  isCanvasElegirPersonaje: 0
 --- !u!4 &608581420
 Transform:
   m_ObjectHideFlags: 0
@@ -9196,8 +9198,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameLogic: {fileID: 608581419}
   camara: {fileID: 519420031}
-  clickParticle: {fileID: 895202614}
-  particleRec: {fileID: 895202612}
+  clickParticleJuego: {fileID: 895202614}
+  particleRecJuego: {fileID: 895202612}
+  clickParticleElegirPersonaje: {fileID: 791470220}
+  particleRecElegirPersonaje: {fileID: 791470218}
 --- !u!1 &1342891662
 GameObject:
   m_ObjectHideFlags: 0
@@ -13832,7 +13836,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 538.6, y: 0}
+  m_AnchoredPosition: {x: 538.5, y: 0}
   m_SizeDelta: {x: 43.31, y: 40.5}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!1 &5514987202648443247

@@ -15,11 +15,11 @@ public class GameLogic : MonoBehaviour
 
     //private InputActions inputActions;
 
-    
+
 
     [SerializeField] public int currentPositionPlayer = -1;
     [SerializeField] public int lastPositionPlayer = -1;
-    
+
     [Header("Juego")]
     [SerializeField] private Image[] cartas = null;
     [SerializeField] private RectTransform[] cartasRect = null;
@@ -59,7 +59,8 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private short rangoYMax = 240;
 
     public bool isAugmented = false;
-
+    public bool isCanvasJuegoActive = false;
+    public bool isCanvasElegirPersonajeActive = false;
 
 
     private void Awake()
@@ -83,7 +84,7 @@ public class GameLogic : MonoBehaviour
 
     }
 
-    
+
 
     private void GenerateCartasJuegosMezcla()
     {
@@ -95,26 +96,26 @@ public class GameLogic : MonoBehaviour
             wrapMode = WrapMode.Once
         };
 
-        for (ushort i = 0; i < cartas.Length; i++ )
-        { 
+        for (ushort i = 0; i < cartas.Length; i++)
+        {
             Keyframe[] keysX = new Keyframe[6];
             Keyframe[] keysY = new Keyframe[6];
 
             float timeRot = 1.05f;
-        
 
-            keysX[0] = new Keyframe(0f, UnityEngine.Random.Range(rangoXMin, rangoXMax) );
+
+            keysX[0] = new Keyframe(0f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
             keysX[1] = new Keyframe(0.18f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
             keysX[2] = new Keyframe(0.38f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
             keysX[3] = new Keyframe(0.58f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
             keysX[4] = new Keyframe(timeRot, 500);
             keysX[5] = new Keyframe(1.40f, posicionPlayer[i].anchoredPosition.x);
 
-            keysY[0] = new Keyframe(0f, UnityEngine.Random.Range(rangoYMin, rangoYMax) );
-            keysY[1] = new Keyframe(0.18f, UnityEngine.Random.Range(rangoYMin, rangoYMax) );
-            keysY[2] = new Keyframe(0.38f, UnityEngine.Random.Range(rangoYMin, rangoYMax) );
-            keysY[3] = new Keyframe(0.58f, UnityEngine.Random.Range(rangoYMin, rangoYMax) );
-            keysY[4] = new Keyframe(timeRot, 250 );
+            keysY[0] = new Keyframe(0f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
+            keysY[1] = new Keyframe(0.18f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
+            keysY[2] = new Keyframe(0.38f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
+            keysY[3] = new Keyframe(0.58f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
+            keysY[4] = new Keyframe(timeRot, 250);
             keysY[5] = new Keyframe(1.40f, posicionPlayer[i].anchoredPosition.y);
 
 
@@ -123,7 +124,7 @@ public class GameLogic : MonoBehaviour
             Keyframe[] keysRotZ = new Keyframe[11];
             Keyframe[] keysRotW = new Keyframe[11];
 
-        
+
 
             Quaternion initialRotation = Quaternion.Euler(0, 0, 0);
 
@@ -132,7 +133,7 @@ public class GameLogic : MonoBehaviour
             Vector3 axisForward = Vector3.forward;
             float timeSumed = 0.03f;
 
-            for(int k = 0; k < 7; k++)
+            for (int k = 0; k < 7; k++)
             {
                 rotationCard = Quaternion.AngleAxis(angle * k, axisForward);
 
@@ -173,7 +174,7 @@ public class GameLogic : MonoBehaviour
 
         }
         anim.AddClip(clip, clip.name);
-            
+
     }
 
     private void GenerateCartasPersonajesMezcla(string nombreClip)
@@ -281,7 +282,7 @@ public class GameLogic : MonoBehaviour
     {
 
 # if UNITY_EDITOR
-        print("clicked"+ " position=" + posicion + " lastPositionPlayer=" + lastPositionPlayer);
+        print("clicked" + " position=" + posicion + " lastPositionPlayer=" + lastPositionPlayer);
 #endif
         if (estaMezclando == true || posicion < 0 || posicion > 9) return;
 
@@ -297,7 +298,7 @@ public class GameLogic : MonoBehaviour
             return;
         }
 
-        if (lastPositionPlayer == -1 )
+        if (lastPositionPlayer == -1)
         {
 # if UNITY_EDITOR
             print("lastposition");
@@ -325,7 +326,7 @@ public class GameLogic : MonoBehaviour
                 case 6: if (posicion == 2 || posicion == 3 || posicion == 5 || posicion == 6) { MalClick(posicion); return; } break;
                 case 7: if (posicion == 1 || posicion == 3 || posicion == 4 || posicion == 6) { MalClick(posicion); return; } break;
                 case 8: if (posicion == 1 || posicion == 2 || posicion == 4 || posicion == 5) { MalClick(posicion); return; } break;
-            
+
             }
 # if UNITY_EDITOR
             print("lastposition 3");
@@ -342,7 +343,7 @@ public class GameLogic : MonoBehaviour
 
             //anim.Play(nombreclipLastPosition);
             await UniTask.Delay(TimeSpan.FromSeconds(anim.GetClip(clipTemp.name).length));
-            cartasRect[lastPositionPlayer].rotation = Quaternion.Euler(0,0,0);
+            cartasRect[lastPositionPlayer].rotation = Quaternion.Euler(0, 0, 0);
             cartas[lastPositionPlayer].sprite = blackBackgroundCard;
             anim.RemoveClip(clipTemp);
 
@@ -357,14 +358,14 @@ public class GameLogic : MonoBehaviour
         canvasCartas[posicion - 1].sortingOrder = 1;
 
         AnimationClip clip = GenerateClipAnimation(posicion - 1, "giro_carta_siguiente", true);
-        
+
         float fullDurationClip = clip.length * 1000; //anim.GetClip("carta_giro").length * 1000;
         float restDurationClip = fullDurationClip - 100;
-        
+
         anim.AddClip(clip, clip.name);
         anim.Play(clip.name);
         await UniTask.Delay(TimeSpan.FromMilliseconds(fullDurationClip - 100));
-        
+
         currentPositionPlayer = posicion - 1;
         cartas[currentPositionPlayer].sprite = poolImages[currentPositionPlayer];
 
@@ -378,7 +379,7 @@ public class GameLogic : MonoBehaviour
         outlineCards[lastPositionPlayer].enabled = false;
         outlineCards[lastPositionPlayer].GetComponent<Image>().enabled = false;
 
-        
+
         lastPositionPlayer = currentPositionPlayer;
 
         cartas[currentPositionPlayer].raycastTarget = true;
@@ -390,7 +391,7 @@ public class GameLogic : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromSeconds(animsCards[currentPositionPlayer].GetClip("carta_outline").length));
         //clickedCard = false;
 
-        
+
 
 
     }
@@ -414,19 +415,19 @@ public class GameLogic : MonoBehaviour
         keysX[0] = new Keyframe(0f, cartasRect[posicion].anchoredPosition.x);
         keysY[0] = new Keyframe(0f, cartasRect[posicion].anchoredPosition.y);
         keysZ[0] = new Keyframe(0f, 0);
-        
+
         keysX[1] = new Keyframe(0.3f, posicionPlayer[posicion].anchoredPosition.x);
         keysY[1] = new Keyframe(0.3f, posicionPlayer[posicion].anchoredPosition.y);
         keysZ[1] = new Keyframe(0.3f, 0);
-        
+
         Keyframe[] keysScaleX = new Keyframe[2];
         Keyframe[] keysScaleY = new Keyframe[2];
         Keyframe[] keysScaleZ = new Keyframe[2];
-        
+
         keysScaleX[0] = new Keyframe(0f, cartasRect[posicion].localScale.x);
         keysScaleY[0] = new Keyframe(0f, cartasRect[posicion].localScale.y);
         keysScaleZ[0] = new Keyframe(0f, cartasRect[posicion].localScale.z);
-        
+
         keysScaleX[1] = new Keyframe(0.15f, 1);
         keysScaleY[1] = new Keyframe(0.15f, 1);
         keysScaleZ[1] = new Keyframe(0.15f, 1);
@@ -450,7 +451,7 @@ public class GameLogic : MonoBehaviour
 
         anim.AddClip(clip, clip.name);
         anim.Play(clip.name);
-        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip(clip.name).length * 1000 ));
+        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip(clip.name).length * 1000));
         //anim.RemoveClip(clip);
 
         isAugmented = false;
@@ -522,10 +523,10 @@ public class GameLogic : MonoBehaviour
         Quaternion angle0 = Quaternion.Euler(0, 0, 0);
         Quaternion angle90 = Quaternion.Euler(0, 92, 0);
 
-        keysRotX[0] = new Keyframe(0f, angle0.x );
-        keysRotY[0] = new Keyframe(0f, angle0.y );
-        keysRotZ[0] = new Keyframe(0f, angle0.z );
-        keysRotW[0] = new Keyframe(0f, angle0.w );
+        keysRotX[0] = new Keyframe(0f, angle0.x);
+        keysRotY[0] = new Keyframe(0f, angle0.y);
+        keysRotZ[0] = new Keyframe(0f, angle0.z);
+        keysRotW[0] = new Keyframe(0f, angle0.w);
 
 
         keysRotX[1] = new Keyframe(0.03f, angle0.x);
@@ -591,13 +592,13 @@ public class GameLogic : MonoBehaviour
         clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.z", curveRotz);
         clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.w", curveRotw);
 
-        
+
         clip.EnsureQuaternionContinuity();
 
         return clip;
-    
-    
-    
+
+
+
     }
 
     private void DisableRaycastTarget()
@@ -605,9 +606,9 @@ public class GameLogic : MonoBehaviour
         for (ushort i = 0; i < cartas.Length; i++)
         {
             cartas[i].raycastTarget = false;
-        
+
         }
-    
+
     }
 
     private void EnableRaycastTarget()
@@ -621,8 +622,8 @@ public class GameLogic : MonoBehaviour
     }
 
     private async void MalClick(int posicion)
-    { 
-    
+    {
+
         int pos = posicion - 1;
         var tempSprite = cartas[pos].sprite;
         cartas[pos].sprite = malClickSprite;
@@ -636,10 +637,14 @@ public class GameLogic : MonoBehaviour
 
     private async void SeccionElegirPersonaje()
     {
-        poolImagesPersonajes.Clear();
 
+        isCanvasElegirPersonajeActive = true;
+        isCanvasJuegoActive = false;
+
+        poolImagesPersonajes.Clear();
+        canvasGroupEleccionPersonakes.blocksRaycasts = true;
         anim.Play("aparecerCanvasPersonajes");
-        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasPersonajes").length * 1000  ));
+        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasPersonajes").length * 1000));
 
         estaMezclando = true;
         currentPositionPlayer = -1;
@@ -674,6 +679,10 @@ public class GameLogic : MonoBehaviour
     private async void SeccionJuego()
     {
 
+
+        isCanvasElegirPersonajeActive = false;
+        isCanvasJuegoActive = true;
+
         poolImages.Clear();
 
         anim.Play("aparecerCanvasJuego");
@@ -684,7 +693,7 @@ public class GameLogic : MonoBehaviour
         lastPositionPlayer = -1;
         currentPositionPlayer = -1;
         isAugmented = false;
-
+        
         EnableRaycastTarget();
 
         for (ushort i = 0; i < cartas.Length; i++)
@@ -720,6 +729,9 @@ public class GameLogic : MonoBehaviour
     {
         canvasGroupJuego.alpha = 0;
         canvasGroupEleccionPersonakes.alpha = 0;
+
+        DesactivarCanvasJuego();
+
 
         //seccion elegir player
         SeccionElegirPersonaje();
@@ -809,12 +821,48 @@ public class GameLogic : MonoBehaviour
     
     }
 
+    private void DesactivarCanvasElegirPersonaje()
+    {
+        
+        isCanvasElegirPersonajeActive = false;
+        canvasGroupEleccionPersonakes.alpha = 0;
+        canvasGroupEleccionPersonakes.blocksRaycasts = false;
+        canvasGroupEleccionPersonakes.interactable = false;
+
+        for (ushort i = 0; i < canvasCartas.Length; i++)
+        {
+            canvasCartasPersonajes[i].GetComponent<GraphicRaycaster>().enabled = false;
+
+        }
+
+
+
+    }
+
+    private void DesactivarCanvasJuego()
+    {
+
+        //canvasGroupJuego.gameObject.SetActive(false);
+        isCanvasJuegoActive = false;
+        canvasGroupJuego.alpha = 0;
+        canvasGroupJuego.blocksRaycasts = false;
+        canvasGroupJuego.interactable = false;
+
+        for (ushort i = 0; i < canvasCartas.Length; i++)
+        {
+            canvasCartas[i].GetComponent<GraphicRaycaster>().enabled = false;
+        
+        }
+
+    }
+
 
     public void ClickedSelectPersonaje(int posicion)
-    { 
-    
-    
-    
+    {
+
+
+        canvasGroupEleccionPersonakes.blocksRaycasts = false;
+        canvasGroupEleccionPersonakes.interactable = false;
     }
 
 }
