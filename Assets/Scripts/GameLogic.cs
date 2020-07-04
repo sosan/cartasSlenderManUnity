@@ -641,11 +641,29 @@ public class GameLogic : MonoBehaviour
     private async void SeccionElegirPersonaje()
     {
 
+
+        for (ushort i = 0; i < cartasPersonajes.Length; i++)
+        {
+
+            cartasRectPersonajes[i].localScale = Vector3.one;
+            cartasPersonajes[i].sprite = whiteBackgroundCard;
+            canvasCartasPersonajes[i].sortingOrder = 0;
+            cartasRectPersonajes[i].anchoredPosition = posicionPersonajes[i].anchoredPosition;
+        }
+
+
+
         isCanvasElegirPersonajeActive = true;
         isCanvasJuegoActive = false;
+        ActivarCanvasElegirPersonaje();
+
+        
+
 
         poolImagesPersonajes.Clear();
-        canvasGroupEleccionPersonakes.blocksRaycasts = true;
+        //canvasGroupEleccionPersonakes.blocksRaycasts = true;
+        //canvasGroupEleccionPersonakes.interactable = true;
+
         anim.Play("aparecerCanvasPersonajes");
         await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasPersonajes").length * 1000));
 
@@ -653,13 +671,7 @@ public class GameLogic : MonoBehaviour
         currentPositionPlayer = -1;
         isAugmented = false;
 
-        for (ushort i = 0; i < cartasPersonajes.Length; i++)
-        {
-            ////outlineCardsPersonajes[i].enabled = false;
-            cartasPersonajes[i].sprite = whiteBackgroundCard;
-            canvasCartasPersonajes[i].sortingOrder = 0;
-
-        }
+        
 
         ScaleAllPersonajesCards(1);
         //anim.RemoveClip("cartaspersonajes_mezcla_runtime");
@@ -682,6 +694,12 @@ public class GameLogic : MonoBehaviour
     private async void SeccionJuego()
     {
 
+        await UniTask.Delay(TimeSpan.FromMilliseconds(150));
+
+        anim.Play("aparecerCanvasJuego");
+        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasJuego").length * 1000  ));
+
+        ActivarCanvasJuego();
 
         isCanvasElegirPersonajeActive = false;
         isCanvasJuegoActive = true;
@@ -728,18 +746,16 @@ public class GameLogic : MonoBehaviour
     }
 
 
-    public void Click_NewGame()
+    public async void Click_NewGame()
     {
+
+        await UniTask.Delay(TimeSpan.FromMilliseconds(300));
+
         canvasGroupJuego.alpha = 0;
         canvasGroupEleccionPersonakes.alpha = 0;
 
         DesactivarCanvasJuego();
-
-
-        //seccion elegir player
         SeccionElegirPersonaje();
-
-        //SeccionJuego();
 
     }
 
@@ -842,6 +858,42 @@ public class GameLogic : MonoBehaviour
 
     }
 
+    private void ActivarCanvasElegirPersonaje()
+    {
+
+        isCanvasElegirPersonajeActive = true;
+        canvasGroupEleccionPersonakes.alpha = 1;
+        canvasGroupEleccionPersonakes.blocksRaycasts = true;
+        canvasGroupEleccionPersonakes.interactable = true;
+
+        for (ushort i = 0; i < canvasCartasPersonajes.Length; i++)
+        {
+            canvasCartasPersonajes[i].GetComponent<GraphicRaycaster>().enabled = true;
+
+        }
+
+
+
+    }
+
+    private void ActivarCanvasJuego()
+    {
+
+        //canvasGroupJuego.gameObject.SetActive(false);
+        isCanvasJuegoActive = true;
+        canvasGroupJuego.alpha = 1;
+        canvasGroupJuego.blocksRaycasts = true;
+        canvasGroupJuego.interactable = true;
+
+        for (ushort i = 0; i < canvasCartas.Length; i++)
+        {
+            canvasCartas[i].GetComponent<GraphicRaycaster>().enabled = true;
+
+        }
+
+    }
+
+
     private void DesactivarCanvasJuego()
     {
 
@@ -860,13 +912,17 @@ public class GameLogic : MonoBehaviour
     }
 
 
+
+
     public async void ClickedSelectPersonaje(int posicion)
     {
         print("cliecked seelect personaje");
         if (isAugmented == true)
         {
             currentPositionPlayer = -1;
+            //ScaleAllPersonajesCards(1);
             DesactivarCanvasElegirPersonaje();
+            
             SeccionJuego();
             //ProcessPersonajeAugmented(currentPositionPlayer, "desaumentar_personaje");
             return;
