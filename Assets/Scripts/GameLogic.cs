@@ -46,6 +46,9 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private CanvasGroup canvasGroupEleccionPersonakes = null;
     [SerializeField] private RectTransform[] posicionPersonajes = null;
 
+    [Header("Personaje Seleccionado")]
+    [SerializeField] private Image personajeSeleccionado = null;
+
 
     private List<int> listCards = new List<int>();
     private List<int> listCardsPersonajes = new List<int>();
@@ -829,7 +832,7 @@ public class GameLogic : MonoBehaviour
         canvasGroupEleccionPersonakes.blocksRaycasts = false;
         canvasGroupEleccionPersonakes.interactable = false;
 
-        for (ushort i = 0; i < canvasCartas.Length; i++)
+        for (ushort i = 0; i < canvasCartasPersonajes.Length; i++)
         {
             canvasCartasPersonajes[i].GetComponent<GraphicRaycaster>().enabled = false;
 
@@ -857,12 +860,239 @@ public class GameLogic : MonoBehaviour
     }
 
 
-    public void ClickedSelectPersonaje(int posicion)
+    public async void ClickedSelectPersonaje(int posicion)
     {
+        print("cliecked seelect personaje");
+        if (isAugmented == true)
+        {
+            currentPositionPlayer = -1;
+            DesactivarCanvasElegirPersonaje();
+            SeccionJuego();
+            //ProcessPersonajeAugmented(currentPositionPlayer, "desaumentar_personaje");
+            return;
+        }
 
-
+        DisableRaycastPersonaje();
+        isAugmented = true;
         canvasGroupEleccionPersonakes.blocksRaycasts = false;
         canvasGroupEleccionPersonakes.interactable = false;
+        canvasCartasPersonajes[posicion - 1].sortingOrder = 1;
+
+        AnimationClip clip = GenerateClipAnimationPersonaje(posicion - 1, "giro_personaje");
+
+        float fullDurationClip = clip.length * 1000;
+        float restDurationClip = fullDurationClip - 100;
+
+        anim.AddClip(clip, clip.name);
+        anim.Play(clip.name);
+        await UniTask.Delay(TimeSpan.FromMilliseconds(fullDurationClip - 100));
+
+        currentPositionPlayer = posicion - 1;
+        cartasPersonajes[currentPositionPlayer].sprite = poolImagesPersonajes[currentPositionPlayer];
+        personajeSeleccionado.sprite = poolImagesPersonajes[currentPositionPlayer];
+
+        await UniTask.Delay(TimeSpan.FromMilliseconds(restDurationClip + 200));
+        anim.RemoveClip(clip);
+        cartasRectPersonajes[currentPositionPlayer].rotation = Quaternion.Euler(0, 0, 0);
+        cartasPersonajes[currentPositionPlayer].raycastTarget = true;
+
+
     }
+
+
+    private AnimationClip GenerateClipAnimationPersonaje(int posicion, string nombreClip)
+    {
+        AnimationClip clip = new AnimationClip
+        {
+            name = nombreClip,
+            legacy = true,
+            wrapMode = WrapMode.Once
+        };
+
+        string nombreCarta = "--Personajes/personaje_" + (posicion + 1);
+
+        Keyframe[] keysX = new Keyframe[4];
+        Keyframe[] keysY = new Keyframe[4];
+        Keyframe[] keysZ = new Keyframe[4];
+
+        float x = cartasRectPersonajes[posicion].anchoredPosition.x;
+
+        keysX[0] = new Keyframe(0f, x);
+        keysY[0] = new Keyframe(0f, cartasRectPersonajes[posicion].anchoredPosition.y);
+        keysZ[0] = new Keyframe(0f, 0);
+
+        keysX[1] = new Keyframe(0.05f, x -= 44);
+        keysY[1] = new Keyframe(0.05f, cartasRectPersonajes[posicion].anchoredPosition.y);
+        keysZ[1] = new Keyframe(0.05f, 0);
+
+        keysX[2] = new Keyframe(0.15f, x += 44);
+        keysY[2] = new Keyframe(0.15f, cartasRectPersonajes[posicion].anchoredPosition.y);
+        keysZ[2] = new Keyframe(0.15f, 0);
+
+        keysX[3] = new Keyframe(0.20f, 0);
+        keysY[3] = new Keyframe(0.20f, 0);
+        keysZ[3] = new Keyframe(0.20f, 0);
+
+        Keyframe[] keysRotX = new Keyframe[4];
+        Keyframe[] keysRotY = new Keyframe[4];
+        Keyframe[] keysRotZ = new Keyframe[4];
+        Keyframe[] keysRotW = new Keyframe[4];
+
+
+        Quaternion angle0 = Quaternion.Euler(0, 0, 0);
+        Quaternion angle90 = Quaternion.Euler(0, 92, 0);
+
+        keysRotX[0] = new Keyframe(0f, angle0.x);
+        keysRotY[0] = new Keyframe(0f, angle0.y);
+        keysRotZ[0] = new Keyframe(0f, angle0.z);
+        keysRotW[0] = new Keyframe(0f, angle0.w);
+
+
+        keysRotX[1] = new Keyframe(0.03f, angle0.x);
+        keysRotY[1] = new Keyframe(0.03f, angle0.y);
+        keysRotZ[1] = new Keyframe(0.03f, angle0.z);
+        keysRotW[1] = new Keyframe(0.03f, angle0.w);
+
+        keysRotX[2] = new Keyframe(0.10f, angle90.x);
+        keysRotY[2] = new Keyframe(0.10f, angle90.y);
+        keysRotZ[2] = new Keyframe(0.10f, angle90.z);
+        keysRotW[2] = new Keyframe(0.10f, angle90.w);
+
+        keysRotX[3] = new Keyframe(0.20f, angle0.x);
+        keysRotY[3] = new Keyframe(0.20f, angle0.y);
+        keysRotZ[3] = new Keyframe(0.20f, angle0.z);
+        keysRotW[3] = new Keyframe(0.20f, angle0.w);
+
+        Keyframe[] keysScaleX = new Keyframe[2];
+        Keyframe[] keysScaleY = new Keyframe[2];
+        Keyframe[] keysScaleZ = new Keyframe[1];
+
+        keysScaleX[0] = new Keyframe(0.15f, 1);
+        keysScaleX[1] = new Keyframe(0.20f, 4);
+
+        keysScaleY[0] = new Keyframe(0.15f, 1);
+        keysScaleY[1] = new Keyframe(0.20f, 4);
+
+        keysScaleZ[0] = new Keyframe(0.15f, 1);
+
+        AnimationCurve curveScalex = new AnimationCurve(keysScaleX);
+        AnimationCurve curveScaley = new AnimationCurve(keysScaleY);
+        AnimationCurve curveScalez = new AnimationCurve(keysScaleZ);
+
+        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.x", curveScalex);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.y", curveScaley);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.z", curveScalez);
+
+        AnimationCurve curvex = new AnimationCurve(keysX);
+        AnimationCurve curvey = new AnimationCurve(keysY);
+        AnimationCurve curvez = new AnimationCurve(keysZ);
+
+        AnimationCurve curveRotx = new AnimationCurve(keysRotX);
+        AnimationCurve curveRoty = new AnimationCurve(keysRotY);
+        AnimationCurve curveRotz = new AnimationCurve(keysRotZ);
+        AnimationCurve curveRotw = new AnimationCurve(keysRotW);
+
+        clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.x", curvex);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.y", curvey);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.z", curvez);
+
+        clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.x", curveRotx);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.y", curveRoty);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.z", curveRotz);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.w", curveRotw);
+
+
+        clip.EnsureQuaternionContinuity();
+
+        return clip;
+
+
+    }
+
+    private async void ProcessPersonajeAugmented(int posicion, string nombreClip)
+    {
+
+        isAugmented = false;
+        AnimationClip clip = new AnimationClip
+        {
+            name = nombreClip,
+            legacy = true,
+            wrapMode = WrapMode.Once
+        };
+
+        Keyframe[] keysX = new Keyframe[2];
+        Keyframe[] keysY = new Keyframe[2];
+        Keyframe[] keysZ = new Keyframe[2];
+
+        keysX[0] = new Keyframe(0f, cartasRectPersonajes[posicion].anchoredPosition.x);
+        keysY[0] = new Keyframe(0f, cartasRectPersonajes[posicion].anchoredPosition.y);
+        keysZ[0] = new Keyframe(0f, 0);
+
+        keysX[1] = new Keyframe(0.3f, posicionPersonajes[posicion].anchoredPosition.x);
+        keysY[1] = new Keyframe(0.3f, posicionPersonajes[posicion].anchoredPosition.y);
+        keysZ[1] = new Keyframe(0.3f, 0);
+
+        Keyframe[] keysScaleX = new Keyframe[2];
+        Keyframe[] keysScaleY = new Keyframe[2];
+        Keyframe[] keysScaleZ = new Keyframe[2];
+
+        keysScaleX[0] = new Keyframe(0f, cartasRectPersonajes[posicion].localScale.x);
+        keysScaleY[0] = new Keyframe(0f, cartasRectPersonajes[posicion].localScale.y);
+        keysScaleZ[0] = new Keyframe(0f, cartasRectPersonajes[posicion].localScale.z);
+
+        keysScaleX[1] = new Keyframe(0.15f, 1);
+        keysScaleY[1] = new Keyframe(0.15f, 1);
+        keysScaleZ[1] = new Keyframe(0.15f, 1);
+
+        AnimationCurve curvex = new AnimationCurve(keysX);
+        AnimationCurve curvey = new AnimationCurve(keysY);
+        AnimationCurve curvez = new AnimationCurve(keysZ);
+
+        AnimationCurve curveScalex = new AnimationCurve(keysScaleX);
+        AnimationCurve curveScaley = new AnimationCurve(keysScaleY);
+        AnimationCurve curveScalez = new AnimationCurve(keysScaleZ);
+
+        string nombreCarta = "--Personajes/personaje_" + (posicion + 1);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.x", curvex);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.y", curvey);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.z", curvez);
+
+        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.x", curveScalex);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.y", curveScaley);
+        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.z", curveScalez);
+
+        anim.AddClip(clip, clip.name);
+        anim.Play(clip.name);
+        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip(clip.name).length * 1000));
+        //anim.RemoveClip(clip);
+
+        isAugmented = false;
+        EnableRaycastPersonaje();
+        canvasCartasPersonajes[posicion].sortingOrder = 0;
+
+    }
+
+    private void DisableRaycastPersonaje()
+    {
+
+        for (ushort i = 0; i < cartasPersonajes.Length; i++)
+        {
+            cartasPersonajes[i].raycastTarget = false;
+
+        }
+    }
+
+    private void EnableRaycastPersonaje()
+    {
+        for (ushort i = 0; i < cartasPersonajes.Length; i++)
+        {
+            cartasPersonajes[i].raycastTarget = true;
+
+        }
+
+    }
+
+
+
 
 }

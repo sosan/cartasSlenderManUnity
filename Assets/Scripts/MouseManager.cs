@@ -67,12 +67,9 @@ public class MouseManager : MonoBehaviour
 #endif
 
 
-        if (gameLogic.isAugmented == true)
+        if (gameLogic.isAugmented == true && gameLogic.isCanvasJuegoActive == true)
         {
-            
             gameLogic.ProcessCardAugmeted(gameLogic.currentPositionPlayer, "desaugmentar_carta");
-
-
         }
 
 
