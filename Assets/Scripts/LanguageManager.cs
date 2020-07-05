@@ -8,6 +8,9 @@ using UniRx.Async;
 public class LanguageManager : MonoBehaviour
 {
 
+
+    [SerializeField] private Animation anim = null;
+
     [SerializeField] private GameLogic gameLogic = null;
     [SerializeField] private Color selectColor = Color.white;
     [SerializeField] private Color notSelectColor = Color.white;
@@ -23,7 +26,7 @@ public class LanguageManager : MonoBehaviour
 
     private void Awake()
     {
-
+        print("idioma=" + PlayerPrefs.HasKey("idioma"));
         if (PlayerPrefs.HasKey("idioma") == true)
         {
 
@@ -38,14 +41,15 @@ public class LanguageManager : MonoBehaviour
 
             }
 
+            DesactivarCanvasIdiomas();
+            gameLogic.Click_NewGame();
+
         }
+        else
+        {
+            anim.Play("aparecerCanvasIdiomas");
 
-        DesactivarCanvasIdiomas();
-
-        gameLogic.Click_NewGame();
-
-
-
+        }
 
     }
 
@@ -58,6 +62,8 @@ public class LanguageManager : MonoBehaviour
 
     private void DesactivarCanvasIdiomas()
     {
+
+        canvasGroupSelectLanguage.gameObject.SetActive(false);
         canvasGroupSelectLanguage.alpha = 0;
         canvasGroupSelectLanguage.blocksRaycasts = false;
         canvasGroupSelectLanguage.interactable = false;

@@ -854,6 +854,8 @@ public class GameLogic : MonoBehaviour
         canvasGroupEleccionPersonakes.blocksRaycasts = false;
         canvasGroupEleccionPersonakes.interactable = false;
 
+        canvasGroupEleccionPersonakes.gameObject.SetActive(false);
+
         for (ushort i = 0; i < canvasCartasPersonajes.Length; i++)
         {
             canvasCartasPersonajes[i].GetComponent<GraphicRaycaster>().enabled = false;
@@ -871,6 +873,8 @@ public class GameLogic : MonoBehaviour
         canvasGroupEleccionPersonakes.alpha = 1;
         canvasGroupEleccionPersonakes.blocksRaycasts = true;
         canvasGroupEleccionPersonakes.interactable = true;
+
+        canvasGroupEleccionPersonakes.gameObject.SetActive(true);
 
         for (ushort i = 0; i < canvasCartasPersonajes.Length; i++)
         {
@@ -890,6 +894,7 @@ public class GameLogic : MonoBehaviour
         canvasGroupJuego.alpha = 1;
         canvasGroupJuego.blocksRaycasts = true;
         canvasGroupJuego.interactable = true;
+        canvasGroupJuego.gameObject.SetActive(true);
 
         for (ushort i = 0; i < canvasCartas.Length; i++)
         {
@@ -908,6 +913,8 @@ public class GameLogic : MonoBehaviour
         canvasGroupJuego.alpha = 0;
         canvasGroupJuego.blocksRaycasts = false;
         canvasGroupJuego.interactable = false;
+
+        canvasGroupJuego.gameObject.SetActive(false);
 
         for (ushort i = 0; i < canvasCartas.Length; i++)
         {

@@ -555,6 +555,7 @@ Animation:
   - {fileID: 7400000, guid: 7bebc60457aa3ee4e9aa052091ba4510, type: 2}
   - {fileID: 7400000, guid: 645569e6bff63674eba94a43398e67da, type: 2}
   - {fileID: 7400000, guid: 8f0f4edae3c42b642a314214cd1b79c9, type: 2}
+  - {fileID: 7400000, guid: 0d1634af1b1d98a488855c9c86404825, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
@@ -7684,6 +7685,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0dbd30c41e71fb4085ae811b55ab15b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  anim: {fileID: 126586405}
   gameLogic: {fileID: 608581419}
   selectColor: {r: 1, g: 1, b: 1, a: 1}
   notSelectColor: {r: 1, g: 1, b: 1, a: 1}
