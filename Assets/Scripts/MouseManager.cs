@@ -72,6 +72,12 @@ public class MouseManager : MonoBehaviour
             gameLogic.ProcessCardAugmeted(gameLogic.currentPositionPlayer, "desaugmentar_carta");
         }
 
+        if (gameLogic.isAugmented == true && gameLogic.isCanvasElegirPersonajeActive == true)
+        {
+            gameLogic.DesactivarCanvasElegirPersonaje();
+            gameLogic.SeccionJuego();
+        }
+
 
         Vector3 currentMousePos = camara.ScreenToWorldPoint(vectorMousePos);
 

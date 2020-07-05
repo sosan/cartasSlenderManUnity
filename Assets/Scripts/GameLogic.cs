@@ -693,7 +693,7 @@ public class GameLogic : MonoBehaviour
         estaMezclando = false;
     }
 
-    private async void SeccionJuego()
+    public async void SeccionJuego()
     {
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(150));
@@ -846,7 +846,7 @@ public class GameLogic : MonoBehaviour
     
     }
 
-    private void DesactivarCanvasElegirPersonaje()
+    public void DesactivarCanvasElegirPersonaje()
     {
         
         isCanvasElegirPersonajeActive = false;
@@ -926,9 +926,7 @@ public class GameLogic : MonoBehaviour
         if (isAugmented == true)
         {
             currentPositionPlayer = -1;
-            //ScaleAllPersonajesCards(1);
             DesactivarCanvasElegirPersonaje();
-            
             SeccionJuego();
             //ProcessPersonajeAugmented(currentPositionPlayer, "desaumentar_personaje");
             return;
@@ -1081,68 +1079,68 @@ public class GameLogic : MonoBehaviour
 
     }
 
-    private async void ProcessPersonajeAugmented(int posicion, string nombreClip)
-    {
+    //public async void ProcessPersonajeAugmented(int posicion, string nombreClip)
+    //{
 
-        isAugmented = false;
-        AnimationClip clip = new AnimationClip
-        {
-            name = nombreClip,
-            legacy = true,
-            wrapMode = WrapMode.Once
-        };
+    //    isAugmented = false;
+    //    AnimationClip clip = new AnimationClip
+    //    {
+    //        name = nombreClip,
+    //        legacy = true,
+    //        wrapMode = WrapMode.Once
+    //    };
 
-        Keyframe[] keysX = new Keyframe[2];
-        Keyframe[] keysY = new Keyframe[2];
-        Keyframe[] keysZ = new Keyframe[2];
+    //    Keyframe[] keysX = new Keyframe[2];
+    //    Keyframe[] keysY = new Keyframe[2];
+    //    Keyframe[] keysZ = new Keyframe[2];
 
-        keysX[0] = new Keyframe(0f, cartasRectPersonajes[posicion].anchoredPosition.x);
-        keysY[0] = new Keyframe(0f, cartasRectPersonajes[posicion].anchoredPosition.y);
-        keysZ[0] = new Keyframe(0f, 0);
+    //    keysX[0] = new Keyframe(0f, cartasRectPersonajes[posicion].anchoredPosition.x);
+    //    keysY[0] = new Keyframe(0f, cartasRectPersonajes[posicion].anchoredPosition.y);
+    //    keysZ[0] = new Keyframe(0f, 0);
 
-        keysX[1] = new Keyframe(0.3f, posicionPersonajes[posicion].anchoredPosition.x);
-        keysY[1] = new Keyframe(0.3f, posicionPersonajes[posicion].anchoredPosition.y);
-        keysZ[1] = new Keyframe(0.3f, 0);
+    //    keysX[1] = new Keyframe(0.3f, posicionPersonajes[posicion].anchoredPosition.x);
+    //    keysY[1] = new Keyframe(0.3f, posicionPersonajes[posicion].anchoredPosition.y);
+    //    keysZ[1] = new Keyframe(0.3f, 0);
 
-        Keyframe[] keysScaleX = new Keyframe[2];
-        Keyframe[] keysScaleY = new Keyframe[2];
-        Keyframe[] keysScaleZ = new Keyframe[2];
+    //    Keyframe[] keysScaleX = new Keyframe[2];
+    //    Keyframe[] keysScaleY = new Keyframe[2];
+    //    Keyframe[] keysScaleZ = new Keyframe[2];
 
-        keysScaleX[0] = new Keyframe(0f, cartasRectPersonajes[posicion].localScale.x);
-        keysScaleY[0] = new Keyframe(0f, cartasRectPersonajes[posicion].localScale.y);
-        keysScaleZ[0] = new Keyframe(0f, cartasRectPersonajes[posicion].localScale.z);
+    //    keysScaleX[0] = new Keyframe(0f, cartasRectPersonajes[posicion].localScale.x);
+    //    keysScaleY[0] = new Keyframe(0f, cartasRectPersonajes[posicion].localScale.y);
+    //    keysScaleZ[0] = new Keyframe(0f, cartasRectPersonajes[posicion].localScale.z);
 
-        keysScaleX[1] = new Keyframe(0.15f, 1);
-        keysScaleY[1] = new Keyframe(0.15f, 1);
-        keysScaleZ[1] = new Keyframe(0.15f, 1);
+    //    keysScaleX[1] = new Keyframe(0.15f, 1);
+    //    keysScaleY[1] = new Keyframe(0.15f, 1);
+    //    keysScaleZ[1] = new Keyframe(0.15f, 1);
 
-        AnimationCurve curvex = new AnimationCurve(keysX);
-        AnimationCurve curvey = new AnimationCurve(keysY);
-        AnimationCurve curvez = new AnimationCurve(keysZ);
+    //    AnimationCurve curvex = new AnimationCurve(keysX);
+    //    AnimationCurve curvey = new AnimationCurve(keysY);
+    //    AnimationCurve curvez = new AnimationCurve(keysZ);
 
-        AnimationCurve curveScalex = new AnimationCurve(keysScaleX);
-        AnimationCurve curveScaley = new AnimationCurve(keysScaleY);
-        AnimationCurve curveScalez = new AnimationCurve(keysScaleZ);
+    //    AnimationCurve curveScalex = new AnimationCurve(keysScaleX);
+    //    AnimationCurve curveScaley = new AnimationCurve(keysScaleY);
+    //    AnimationCurve curveScalez = new AnimationCurve(keysScaleZ);
 
-        string nombreCarta = "--Personajes/personaje_" + (posicion + 1);
-        clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.x", curvex);
-        clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.y", curvey);
-        clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.z", curvez);
+    //    string nombreCarta = "--Personajes/personaje_" + (posicion + 1);
+    //    clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.x", curvex);
+    //    clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.y", curvey);
+    //    clip.SetCurve(nombreCarta, typeof(Transform), "localPosition.z", curvez);
 
-        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.x", curveScalex);
-        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.y", curveScaley);
-        clip.SetCurve(nombreCarta, typeof(Transform), "localScale.z", curveScalez);
+    //    clip.SetCurve(nombreCarta, typeof(Transform), "localScale.x", curveScalex);
+    //    clip.SetCurve(nombreCarta, typeof(Transform), "localScale.y", curveScaley);
+    //    clip.SetCurve(nombreCarta, typeof(Transform), "localScale.z", curveScalez);
 
-        anim.AddClip(clip, clip.name);
-        anim.Play(clip.name);
-        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip(clip.name).length * 1000));
-        //anim.RemoveClip(clip);
+    //    anim.AddClip(clip, clip.name);
+    //    anim.Play(clip.name);
+    //    await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip(clip.name).length * 1000));
+    //    //anim.RemoveClip(clip);
 
-        isAugmented = false;
-        EnableRaycastPersonaje();
-        canvasCartasPersonajes[posicion].sortingOrder = 0;
+    //    isAugmented = false;
+    //    EnableRaycastPersonaje();
+    //    canvasCartasPersonajes[posicion].sortingOrder = 0;
 
-    }
+    //}
 
     private void DisableRaycastPersonaje()
     {
