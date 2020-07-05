@@ -15,7 +15,9 @@ public class GameLogic : MonoBehaviour
 
     //private InputActions inputActions;
 
-
+    [Header("Managers")]
+    [SerializeField] private BotonesPersonaje botonesPersonaje = null;
+    [SerializeField] public PersonajesStats personajesStats = null;
 
     [SerializeField] public int currentPositionPlayer = -1;
     [SerializeField] public int lastPositionPlayer = -1;
@@ -35,12 +37,12 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private Outline[] outlineCards = null;
     [SerializeField] private Sprite malClickSprite = null;
     [SerializeField] private Sprite blackBackgroundCard = null;
-    [SerializeField] private Sprite whiteBackgroundCard = null;
+    [SerializeField] public Sprite whiteBackgroundCard = null;
 
     [Header("Eleccion Persoanjes")]
     [SerializeField] private Image[] cartasPersonajes = null;
     [SerializeField] private RectTransform[] cartasRectPersonajes = null;
-    [SerializeField] private Sprite[] imagesPersonajes = null;
+    //[SerializeField] private Sprite[] imagesPersonajes = null;
     [SerializeField] private Canvas[] canvasCartasPersonajes = null;
     [SerializeField] private List<Sprite> poolImagesPersonajes = new List<Sprite>();
     [SerializeField] private CanvasGroup canvasGroupEleccionPersonakes = null;
@@ -767,12 +769,16 @@ public class GameLogic : MonoBehaviour
 
         while (insertado == false)
         {
-            int rnd = UnityEngine.Random.Range(0, imagesPersonajes.Length);
+            //int rnd = UnityEngine.Random.Range(0, imagesPersonajes.Length);
+            int rnd = UnityEngine.Random.Range(0, personajesStats.personajes.Length);
             if (listCardsPersonajes.Contains(rnd) == false)
             {
 
                 listCardsPersonajes.Add(rnd);
-                poolImagesPersonajes.Add(imagesPersonajes[rnd]);
+                //poolImagesPersonajes.Add(imagesPersonajes[rnd]);
+                poolImagesPersonajes.Add(personajesStats.personajes[rnd].imagenPersonaje);
+
+                
 
                 insertado = true;
             }
@@ -869,7 +875,7 @@ public class GameLogic : MonoBehaviour
         for (ushort i = 0; i < canvasCartasPersonajes.Length; i++)
         {
             canvasCartasPersonajes[i].GetComponent<GraphicRaycaster>().enabled = true;
-
+            cartasPersonajes[i].raycastTarget = true;
         }
 
 
@@ -946,6 +952,16 @@ public class GameLogic : MonoBehaviour
         currentPositionPlayer = posicion - 1;
         cartasPersonajes[currentPositionPlayer].sprite = poolImagesPersonajes[currentPositionPlayer];
         personajeSeleccionado.sprite = poolImagesPersonajes[currentPositionPlayer];
+
+        int posInRandomArray = listCardsPersonajes[currentPositionPlayer];
+        botonesPersonaje.ShowStatsPersonajePrincipal(personajesStats.personajes[posInRandomArray]);
+
+
+        //botonesPersonaje.statsJugador.bombillas = personajesStats.personajes[posInRandomArray].bombilla;
+        //botonesPersonaje.statsJugador.tokens = personajesStats.personajes[posInRandomArray].token;
+
+        
+
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(restDurationClip + 200));
         anim.RemoveClip(clip);
