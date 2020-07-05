@@ -1874,15 +1874,6 @@ MonoBehaviour:
   - {fileID: 1590779262}
   - {fileID: 1203161922}
   - {fileID: 2126439910}
-  imagesPersonajes:
-  - {fileID: 21300000, guid: 06f318cc698151744afe2e1e6ba6a3a4, type: 3}
-  - {fileID: 21300000, guid: 170b305047d33d14fa3afb1d83bf721d, type: 3}
-  - {fileID: 21300000, guid: f07cdf7640a005645b363f0692e58ac3, type: 3}
-  - {fileID: 21300000, guid: c42a6bf8550ab6f4e9261d795f8e3810, type: 3}
-  - {fileID: 21300000, guid: 89c84731fd38fe34eaff6cdb34a4b838, type: 3}
-  - {fileID: 21300000, guid: 5e23eef8c5950fd4190d714b90f4629d, type: 3}
-  - {fileID: 21300000, guid: b3c26d1d8adf79c44a6fb43603bcdd81, type: 3}
-  - {fileID: 21300000, guid: 0e65faaee3374c54fac02ad6a0b79c9c, type: 3}
   canvasCartasPersonajes:
   - {fileID: 1342891665}
   - {fileID: 1150007643}
@@ -12590,6 +12581,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c3c7303bff460b4ebcca88db6678e7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameLogic: {fileID: 608581419}
+  tokensText: {fileID: 1244575447}
+  bombillasText: {fileID: 1681795793}
+  personajeSeleccionado: {fileID: 180270317}
 --- !u!1 &2014113483
 GameObject:
   m_ObjectHideFlags: 0
