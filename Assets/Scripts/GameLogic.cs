@@ -8,6 +8,7 @@ using System;
 using GlobalActions;
 using UnityEngine.InputSystem;
 using UnityEditor;
+using System.Linq;
 
 public class GameLogic : MonoBehaviour
 {
@@ -17,10 +18,10 @@ public class GameLogic : MonoBehaviour
 
     [Header("Managers")]
     [SerializeField] private BotonesPersonaje botonesPersonaje = null;
-    [SerializeField] public PersonajesStats personajesStats = null;
+    public PersonajesStats personajesStats = null;
 
-    [SerializeField] public int currentPositionPlayer = -1;
-    [SerializeField] public int lastPositionPlayer = -1;
+    public int currentPositionPlayer = -1;
+    public int lastPositionPlayer = -1;
 
     [Header("Juego")]
     [SerializeField] private Image[] cartas = null;
@@ -37,7 +38,7 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private Outline[] outlineCards = null;
     [SerializeField] private Sprite malClickSprite = null;
     [SerializeField] private Sprite blackBackgroundCard = null;
-    [SerializeField] public Sprite whiteBackgroundCard = null;
+    public Sprite whiteBackgroundCard = null;
 
     [Header("Eleccion Persoanjes")]
     [SerializeField] private Image[] cartasPersonajes = null;
@@ -50,6 +51,9 @@ public class GameLogic : MonoBehaviour
 
     [Header("Personaje Seleccionado")]
     [SerializeField] private Image personajeSeleccionado = null;
+
+    [Header("Punto de inicio")]
+    [SerializeField] private Sprite spritePuntoInicio = null;
 
 
     private List<int> listCards = new List<int>();
@@ -276,10 +280,6 @@ public class GameLogic : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        //estaMezclando = true;
-        //await UniTask.Delay(TimeSpan.FromSeconds(1));
-
-        //Click_NewGame();
     }
 
 
@@ -289,7 +289,7 @@ public class GameLogic : MonoBehaviour
 # if UNITY_EDITOR
         print("clicked" + " position=" + posicion + " lastPositionPlayer=" + lastPositionPlayer);
 #endif
-        if (estaMezclando == true || posicion < 0 || posicion > 9) return;
+        if (estaMezclando == true || posicion < 1 || posicion > 8) return;
 
 
         if (isAugmented == true)
@@ -356,7 +356,10 @@ public class GameLogic : MonoBehaviour
 
         isAugmented = true;
 
-        //clickedCard = true;
+
+        outlineCards[outlineCards.Length - 1].enabled = false;
+        outlineCards[outlineCards.Length - 1].GetComponent<Image>().enabled = false;
+        animsCards[outlineCards.Length - 1].Stop("carta_outline");
 
         DisableRaycastTarget();
 
@@ -372,6 +375,7 @@ public class GameLogic : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromMilliseconds(fullDurationClip - 100));
 
         currentPositionPlayer = posicion - 1;
+        print("currentPositionPlayer=" + currentPositionPlayer + " cartas.leng=" + cartas.Length + " pollimgaescount=" + poolImages.Count);
         cartas[currentPositionPlayer].sprite = poolImages[currentPositionPlayer];
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(restDurationClip + 200));
@@ -696,10 +700,20 @@ public class GameLogic : MonoBehaviour
     public async void SeccionJuego()
     {
 
+        for (ushort i = 0; i < cartas.Length; i++)
+        {
+            outlineCards[i].enabled = false;
+            outlineCards[i].GetComponent<Image>().enabled = false;
+            cartas[i].sprite = blackBackgroundCard;
+            canvasCartas[i].sortingOrder = 0;
+
+        }
+
+
         await UniTask.Delay(TimeSpan.FromMilliseconds(150));
 
         anim.Play("aparecerCanvasJuego");
-        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasJuego").length * 1000  ));
+        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasJuego").length * 1000));
 
         ActivarCanvasJuego();
 
@@ -708,24 +722,19 @@ public class GameLogic : MonoBehaviour
 
         poolImages.Clear();
 
-        anim.Play("aparecerCanvasJuego");
-        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasJuego").length * 1000));
+        //anim.Play("aparecerCanvasJuego");
+        //await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasJuego").length * 1000));
 
 
         estaMezclando = true;
         lastPositionPlayer = -1;
         currentPositionPlayer = -1;
         isAugmented = false;
-        
+
         EnableRaycastTarget();
 
-        for (ushort i = 0; i < cartas.Length; i++)
-        {
-            outlineCards[i].enabled = false;
-            cartas[i].sprite = blackBackgroundCard;
-            canvasCartas[i].sortingOrder = 0;
 
-        }
+        cartas[cartas.Length - 1].sprite = spritePuntoInicio;
 
 
         ScaleAllGameCards(1);
@@ -736,15 +745,84 @@ public class GameLogic : MonoBehaviour
         anim.Play("cartas_mezcla_runtime");
         await UniTask.Delay(TimeSpan.FromSeconds(anim.GetClip("cartas_mezcla_runtime").length));
 
+        
+
         listCards.Clear();
-        for (ushort i = 0; i < cartas.Length; i++)
+
+
+        //for (ushort i = 0; i < cartas.Length; i++)
+        //{
+        //    cartasRect[i].rotation = Quaternion.Euler(0, 0, 0);
+        //    InsertarCarta();
+
+
+        //}
+
+        //---
+
+        List<Sprite> rndImgaes = new List<Sprite>();
+        rndImgaes.AddRange(imagesCartas);
+
+
+
+        listCards.AddRange(new int[8] {0, 1, 2, 3, 4, 5, 6, 7 });
+
+        for (ushort i = 0; i < imagesCartas.Length; i++)
         {
             cartasRect[i].rotation = Quaternion.Euler(0, 0, 0);
-            InsertarCarta();
 
+            int rnd = UnityEngine.Random.Range(i, imagesCartas.Length);
+
+            var tempCard = listCards[rnd];
+            listCards[rnd] = listCards[i];
+            listCards[i] = tempCard;
+
+            var tempSpite = rndImgaes[rnd];
+            rndImgaes[rnd] = rndImgaes[i];
+            rndImgaes[i] = tempSpite;
+
+            //listCards.Add(rnd);
+
+
+
+            //poolImages.Add(imagesCartas[rnd]);
 
         }
+
+
+        //--
+        poolImages.AddRange(rndImgaes);
+
+        outlineCards[outlineCards.Length - 1].enabled = true;
+        outlineCards[outlineCards.Length - 1].GetComponent<Image>().enabled = true;
+
+        animsCards[outlineCards.Length - 1].Play("carta_outline");
+
         estaMezclando = false;
+    }
+
+    private void InsertarCarta()
+    {
+        bool insertado = false;
+
+        while (insertado == false)
+        {
+            int rnd = UnityEngine.Random.Range(0, imagesCartas.Length);
+            if (listCards.Contains(rnd) == false)
+            {
+
+                listCards.Add(rnd);
+                //cartas[i].color = Color.black;
+                poolImages.Add(imagesCartas[rnd]);
+                //cartas[i].sprite = imagesCartas[rnd];
+                
+
+                insertado = true;
+            }
+
+        }
+
+
     }
 
 
@@ -787,28 +865,7 @@ public class GameLogic : MonoBehaviour
 
     }
 
-    private void InsertarCarta()
-    { 
-        bool insertado = false;
-
-        while(insertado == false)
-        { 
-            int rnd = UnityEngine.Random.Range(0, imagesCartas.Length);
-            if (listCards.Contains(rnd) == false)
-            { 
-            
-                listCards.Add(rnd);
-                //cartas[i].color = Color.black;
-                poolImages.Add(imagesCartas[rnd]);
-                //cartas[i].sprite = imagesCartas[rnd];
-                
-                insertado = true;
-            }
-                       
-        }
-
-    
-    }
+   
 
     private void ScaleAllGameCards(int scale)
     {

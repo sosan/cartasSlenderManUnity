@@ -12,8 +12,8 @@ public class LanguageManager : MonoBehaviour
     [SerializeField] private Animation anim = null;
 
     [SerializeField] private GameLogic gameLogic = null;
-    [SerializeField] private Color selectColor = Color.white;
-    [SerializeField] private Color notSelectColor = Color.white;
+    //[SerializeField] private Color selectColor = Color.white;
+    //[SerializeField] private Color notSelectColor = Color.white;
     [SerializeField] private TextMeshProUGUI[] textos = null;
     [SerializeField] public ParticleSystem[] particulas = null;
     //[SerializeField] private Canvas canvas = null;

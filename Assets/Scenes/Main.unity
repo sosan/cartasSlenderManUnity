@@ -1817,7 +1817,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: a6f1eae2cb9abea49b51c64a32043571, type: 3}
   - {fileID: 21300000, guid: 8514725589446f64f9a98cb6c925b875, type: 3}
   - {fileID: 21300000, guid: 5f6cf9d835f450541b50deb32a0ada3c, type: 3}
-  - {fileID: 21300000, guid: 8b58a172cb828d14a8f5213db48e712d, type: 3}
   - {fileID: 21300000, guid: 877eb1629882f6642bcf93ba5a713143, type: 3}
   canvasGroupJuego: {fileID: 1715123445}
   posicionPlayer:
@@ -1896,6 +1895,7 @@ MonoBehaviour:
   - {fileID: 1852133360}
   - {fileID: 1969805244}
   personajeSeleccionado: {fileID: 180270317}
+  spritePuntoInicio: {fileID: 21300000, guid: 8b58a172cb828d14a8f5213db48e712d, type: 3}
   clickedCard: 0
   estaMezclando: 1
   rangoXMin: -400
@@ -7687,8 +7687,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 126586405}
   gameLogic: {fileID: 608581419}
-  selectColor: {r: 1, g: 1, b: 1, a: 1}
-  notSelectColor: {r: 1, g: 1, b: 1, a: 1}
   textos: []
   particulas:
   - {fileID: 1533287324}
