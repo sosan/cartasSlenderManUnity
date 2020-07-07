@@ -196,8 +196,9 @@ public class GameLogic : MonoBehaviour
         outlineCards[outlineCards.Length - 1].enabled = false;
         outlineCards[outlineCards.Length - 1].GetComponent<Image>().enabled = false;
         animsCards[outlineCards.Length - 1].Stop("carta_outline");
-
+        
         DisableRaycastTarget();
+        
 
         canvasCartas[posicion - 1].sortingOrder = 1;
 
@@ -211,6 +212,8 @@ public class GameLogic : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromMilliseconds(fullDurationClip - 100));
 
         currentPositionPlayer = posicion - 1;
+        print("currentPositionPlayer=" + currentPositionPlayer + " cartas.leng=" + cartas.Length + " pollimgaescount=" + poolImages.Count);
+        print("currentPositionPlayer=" + currentPositionPlayer + " cartas.leng=" + cartas.Length + " pollimgaescount=" + poolImages.Count);
         print("currentPositionPlayer=" + currentPositionPlayer + " cartas.leng=" + cartas.Length + " pollimgaescount=" + poolImages.Count);
 
         clickedCardButtons[currentPositionPlayer].cartasBosque.isVisited = true;
