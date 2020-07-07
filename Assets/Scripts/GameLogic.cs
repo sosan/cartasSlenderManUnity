@@ -104,6 +104,19 @@ public class GameLogic : MonoBehaviour
     {
     }
 
+    public async void Click_NewGame()
+    {
+
+        await UniTask.Delay(TimeSpan.FromMilliseconds(300));
+
+        canvasGroupJuego.alpha = 0;
+        canvasGroupEleccionPersonakes.alpha = 0;
+
+        DesactivarCanvasJuego();
+        SeccionElegirPersonaje();
+
+    }
+
 
     public async void Click_Carta(int posicion)
     {
@@ -112,6 +125,8 @@ public class GameLogic : MonoBehaviour
         print("clicked" + " position=" + posicion + " lastPositionPlayer=" + lastPositionPlayer);
 #endif
         if (estaMezclando == true || posicion < 1 || posicion > 8) return;
+
+        
 
 
         if (isAugmented == true)
@@ -132,17 +147,24 @@ public class GameLogic : MonoBehaviour
         {
             if (lastPositionPlayer == posicion - 1) return;
 
+            if (clickedCardButtons[posicion - 1].cartasBosque.isVisited == true)
+            {
+                MalClick(posicion - 1);
+                return;
+
+            }
+
             switch (lastPositionPlayer)
             {
-                case 0: if (posicion == 5 || posicion == 6 || posicion == 8 || posicion == 9) { MalClick(posicion); return; } break;
-                case 1: if (posicion == 4 || posicion == 6 || posicion == 7 || posicion == 9) { MalClick(posicion); return; } break;
-                case 2: if (posicion == 4 || posicion == 5 || posicion == 7 || posicion == 8) { MalClick(posicion); return; } break;
-                case 3: if (posicion == 2 || posicion == 3 || posicion == 8 || posicion == 9) { MalClick(posicion); return; } break;
-                case 4: if (posicion == 1 || posicion == 3 || posicion == 7 || posicion == 9) { MalClick(posicion); return; } break;
-                case 5: if (posicion == 1 || posicion == 2 || posicion == 7 || posicion == 8) { MalClick(posicion); return; } break;
-                case 6: if (posicion == 2 || posicion == 3 || posicion == 5 || posicion == 6) { MalClick(posicion); return; } break;
-                case 7: if (posicion == 1 || posicion == 3 || posicion == 4 || posicion == 6) { MalClick(posicion); return; } break;
-                case 8: if (posicion == 1 || posicion == 2 || posicion == 4 || posicion == 5) { MalClick(posicion); return; } break;
+                case 0: if (posicion == 5 || posicion == 6 || posicion == 8 || posicion == 9) { MalClick(posicion - 1); return; } break;
+                case 1: if (posicion == 4 || posicion == 6 || posicion == 7 || posicion == 9) { MalClick(posicion - 1); return; } break;
+                case 2: if (posicion == 4 || posicion == 5 || posicion == 7 || posicion == 8) { MalClick(posicion - 1); return; } break;
+                case 3: if (posicion == 2 || posicion == 3 || posicion == 8 || posicion == 9) { MalClick(posicion - 1); return; } break;
+                case 4: if (posicion == 1 || posicion == 3 || posicion == 7 || posicion == 9) { MalClick(posicion - 1); return; } break;
+                case 5: if (posicion == 1 || posicion == 2 || posicion == 7 || posicion == 8) { MalClick(posicion - 1); return; } break;
+                case 6: if (posicion == 2 || posicion == 3 || posicion == 5 || posicion == 6) { MalClick(posicion - 1); return; } break;
+                case 7: if (posicion == 1 || posicion == 3 || posicion == 4 || posicion == 6) { MalClick(posicion - 1); return; } break;
+                case 8: if (posicion == 1 || posicion == 2 || posicion == 4 || posicion == 5) { MalClick(posicion - 1); return; } break;
 
             }
 
@@ -163,6 +185,8 @@ public class GameLogic : MonoBehaviour
             anim.RemoveClip(clipTemp);
 
         }
+
+        
 
         isAugmented = true;
         countPasos++;
@@ -188,6 +212,9 @@ public class GameLogic : MonoBehaviour
 
         currentPositionPlayer = posicion - 1;
         print("currentPositionPlayer=" + currentPositionPlayer + " cartas.leng=" + cartas.Length + " pollimgaescount=" + poolImages.Count);
+
+        clickedCardButtons[currentPositionPlayer].cartasBosque.isVisited = true;
+
         cartas[currentPositionPlayer].sprite = poolImages[currentPositionPlayer];
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(restDurationClip + 200));
@@ -218,40 +245,7 @@ public class GameLogic : MonoBehaviour
     }
 
 
-    
-    private void DisableRaycastTarget()
-    {
-        for (ushort i = 0; i < cartas.Length; i++)
-        {
-            cartas[i].raycastTarget = false;
-
-        }
-
-    }
-
-    public void EnableRaycastTarget()
-    {
-        for (ushort i = 0; i < cartas.Length; i++)
-        {
-            cartas[i].raycastTarget = true;
-
-        }
-
-    }
-
-    private async void MalClick(int posicion)
-    {
-
-        int pos = posicion - 1;
-        var tempSprite = cartas[pos].sprite;
-        cartas[pos].sprite = malClickSprite;
-        await UniTask.Delay(TimeSpan.FromMilliseconds(500));
-        cartas[pos].sprite = tempSprite;
-
-
-
-
-    }
+   
 
     private async void SeccionElegirPersonaje()
     {
@@ -316,7 +310,11 @@ public class GameLogic : MonoBehaviour
             cartas[i].sprite = blackBackgroundCard;
             canvasCartas[i].sortingOrder = 0;
 
+            
+
         }
+
+        
 
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(150));
@@ -366,15 +364,22 @@ public class GameLogic : MonoBehaviour
         //---
 
         List<Sprite> rndImgaes = new List<Sprite>();
-        rndImgaes.AddRange(imagesCartas);
+
+        for (ushort i = 0; i < bosqueStats.cartasBosque.Length; i++)
+        {
+            rndImgaes.Add(bosqueStats.cartasBosque[i].imagenBosque );
+            //rndImgaes.AddRange(imagesCartas);
+        
+        }
+
 
         listCards.AddRange(new int[8] {0, 1, 2, 3, 4, 5, 6, 7 });
 
-        for (ushort i = 0; i < imagesCartas.Length; i++)
+        for (ushort i = 0; i < bosqueStats.cartasBosque.Length; i++)
         {
             cartasRect[i].rotation = Quaternion.Euler(0, 0, 0);
 
-            int rnd = UnityEngine.Random.Range(i, imagesCartas.Length);
+            int rnd = UnityEngine.Random.Range(i, bosqueStats.cartasBosque.Length);
 
             var tempCard = listCards[rnd];
             listCards[rnd] = listCards[i];
@@ -397,46 +402,28 @@ public class GameLogic : MonoBehaviour
 
         animsCards[outlineCards.Length - 1].Play("carta_outline");
 
-        estaMezclando = false;
-    }
 
-    private void InsertarCarta()
-    {
-        bool insertado = false;
-
-        while (insertado == false)
+        for (ushort i = 0; i < listCards.Count; i++)
         {
-            int rnd = UnityEngine.Random.Range(0, imagesCartas.Length);
-            if (listCards.Contains(rnd) == false)
-            {
+            int posicionCartasBosque = listCards[i];
+            clickedCardButtons[i].cartasBosque = bosqueStats.cartasBosque[posicionCartasBosque];
 
-                listCards.Add(rnd);
-                //cartas[i].color = Color.black;
-                poolImages.Add(imagesCartas[rnd]);
-                //cartas[i].sprite = imagesCartas[rnd];
-                
+            clickedCardButtons[i].cartasBosque.isVisited = false;
 
-                insertado = true;
-            }
 
         }
 
+        clickedCardButtons[clickedCardButtons.Length - 1].cartasBosque.isVisited = false;
+        clickedCardButtons[clickedCardButtons.Length - 1].cartasBosque.startPosition = true;
 
+
+        estaMezclando = false;
     }
 
+   
 
-    public async void Click_NewGame()
-    {
 
-        await UniTask.Delay(TimeSpan.FromMilliseconds(300));
-
-        canvasGroupJuego.alpha = 0;
-        canvasGroupEleccionPersonakes.alpha = 0;
-
-        DesactivarCanvasJuego();
-        SeccionElegirPersonaje();
-
-    }
+   
 
 
     private void InsertarCartaPersonaje()
@@ -466,121 +453,6 @@ public class GameLogic : MonoBehaviour
 
    
 
-    private void ScaleAllGameCards(int scale)
-    {
-        for (ushort i = 0; i < cartasRect.Length; i++)
-        {
-
-            cartasRect[i].localScale = new Vector3(scale, scale, scale);
-        
-        }
-    
-    
-    }
-
-    private void ScaleAllPersonajesCards(int scale)
-    {
-        for (ushort i = 0; i < cartasRectPersonajes.Length; i++)
-        {
-
-            cartasRectPersonajes[i].localScale = new Vector3(scale, scale, scale);
-
-        }
-
-
-    }
-
-
-    public void QuitGame()
-    { 
-#if UNITY_EDITOR
-    UnityEditor.EditorApplication.isPlaying = false;
-#else
-    Application.Quit();
-#endif
-    
-    
-    }
-
-    public void DesactivarCanvasElegirPersonaje()
-    {
-        
-        isCanvasElegirPersonajeActive = false;
-        canvasGroupEleccionPersonakes.alpha = 0;
-        canvasGroupEleccionPersonakes.blocksRaycasts = false;
-        canvasGroupEleccionPersonakes.interactable = false;
-
-        canvasGroupEleccionPersonakes.gameObject.SetActive(false);
-
-        for (ushort i = 0; i < canvasCartasPersonajes.Length; i++)
-        {
-            canvasCartasPersonajes[i].GetComponent<GraphicRaycaster>().enabled = false;
-
-        }
-
-
-
-    }
-
-    private void ActivarCanvasElegirPersonaje()
-    {
-
-        isCanvasElegirPersonajeActive = true;
-        canvasGroupEleccionPersonakes.alpha = 1;
-        canvasGroupEleccionPersonakes.blocksRaycasts = true;
-        canvasGroupEleccionPersonakes.interactable = true;
-
-        canvasGroupEleccionPersonakes.gameObject.SetActive(true);
-
-        for (ushort i = 0; i < canvasCartasPersonajes.Length; i++)
-        {
-            canvasCartasPersonajes[i].GetComponent<GraphicRaycaster>().enabled = true;
-            cartasPersonajes[i].raycastTarget = true;
-        }
-
-
-
-    }
-
-    private void ActivarCanvasJuego()
-    {
-
-        //canvasGroupJuego.gameObject.SetActive(false);
-        isCanvasJuegoActive = true;
-        canvasGroupJuego.alpha = 1;
-        canvasGroupJuego.blocksRaycasts = true;
-        canvasGroupJuego.interactable = true;
-        canvasGroupJuego.gameObject.SetActive(true);
-
-        ShowPasos(countPasos);
-
-        for (ushort i = 0; i < canvasCartas.Length; i++)
-        {
-            canvasCartas[i].GetComponent<GraphicRaycaster>().enabled = true;
-
-        }
-
-    }
-
-
-    private void DesactivarCanvasJuego()
-    {
-
-        //canvasGroupJuego.gameObject.SetActive(false);
-        isCanvasJuegoActive = false;
-        canvasGroupJuego.alpha = 0;
-        canvasGroupJuego.blocksRaycasts = false;
-        canvasGroupJuego.interactable = false;
-
-        canvasGroupJuego.gameObject.SetActive(false);
-
-        for (ushort i = 0; i < canvasCartas.Length; i++)
-        {
-            canvasCartas[i].GetComponent<GraphicRaycaster>().enabled = false;
-        
-        }
-
-    }
 
 
 
@@ -726,6 +598,182 @@ public class GameLogic : MonoBehaviour
     
     
     }
+
+
+    private void DisableRaycastTarget()
+    {
+        for (ushort i = 0; i < cartas.Length; i++)
+        {
+            cartas[i].raycastTarget = false;
+
+        }
+
+    }
+
+    public void EnableRaycastTarget()
+    {
+        for (ushort i = 0; i < cartas.Length; i++)
+        {
+            cartas[i].raycastTarget = true;
+
+        }
+
+    }
+
+    private async void MalClick(int posicion)
+    {
+
+        //int pos = posicion - 1;
+        var tempSprite = cartas[posicion].sprite;
+        cartas[posicion].sprite = malClickSprite;
+        await UniTask.Delay(TimeSpan.FromMilliseconds(500));
+        cartas[posicion].sprite = tempSprite;
+
+
+
+
+    }
+
+
+    public void QuitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+    Application.Quit();
+#endif
+
+
+    }
+
+    public void DesactivarCanvasElegirPersonaje()
+    {
+
+        isCanvasElegirPersonajeActive = false;
+        canvasGroupEleccionPersonakes.alpha = 0;
+        canvasGroupEleccionPersonakes.blocksRaycasts = false;
+        canvasGroupEleccionPersonakes.interactable = false;
+
+        canvasGroupEleccionPersonakes.gameObject.SetActive(false);
+
+        for (ushort i = 0; i < canvasCartasPersonajes.Length; i++)
+        {
+            canvasCartasPersonajes[i].GetComponent<GraphicRaycaster>().enabled = false;
+
+        }
+
+
+
+    }
+
+    private void ActivarCanvasElegirPersonaje()
+    {
+
+        isCanvasElegirPersonajeActive = true;
+        canvasGroupEleccionPersonakes.alpha = 1;
+        canvasGroupEleccionPersonakes.blocksRaycasts = true;
+        canvasGroupEleccionPersonakes.interactable = true;
+
+        canvasGroupEleccionPersonakes.gameObject.SetActive(true);
+
+        for (ushort i = 0; i < canvasCartasPersonajes.Length; i++)
+        {
+            canvasCartasPersonajes[i].GetComponent<GraphicRaycaster>().enabled = true;
+            cartasPersonajes[i].raycastTarget = true;
+        }
+
+
+
+    }
+
+    private void ActivarCanvasJuego()
+    {
+
+        //canvasGroupJuego.gameObject.SetActive(false);
+        isCanvasJuegoActive = true;
+        canvasGroupJuego.alpha = 1;
+        canvasGroupJuego.blocksRaycasts = true;
+        canvasGroupJuego.interactable = true;
+        canvasGroupJuego.gameObject.SetActive(true);
+
+        ShowPasos(countPasos);
+
+        for (ushort i = 0; i < canvasCartas.Length; i++)
+        {
+            canvasCartas[i].GetComponent<GraphicRaycaster>().enabled = true;
+
+        }
+
+    }
+
+
+    private void DesactivarCanvasJuego()
+    {
+
+        //canvasGroupJuego.gameObject.SetActive(false);
+        isCanvasJuegoActive = false;
+        canvasGroupJuego.alpha = 0;
+        canvasGroupJuego.blocksRaycasts = false;
+        canvasGroupJuego.interactable = false;
+
+        canvasGroupJuego.gameObject.SetActive(false);
+
+        for (ushort i = 0; i < canvasCartas.Length; i++)
+        {
+            canvasCartas[i].GetComponent<GraphicRaycaster>().enabled = false;
+
+        }
+
+    }
+
+
+    private void ScaleAllGameCards(int scale)
+    {
+        for (ushort i = 0; i < cartasRect.Length; i++)
+        {
+
+            cartasRect[i].localScale = new Vector3(scale, scale, scale);
+
+        }
+
+
+    }
+
+    private void ScaleAllPersonajesCards(int scale)
+    {
+        for (ushort i = 0; i < cartasRectPersonajes.Length; i++)
+        {
+
+            cartasRectPersonajes[i].localScale = new Vector3(scale, scale, scale);
+
+        }
+
+
+    }
+
+    //private void InsertarCarta()
+    //{
+    //    bool insertado = false;
+
+    //    while (insertado == false)
+    //    {
+    //        int rnd = UnityEngine.Random.Range(0, imagesCartas.Length);
+    //        if (listCards.Contains(rnd) == false)
+    //        {
+
+    //            listCards.Add(rnd);
+    //            //cartas[i].color = Color.black;
+    //            poolImages.Add(imagesCartas[rnd]);
+    //            //cartas[i].sprite = imagesCartas[rnd];
+
+
+    //            insertado = true;
+    //        }
+
+    //    }
+
+
+    //}
 
 
 }

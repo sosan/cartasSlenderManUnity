@@ -76,15 +76,6 @@ MonoBehaviour:
     startNewGame: 0
     isVisited: 0
     imagenBosque: {fileID: 21300000, guid: 5f6cf9d835f450541b50deb32a0ada3c, type: 3}
-  - name: forest8
-    mezclar: 0
-    cartasMezclar: 
-    bombilla: 0
-    fear: 0
-    startPosition: 1
-    startNewGame: 0
-    isVisited: 0
-    imagenBosque: {fileID: 21300000, guid: 8b58a172cb828d14a8f5213db48e712d, type: 3}
   - name: forest9
     mezclar: 0
     cartasMezclar: 
