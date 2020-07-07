@@ -199,7 +199,7 @@ public class GenerateAnimations : MonoBehaviour
 
     }
 
-    public async void ProcessCardAugmeted(int posicion, string nombreClip)
+    public async void GenerateAnimationDesAumentar(int posicion, string nombreClip)
     {
 
         

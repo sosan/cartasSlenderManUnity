@@ -70,7 +70,7 @@ public class MouseManager : MonoBehaviour
 
         if (gameLogic.isAugmented == true && gameLogic.isCanvasJuegoActive == true)
         {
-            generateAnimations.ProcessCardAugmeted(gameLogic.currentPositionPlayer, "desaugmentar_carta");
+            generateAnimations.GenerateAnimationDesAumentar(gameLogic.currentPositionPlayer, "desaugmentar_carta");
         }
 
         if (gameLogic.isAugmented == true && gameLogic.isCanvasElegirPersonajeActive == true)

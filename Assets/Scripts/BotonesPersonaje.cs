@@ -61,14 +61,52 @@ public class BotonesPersonaje : MonoBehaviour
 
     }
 
-    public void ShowStatsPersonajePrincipal(Personajes personajePrincipalStats)
+    public void SetIniitialStatsPersonajePrincipal(Personajes personajePrincipalStats)
     {
 
         statsJugador.bombillasMax = personajePrincipalStats.bombilla;
         statsJugador.tokensMax = personajePrincipalStats.token;
+        statsJugador.tokensCurrent = 0;
+        statsJugador.bombillasCurrent = 0;
+
+        ShowStatsPersonajePrincipal();
+
+    }
+
+    public void SumarBombillas()
+    {
+
+        if (statsJugador.bombillasCurrent < statsJugador.bombillasMax)
+        { 
         
+            statsJugador.bombillasCurrent++;
+            ShowStatsPersonajePrincipal();
+        
+        }
+
+    }
+
+
+    public void SumarFear()
+    {
+
+        if (statsJugador.tokensCurrent < statsJugador.tokensMax)
+        { 
+        
+            statsJugador.tokensCurrent++;
+            ShowStatsPersonajePrincipal();
+    
+        
+        }
+
+    }
+
+    public void ShowStatsPersonajePrincipal()
+    {
+
         bombillasText.text = statsJugador.bombillasCurrent + " / " + statsJugador.bombillasMax;
         tokensText.text = statsJugador.tokensCurrent + " / " + statsJugador.tokensMax;
+
 
     }
 

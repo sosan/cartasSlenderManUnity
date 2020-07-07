@@ -117,6 +117,39 @@ public class GameLogic : MonoBehaviour
 
     }
 
+    private void ProcessAugmentedCard(int posicion)
+    {
+        isAugmented = false;
+        currentPositionPlayer = posicion;
+        generateAnimations.GenerateAnimationDesAumentar(currentPositionPlayer, "desaugmentar_carta");
+        if (clickedCardButtons[currentPositionPlayer].cartasBosque.mezclar == true)
+        {
+
+
+            print("mezlcar ");
+
+        }
+        else if (clickedCardButtons[currentPositionPlayer].cartasBosque.bombilla == true)
+        {
+            botonesPersonaje.SumarBombillas();
+
+        }
+        else if (clickedCardButtons[currentPositionPlayer].cartasBosque.fear == true && clickedCardButtons[currentPositionPlayer].cartasBosque.startNewGame == true)
+        {
+
+
+            print("nueva partida");
+
+        }
+        else if (clickedCardButtons[currentPositionPlayer].cartasBosque.startPosition == true)
+        {
+
+            print("start position");
+
+        }
+
+
+    }
 
     public async void Click_Carta(int posicion)
     {
@@ -131,11 +164,9 @@ public class GameLogic : MonoBehaviour
 
         if (isAugmented == true)
         {
-            isAugmented = false;
-            currentPositionPlayer = posicion - 1;
-            generateAnimations.ProcessCardAugmeted(currentPositionPlayer, "desaugmentar_carta");
-
+            ProcessAugmentedCard(posicion - 1);
             return;
+
         }
 
         if (lastPositionPlayer == -1)
@@ -212,10 +243,7 @@ public class GameLogic : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromMilliseconds(fullDurationClip - 100));
 
         currentPositionPlayer = posicion - 1;
-        print("currentPositionPlayer=" + currentPositionPlayer + " cartas.leng=" + cartas.Length + " pollimgaescount=" + poolImages.Count);
-        print("currentPositionPlayer=" + currentPositionPlayer + " cartas.leng=" + cartas.Length + " pollimgaescount=" + poolImages.Count);
-        print("currentPositionPlayer=" + currentPositionPlayer + " cartas.leng=" + cartas.Length + " pollimgaescount=" + poolImages.Count);
-
+        
         clickedCardButtons[currentPositionPlayer].cartasBosque.isVisited = true;
 
         cartas[currentPositionPlayer].sprite = poolImages[currentPositionPlayer];
@@ -492,7 +520,7 @@ public class GameLogic : MonoBehaviour
         personajeSeleccionado.sprite = poolImagesPersonajes[currentPositionPlayer];
 
         int posInRandomArray = listCardsPersonajes[currentPositionPlayer];
-        botonesPersonaje.ShowStatsPersonajePrincipal(personajesStats.personajes[posInRandomArray]);
+        botonesPersonaje.SetIniitialStatsPersonajePrincipal(personajesStats.personajes[posInRandomArray]);
 
 
         //botonesPersonaje.statsJugador.bombillas = personajesStats.personajes[posInRandomArray].bombilla;
