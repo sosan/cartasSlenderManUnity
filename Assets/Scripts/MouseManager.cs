@@ -11,6 +11,7 @@ public class MouseManager : MonoBehaviour
 
     private InputActions inputActions;
     [SerializeField] private GameLogic gameLogic = null;
+    [SerializeField] private GenerateAnimations generateAnimations = null;
     [SerializeField] private Camera camara = null;
     [SerializeField] private ParticleSystem clickParticleJuego = null;
     [SerializeField] private RectTransform particleRecJuego = null;
@@ -69,7 +70,7 @@ public class MouseManager : MonoBehaviour
 
         if (gameLogic.isAugmented == true && gameLogic.isCanvasJuegoActive == true)
         {
-            gameLogic.ProcessCardAugmeted(gameLogic.currentPositionPlayer, "desaugmentar_carta");
+            generateAnimations.ProcessCardAugmeted(gameLogic.currentPositionPlayer, "desaugmentar_carta");
         }
 
         if (gameLogic.isAugmented == true && gameLogic.isCanvasElegirPersonajeActive == true)

@@ -13,6 +13,8 @@ public class ClickedCardButton : MonoBehaviour, IPointerClickHandler
 
     [SerializeField] private GameLogic gameLogic = null;
 
+    public CartasBosque cartasBosque = new CartasBosque();
+
 
     private void Start()
     {

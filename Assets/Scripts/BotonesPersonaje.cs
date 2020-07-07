@@ -6,15 +6,21 @@ using UnityEngine.UI;
 
 public class StatsJugador
 {
-    public short tokens;
-    public short bombillas;
+    public short tokensMax;
+    public short tokensCurrent;
+
+    public short bombillasMax;
+    public short bombillasCurrent;
 
     public StatsJugador() { }
 
-    public StatsJugador(short tokens, short bombillas)
+    public StatsJugador(short tokensMax, short tokensCurrent, short bombillaMax, short bombillasCurrent)
     {
-        this.tokens = tokens;
-        this.bombillas = bombillas;
+        this.tokensMax = tokensMax;
+        this.tokensCurrent = tokensCurrent;
+
+        this.bombillasMax = bombillaMax;
+        this.bombillasCurrent = bombillasCurrent;
     
     }
 
@@ -34,7 +40,7 @@ public class BotonesPersonaje : MonoBehaviour
     [SerializeField] private Image personajeSeleccionado = null;
 
 
-    public StatsJugador statsJugador = new StatsJugador(3, 3);
+    public StatsJugador statsJugador = new StatsJugador(2, 0, 2, 0);
 
     // Start is called before the first frame update
     void Start()
@@ -58,22 +64,22 @@ public class BotonesPersonaje : MonoBehaviour
     public void ShowStatsPersonajePrincipal(Personajes personajePrincipalStats)
     {
 
-        statsJugador.bombillas = personajePrincipalStats.bombilla;
-        statsJugador.tokens = personajePrincipalStats.token;
+        statsJugador.bombillasMax = personajePrincipalStats.bombilla;
+        statsJugador.tokensMax = personajePrincipalStats.token;
         
-        bombillasText.text = "X" + personajePrincipalStats.bombilla;
-        tokensText.text = "X" + personajePrincipalStats.token;
+        bombillasText.text = statsJugador.bombillasCurrent + " / " + statsJugador.bombillasMax;
+        tokensText.text = statsJugador.tokensCurrent + " / " + statsJugador.tokensMax;
 
     }
 
     public void ResetStatsPersonajePrincipal()
     {
 
-        statsJugador.bombillas = 0;
-        statsJugador.tokens = 0;
+        statsJugador.bombillasCurrent = 0;
+        statsJugador.tokensCurrent = 0;
 
-        bombillasText.text = "X0";
-        tokensText.text = "X0";
+        bombillasText.text = statsJugador.bombillasCurrent + " / " + statsJugador.bombillasMax;
+        tokensText.text = statsJugador.tokensCurrent + " / " + statsJugador.tokensMax;
 
         personajeSeleccionado.sprite = gameLogic.whiteBackgroundCard;
 
