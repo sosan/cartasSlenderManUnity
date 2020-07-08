@@ -40,14 +40,14 @@ public class GenerateAnimations : MonoBehaviour
             keysX[2] = new Keyframe(0.38f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
             keysX[3] = new Keyframe(0.58f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
             keysX[4] = new Keyframe(timeRot, 500);
-            keysX[5] = new Keyframe(1.40f, gameLogic.posicionPlayer[i].anchoredPosition.x);
+            keysX[5] = new Keyframe(1.40f, gameLogic.initialCardPosition[i].anchoredPosition.x);
 
             keysY[0] = new Keyframe(0f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
             keysY[1] = new Keyframe(0.18f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
             keysY[2] = new Keyframe(0.38f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
             keysY[3] = new Keyframe(0.58f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
             keysY[4] = new Keyframe(timeRot, 250);
-            keysY[5] = new Keyframe(1.40f, gameLogic.posicionPlayer[i].anchoredPosition.y);
+            keysY[5] = new Keyframe(1.40f, gameLogic.initialCardPosition[i].anchoredPosition.y);
 
 
             Keyframe[] keysRotX = new Keyframe[11];
@@ -199,7 +199,7 @@ public class GenerateAnimations : MonoBehaviour
 
     }
 
-    public async void GenerateAnimationDesAumentar(int posicion, string nombreClip)
+    public AnimationClip GenerateAnimationDesAumentar(int posicion, string nombreClip)
     {
 
         
@@ -218,8 +218,8 @@ public class GenerateAnimations : MonoBehaviour
         keysY[0] = new Keyframe(0f, gameLogic.cartasRect[posicion].anchoredPosition.y);
         keysZ[0] = new Keyframe(0f, 0);
 
-        keysX[1] = new Keyframe(0.3f, gameLogic.posicionPlayer[posicion].anchoredPosition.x);
-        keysY[1] = new Keyframe(0.3f, gameLogic.posicionPlayer[posicion].anchoredPosition.y);
+        keysX[1] = new Keyframe(0.3f, gameLogic.initialCardPosition[posicion].anchoredPosition.x);
+        keysY[1] = new Keyframe(0.3f, gameLogic.initialCardPosition[posicion].anchoredPosition.y);
         keysZ[1] = new Keyframe(0.3f, 0);
 
         Keyframe[] keysScaleX = new Keyframe[2];
@@ -251,13 +251,9 @@ public class GenerateAnimations : MonoBehaviour
         clip.SetCurve(nombreCarta, typeof(Transform), "localScale.y", curveScaley);
         clip.SetCurve(nombreCarta, typeof(Transform), "localScale.z", curveScalez);
 
-        anim.AddClip(clip, clip.name);
-        anim.Play(clip.name);
-        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip(clip.name).length * 1000));
 
-        gameLogic.EnableRaycastTarget();
-        gameLogic.canvasCartas[posicion].sortingOrder = 0;
-
+        return clip;
+        
 
     }
 
@@ -508,6 +504,105 @@ public class GenerateAnimations : MonoBehaviour
 
         return clip;
 
+
+    }
+
+
+    public AnimationClip GenerateAnimationCartasMezclar(int[] posiciones)
+    {
+
+        AnimationClip clip = new AnimationClip
+        {
+            name = "cartas_mezclas_algunas",
+            legacy = true,
+
+            wrapMode = WrapMode.Once
+        };
+
+        for (ushort i = 0; i < posiciones.Length; i++)
+        {
+
+            //if (posiciones[i] - 1 != i) continue;
+
+
+            Keyframe[] keysX = new Keyframe[6];
+            Keyframe[] keysY = new Keyframe[6];
+
+            float timeRot = 1.05f;
+
+            int posCart = posiciones[i] - 1;
+
+            keysX[0] = new Keyframe(0f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
+            keysX[1] = new Keyframe(0.18f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
+            keysX[2] = new Keyframe(0.38f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
+            keysX[3] = new Keyframe(0.58f, UnityEngine.Random.Range(rangoXMin, rangoXMax));
+            keysX[4] = new Keyframe(timeRot, 500);
+            keysX[5] = new Keyframe(1.40f, gameLogic.initialCardPosition[posCart].anchoredPosition.x);
+
+            keysY[0] = new Keyframe(0f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
+            keysY[1] = new Keyframe(0.18f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
+            keysY[2] = new Keyframe(0.38f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
+            keysY[3] = new Keyframe(0.58f, UnityEngine.Random.Range(rangoYMin, rangoYMax));
+            keysY[4] = new Keyframe(timeRot, 250);
+            keysY[5] = new Keyframe(1.40f, gameLogic.initialCardPosition[posCart].anchoredPosition.y);
+
+
+            Keyframe[] keysRotX = new Keyframe[11];
+            Keyframe[] keysRotY = new Keyframe[11];
+            Keyframe[] keysRotZ = new Keyframe[11];
+            Keyframe[] keysRotW = new Keyframe[11];
+
+
+
+            Quaternion initialRotation = Quaternion.Euler(0, 0, 0);
+
+            Quaternion rotationCard = Quaternion.identity;
+            float angle = 90f;
+            Vector3 axisForward = Vector3.forward;
+            float timeSumed = 0.03f;
+
+            for (int k = 0; k < 7; k++)
+            {
+                rotationCard = Quaternion.AngleAxis(angle * k, axisForward);
+
+                keysRotX[k] = new Keyframe(timeRot, rotationCard.x);
+                keysRotY[k] = new Keyframe(timeRot, rotationCard.y);
+                keysRotZ[k] = new Keyframe(timeRot, rotationCard.z);
+                keysRotW[k] = new Keyframe(timeRot, rotationCard.w);
+
+                timeRot += timeSumed;
+            }
+
+
+            keysRotX[10] = new Keyframe(timeRot, initialRotation.x);
+            keysRotY[10] = new Keyframe(timeRot, initialRotation.y);
+            keysRotZ[10] = new Keyframe(timeRot, initialRotation.z);
+            keysRotW[10] = new Keyframe(timeRot, initialRotation.w);
+
+            AnimationCurve curvex = new AnimationCurve(keysX);
+            AnimationCurve curvey = new AnimationCurve(keysY);
+
+
+            AnimationCurve curveRotx = new AnimationCurve(keysRotX);
+            AnimationCurve curveRoty = new AnimationCurve(keysRotY);
+            AnimationCurve curveRotz = new AnimationCurve(keysRotZ);
+            AnimationCurve curveRotw = new AnimationCurve(keysRotW);
+
+            string nombreCarta = "--Juego/carta_" + posiciones[i];
+            clip.SetCurve(nombreCarta, typeof(RectTransform), "m_AnchoredPosition.x", curvex);
+            clip.SetCurve(nombreCarta, typeof(RectTransform), "m_AnchoredPosition.y", curvey);
+
+
+
+            clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.x", curveRotx);
+            clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.y", curveRoty);
+            clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.z", curveRotz);
+            clip.SetCurve(nombreCarta, typeof(Transform), "localRotation.w", curveRotw);
+
+
+        }
+
+        return clip;
 
     }
 

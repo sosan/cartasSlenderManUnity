@@ -15,7 +15,7 @@ MonoBehaviour:
   cartasBosque:
   - name: forest1
     mezclar: 1
-    cartasMezclar: 0000000003000000060000000700000008000000
+    cartasMezclar: 0100000004000000070000000800000009000000
     bombilla: 0
     fear: 0
     startPosition: 0
@@ -24,7 +24,7 @@ MonoBehaviour:
     imagenBosque: {fileID: 21300000, guid: fee5f469ef996164dbae697d107ad976, type: 3}
   - name: forest2
     mezclar: 1
-    cartasMezclar: 0000000001000000020000000500000008000000
+    cartasMezclar: 0100000002000000030000000600000009000000
     bombilla: 0
     fear: 0
     startPosition: 0
@@ -33,7 +33,7 @@ MonoBehaviour:
     imagenBosque: {fileID: 21300000, guid: 3f03669bce2e3284e9bf014bb77d4430, type: 3}
   - name: forest3
     mezclar: 1
-    cartasMezclar: 0000000002000000040000000600000008000000
+    cartasMezclar: 0100000003000000050000000700000009000000
     bombilla: 0
     fear: 0
     startPosition: 0
@@ -85,3 +85,12 @@ MonoBehaviour:
     startNewGame: 1
     isVisited: 0
     imagenBosque: {fileID: 21300000, guid: 877eb1629882f6642bcf93ba5a713143, type: 3}
+  - name: forest8
+    mezclar: 0
+    cartasMezclar: 
+    bombilla: 0
+    fear: 0
+    startPosition: 1
+    startNewGame: 0
+    isVisited: 0
+    imagenBosque: {fileID: 21300000, guid: 8b58a172cb828d14a8f5213db48e712d, type: 3}

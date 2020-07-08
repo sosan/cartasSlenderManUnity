@@ -59,7 +59,7 @@ public class MouseManager : MonoBehaviour
         
 
 #if UNITY_EDITOR
-        print("clicked");
+        print("clicked from mousemanager");
 #endif
 
 #if UNITY_ANDROID && !(UNITY_STANDALONE || UNITY_EDITOR)
@@ -70,7 +70,10 @@ public class MouseManager : MonoBehaviour
 
         if (gameLogic.isAugmented == true && gameLogic.isCanvasJuegoActive == true)
         {
-            generateAnimations.GenerateAnimationDesAumentar(gameLogic.currentPositionPlayer, "desaugmentar_carta");
+            gameLogic.ProcessAugmentedCard(gameLogic.currentPositionPlayer);
+
+
+            //generateAnimations.GenerateAnimationDesAumentar(gameLogic.currentPositionPlayer, "desaugmentar_carta");
         }
 
         if (gameLogic.isAugmented == true && gameLogic.isCanvasElegirPersonajeActive == true)

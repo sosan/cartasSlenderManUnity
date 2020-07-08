@@ -176,7 +176,7 @@ PrefabInstance:
     - target: {fileID: 548568269098883342, guid: 64cbf16729050e34c8bc01d20634ba1d,
         type: 3}
       propertyPath: m_RootOrder
-      value: 29
+      value: 28
       objectReference: {fileID: 0}
     - target: {fileID: 548568269098883342, guid: 64cbf16729050e34c8bc01d20634ba1d,
         type: 3}
@@ -1880,7 +1880,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 5f6cf9d835f450541b50deb32a0ada3c, type: 3}
   - {fileID: 21300000, guid: 877eb1629882f6642bcf93ba5a713143, type: 3}
   canvasGroupJuego: {fileID: 1715123445}
-  posicionPlayer:
+  initialCardPosition:
   - {fileID: 1819657730}
   - {fileID: 1755718707}
   - {fileID: 2109414564}
@@ -7549,7 +7549,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1715123444}
-  m_RootOrder: 28
+  m_RootOrder: 29
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -11764,8 +11764,8 @@ RectTransform:
   - {fileID: 746668072}
   - {fileID: 1255081282}
   - {fileID: 1803385403}
-  - {fileID: 971563609}
   - {fileID: 895202612}
+  - {fileID: 971563609}
   - {fileID: 691958903}
   - {fileID: 1475511489}
   - {fileID: 443125156}

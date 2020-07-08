@@ -33,7 +33,7 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private List<Sprite> poolImages = new List<Sprite>();
     [SerializeField] private Sprite[] imagesCartas = null;
     [SerializeField] private CanvasGroup canvasGroupJuego = null;
-    [SerializeField] public RectTransform[] posicionPlayer = null;
+    [SerializeField] public RectTransform[] initialCardPosition = null;
     [SerializeField] private RectTransform recPlayer = null;
     [SerializeField] private Animation anim = null;
     [SerializeField] private ClickedCardButton[] clickedCardButtons = null;
@@ -117,16 +117,42 @@ public class GameLogic : MonoBehaviour
 
     }
 
-    private void ProcessAugmentedCard(int posicion)
+    public async void ProcessAugmentedCard(int posicion)
     {
+        
+
         isAugmented = false;
         currentPositionPlayer = posicion;
-        generateAnimations.GenerateAnimationDesAumentar(currentPositionPlayer, "desaugmentar_carta");
+        AnimationClip clip = generateAnimations.GenerateAnimationDesAumentar(currentPositionPlayer, "desaugmentar_carta");
+
+        anim.AddClip(clip, clip.name);
+        float tiempoClip = (anim.GetClip(clip.name).length * 1000) + 500; 
+
+        anim.Play(clip.name);
+        await UniTask.Delay(TimeSpan.FromMilliseconds(tiempoClip));
+
+        EnableRaycastTarget();
+        canvasCartas[posicion].sortingOrder = 0;
+
         if (clickedCardButtons[currentPositionPlayer].cartasBosque.mezclar == true)
         {
+            
+
+            print("mezlcar anim");
+            clip = generateAnimations.GenerateAnimationCartasMezclar(clickedCardButtons[currentPositionPlayer].cartasBosque.cartasMezclar);
+            anim.AddClip(clip, clip.name);
+            anim.Play(clip.name);
+
+            //si esta en caraA volver a background
+            SetBackgroundSpecificCards(clickedCardButtons[currentPositionPlayer].cartasBosque.cartasMezclar);
+
+            //mezclar las posiciones de las cartas
 
 
-            print("mezlcar ");
+
+            return;
+            
+
 
         }
         else if (clickedCardButtons[currentPositionPlayer].cartasBosque.bombilla == true)
@@ -155,7 +181,7 @@ public class GameLogic : MonoBehaviour
     {
 
 # if UNITY_EDITOR
-        print("clicked" + " position=" + posicion + " lastPositionPlayer=" + lastPositionPlayer);
+        print("clicked from gamelogic" + "// position=" + posicion + " lastPositionPlayer=" + lastPositionPlayer + " estamezclado=" + estaMezclando);
 #endif
         if (estaMezclando == true || posicion < 1 || posicion > 8) return;
 
@@ -331,9 +357,10 @@ public class GameLogic : MonoBehaviour
         estaMezclando = false;
     }
 
-    public async void SeccionJuego()
-    {
 
+    private void SetBackgroundAllCards()
+    { 
+    
         for (ushort i = 0; i < cartas.Length; i++)
         {
             outlineCards[i].enabled = false;
@@ -345,9 +372,30 @@ public class GameLogic : MonoBehaviour
 
         }
 
-        
+    
+    }
 
 
+    private void SetBackgroundSpecificCards(int[] posiciones)
+    {
+
+        for (ushort i = 0; i < posiciones.Length; i++)
+        {
+
+            int index = posiciones[i] - 1;
+            cartas[index].sprite = blackBackgroundCard;
+            canvasCartas[index].sortingOrder = 0;
+
+
+        }
+
+    }
+
+    public async void SeccionJuego()
+    {
+
+
+        SetBackgroundAllCards();
         await UniTask.Delay(TimeSpan.FromMilliseconds(150));
 
         anim.Play("aparecerCanvasJuego");
@@ -404,13 +452,13 @@ public class GameLogic : MonoBehaviour
         }
 
 
-        listCards.AddRange(new int[8] {0, 1, 2, 3, 4, 5, 6, 7 });
+        listCards.AddRange(new int[9] { 0, 1, 2, 3, 4, 5, 6, 7, 8 }); 
 
         for (ushort i = 0; i < bosqueStats.cartasBosque.Length; i++)
         {
             cartasRect[i].rotation = Quaternion.Euler(0, 0, 0);
 
-            int rnd = UnityEngine.Random.Range(i, bosqueStats.cartasBosque.Length);
+            int rnd = UnityEngine.Random.Range(i, bosqueStats.cartasBosque.Length - 1);
 
             var tempCard = listCards[rnd];
             listCards[rnd] = listCards[i];
@@ -420,8 +468,6 @@ public class GameLogic : MonoBehaviour
             rndImgaes[rnd] = rndImgaes[i];
             rndImgaes[i] = tempSpite;
 
-            //listCards.Add(rnd);
-            //poolImages.Add(imagesCartas[rnd]);
 
         }
 
@@ -444,8 +490,8 @@ public class GameLogic : MonoBehaviour
 
         }
 
-        clickedCardButtons[clickedCardButtons.Length - 1].cartasBosque.isVisited = false;
-        clickedCardButtons[clickedCardButtons.Length - 1].cartasBosque.startPosition = true;
+        //clickedCardButtons[clickedCardButtons.Length - 1].cartasBosque.isVisited = false;
+        //clickedCardButtons[clickedCardButtons.Length - 1].cartasBosque.startPosition = true;
 
 
         estaMezclando = false;
