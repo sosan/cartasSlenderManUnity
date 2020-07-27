@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UniRx.Async;
+using Cysharp.Threading.Tasks;
 using System;
 
 using GlobalActions;
@@ -27,10 +27,11 @@ public class GameLogic : MonoBehaviour
     public int lastPositionPlayer = 8;
 
     [Header("Juego")]
+    [SerializeField] public CartasBosque[] cartasStats = null;
     [SerializeField] public Image[] cartas = null;
     [SerializeField] public RectTransform[] cartasRect = null;
     [SerializeField] public Canvas[] canvasCartas = null;
-    [SerializeField] private List<Sprite> poolImages = new List<Sprite>();
+    //[SerializeField] private List<Sprite> poolImages = new List<Sprite>();
     [SerializeField] private Sprite[] imagesCartas = null;
     [SerializeField] private CanvasGroup canvasGroupJuego = null;
     [SerializeField] public RectTransform[] initialCardPosition = null;
@@ -61,31 +62,48 @@ public class GameLogic : MonoBehaviour
     [Header("pasos")]
     [SerializeField] private TextMeshProUGUI textoPasos = null;
 
+    [Header("Botones New Game/Quit")]
+    [SerializeField] private Canvas canvasNewGame = null;
+    [SerializeField] private Canvas canvasQuit = null;
+    [SerializeField] private GameObject panelGameover = null;
+    [SerializeField] private TextMeshProUGUI textoGameOver = null;
+    [SerializeField] private Canvas canvasTextoGameOver = null;
+
+    [Header("Panel Volver a elegir")]
+    [SerializeField] private GameObject panelVovlerElegir = null;
+    [SerializeField] private TextMeshProUGUI textoVolverElegir = null;
+
     private ushort countPasos = 0;
     private List<int> listCards = new List<int>();
     private List<int> listCardsPersonajes = new List<int>();
     public bool clickedCard = false;
-    public bool estaMezclando = true;
+    public bool estaMezclando = false;
 
-   
 
+    public bool isGameOver = false;
     public bool isAugmented = false;
     public bool isCanvasJuegoActive = false;
     public bool isCanvasElegirPersonajeActive = false;
+    public const int MAXPASOS = 10;
 
+
+    private List<int[]> queueSuffle = new List<int[]>();
+    private bool volverElegir = false;
 
     private void Awake()
     {
         Application.targetFrameRate = 60;
 
+        cartasStats = new CartasBosque[9];
         canvasGroupJuego.alpha = 0;
         canvasGroupEleccionPersonakes.alpha = 0;
+        panelVovlerElegir.SetActive(false);
+        textoVolverElegir.text = "";
+        volverElegir = false;
 
 
         for (ushort i = 0; i < cartas.Length; i++)
         {
-
-
             outlineCards[i].enabled = false;
 
         }
@@ -106,6 +124,16 @@ public class GameLogic : MonoBehaviour
 
     public async void Click_NewGame()
     {
+        //if (estaMezclando == true) return;
+
+        isGameOver = false;
+        estaMezclando = false;
+        volverElegir = false;
+        queueSuffle.Clear();
+        panelVovlerElegir.SetActive(false);
+        textoVolverElegir.text = "";
+
+        countPasos = 0;
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(300));
 
@@ -115,18 +143,32 @@ public class GameLogic : MonoBehaviour
         DesactivarCanvasJuego();
         SeccionElegirPersonaje();
 
+        textoGameOver.color = new Color(textoGameOver.color.r, textoGameOver.color.g, textoGameOver.color.b, 0);
+        canvasNewGame.sortingOrder = 0;
+        canvasQuit.sortingOrder = 0;
+        canvasTextoGameOver.sortingOrder = 0;
     }
 
     public async void ProcessAugmentedCard(int posicion)
     {
-        
+        print("bombilla=" + cartasStats[currentPositionPlayer].bombilla +
+            "mezclar" + cartasStats[currentPositionPlayer].mezclar
 
-        isAugmented = false;
+            );
+
+        if (cartasStats[currentPositionPlayer].mezclar == true)
+        {
+            volverElegir = true;
+            textoVolverElegir.text = Localization.Get("volver_escoger");
+            panelVovlerElegir.SetActive(true);
+        }
+
+            isAugmented = false;
         currentPositionPlayer = posicion;
         AnimationClip clip = generateAnimations.GenerateAnimationDesAumentar(currentPositionPlayer, "desaugmentar_carta");
 
         anim.AddClip(clip, clip.name);
-        float tiempoClip = (anim.GetClip(clip.name).length * 1000) + 500; 
+        float tiempoClip = (anim.GetClip(clip.name).length * 1000) + 300; 
 
         anim.Play(clip.name);
         await UniTask.Delay(TimeSpan.FromMilliseconds(tiempoClip));
@@ -134,45 +176,31 @@ public class GameLogic : MonoBehaviour
         EnableRaycastTarget();
         canvasCartas[posicion].sortingOrder = 0;
 
-        if (clickedCardButtons[currentPositionPlayer].cartasBosque.mezclar == true)
+        if (cartasStats[currentPositionPlayer].mezclar == true)
         {
-            
-
-            print("mezlcar anim");
-            clip = generateAnimations.GenerateAnimationCartasMezclar(clickedCardButtons[currentPositionPlayer].cartasBosque.cartasMezclar);
-            anim.AddClip(clip, clip.name);
-            anim.Play(clip.name);
-
-            //si esta en caraA volver a background
-            SetBackgroundSpecificCards(clickedCardButtons[currentPositionPlayer].cartasBosque.cartasMezclar);
-
-            //mezclar las posiciones de las cartas
-
-
-
+            queueSuffle.Add(cartasStats[currentPositionPlayer].cartasMezclar);
             return;
-            
-
 
         }
-        else if (clickedCardButtons[currentPositionPlayer].cartasBosque.bombilla == true)
+        else if (cartasStats[currentPositionPlayer].bombilla == true)
         {
+            print("bombilla");
             botonesPersonaje.SumarBombillas();
 
         }
-        else if (clickedCardButtons[currentPositionPlayer].cartasBosque.fear == true && clickedCardButtons[currentPositionPlayer].cartasBosque.startNewGame == true)
-        {
+        //else if (clickedCardButtons[currentPositionPlayer].cartasBosque.fear == true && clickedCardButtons[currentPositionPlayer].cartasBosque.startNewGame == true)
+        //{
 
 
-            print("nueva partida");
+        //    print("nueva partida");
 
-        }
-        else if (clickedCardButtons[currentPositionPlayer].cartasBosque.startPosition == true)
-        {
+        //}
+        //else if (clickedCardButtons[currentPositionPlayer].cartasBosque.startPosition == true)
+        //{
 
-            print("start position");
+        //    print("start position");
 
-        }
+        //}
 
 
     }
@@ -183,17 +211,89 @@ public class GameLogic : MonoBehaviour
 # if UNITY_EDITOR
         print("clicked from gamelogic" + "// position=" + posicion + " lastPositionPlayer=" + lastPositionPlayer + " estamezclado=" + estaMezclando);
 #endif
-        if (estaMezclando == true || posicion < 1 || posicion > 8) return;
 
-        
+        if (isGameOver == true) return;
+        if (estaMezclando == true) return;
+        if (posicion < 1 || posicion > 8) return;
 
+        estaMezclando = true;
 
         if (isAugmented == true)
         {
+
+            print("is augmented desde gamelogic");
+            estaMezclando = false;
             ProcessAugmentedCard(posicion - 1);
+            
+
+            if (queueSuffle.Count > 0)
+            {
+
+                for (ushort i = 0; i < cartas.Length; i++)
+                {
+                    cartas[i].raycastTarget = false;
+                
+                }
+
+                await UniTask.Delay(1000);
+                panelVovlerElegir.SetActive(true);
+                print("mezlcar anim");
+                AnimationClip clipo = generateAnimations.GenerateAnimationCartasMezclar(queueSuffle[0]);
+                anim.AddClip(clipo, clipo.name);
+                anim.Play(clipo.name);
+
+                //si esta en caraA volver a background
+                SetBackgroundSpecificCards(queueSuffle[0]);
+
+                //print("antes");
+                //for (ushort i = 0; i < cartasStats.Length; i++)
+                //{
+                //    print("i=" + i + " name=" + cartasStats[i].name);
+                //}
+
+
+                SuffleSelectedCards(queueSuffle[0]);
+
+                //print("despues");
+                //for (ushort i = 0; i < cartasStats.Length; i++)
+                //{
+                //    print("i=" + i + " name=" + cartasStats[i].name);
+                //}
+
+
+                for (ushort i = 0; i < cartas.Length; i++)
+                {
+                    cartas[i].raycastTarget = true;
+
+                }
+
+
+                queueSuffle.RemoveAt(0);
+
+                if (queueSuffle.Count > 0)
+                {
+                    volverElegir = true;
+                    textoVolverElegir.text = Localization.Get("volver_escoger");
+                    panelVovlerElegir.SetActive(true);
+
+                }
+                else
+                { 
+                    if (volverElegir == true)
+                    {
+                        volverElegir = false;
+                        panelVovlerElegir.SetActive(false);
+                
+                    }
+                
+                }
+            }
+
+
             return;
 
         }
+
 
         if (lastPositionPlayer == -1)
         {
@@ -202,33 +302,41 @@ public class GameLogic : MonoBehaviour
         }
         else
         {
-            if (lastPositionPlayer == posicion - 1) return;
 
-            if (clickedCardButtons[posicion - 1].cartasBosque.isVisited == true)
+            if (lastPositionPlayer == posicion - 1) 
             {
+                estaMezclando = false; 
+                return; 
+            };
+
+            if (cartasStats[posicion - 1].isVisited == true)
+            {
+                estaMezclando = false;
                 MalClick(posicion - 1);
                 return;
 
             }
 
+           
+
+
             switch (lastPositionPlayer)
             {
-                case 0: if (posicion == 5 || posicion == 6 || posicion == 8 || posicion == 9) { MalClick(posicion - 1); return; } break;
-                case 1: if (posicion == 4 || posicion == 6 || posicion == 7 || posicion == 9) { MalClick(posicion - 1); return; } break;
-                case 2: if (posicion == 4 || posicion == 5 || posicion == 7 || posicion == 8) { MalClick(posicion - 1); return; } break;
-                case 3: if (posicion == 2 || posicion == 3 || posicion == 8 || posicion == 9) { MalClick(posicion - 1); return; } break;
-                case 4: if (posicion == 1 || posicion == 3 || posicion == 7 || posicion == 9) { MalClick(posicion - 1); return; } break;
-                case 5: if (posicion == 1 || posicion == 2 || posicion == 7 || posicion == 8) { MalClick(posicion - 1); return; } break;
-                case 6: if (posicion == 2 || posicion == 3 || posicion == 5 || posicion == 6) { MalClick(posicion - 1); return; } break;
-                case 7: if (posicion == 1 || posicion == 3 || posicion == 4 || posicion == 6) { MalClick(posicion - 1); return; } break;
-                case 8: if (posicion == 1 || posicion == 2 || posicion == 4 || posicion == 5) { MalClick(posicion - 1); return; } break;
+                case 0: if (posicion == 5 || posicion == 6 || posicion == 8 || posicion == 9) { estaMezclando = false; MalClick(posicion - 1); return; } break;
+                case 1: if (posicion == 4 || posicion == 6 || posicion == 7 || posicion == 9) { estaMezclando = false; MalClick(posicion - 1); return; } break;
+                case 2: if (posicion == 4 || posicion == 5 || posicion == 7 || posicion == 8) { estaMezclando = false; MalClick(posicion - 1); return; } break;
+                case 3: if (posicion == 2 || posicion == 3 || posicion == 8 || posicion == 9) { estaMezclando = false; MalClick(posicion - 1); return; } break;
+                case 4: if (posicion == 1 || posicion == 3 || posicion == 7 || posicion == 9) { estaMezclando = false; MalClick(posicion - 1); return; } break;
+                case 5: if (posicion == 1 || posicion == 2 || posicion == 7 || posicion == 8) { estaMezclando = false; MalClick(posicion - 1); return; } break;
+                case 6: if (posicion == 2 || posicion == 3 || posicion == 5 || posicion == 6) { estaMezclando = false; MalClick(posicion - 1); return; } break;
+                case 7: if (posicion == 1 || posicion == 3 || posicion == 4 || posicion == 6) { estaMezclando = false; MalClick(posicion - 1); return; } break;
+                case 8: if (posicion == 1 || posicion == 2 || posicion == 4 || posicion == 5) { estaMezclando = false; MalClick(posicion - 1); return; } break;
 
             }
 
 
             outlineCards[lastPositionPlayer].GetComponent<Image>().enabled = false;
 
-            //string nombreclipLastPosition = "carta_giro_" + (lastPositionPlayer + 1);
 
             AnimationClip clipTemp = generateAnimations.GenerateClipAnimation(lastPositionPlayer, "giro_carta_lastposition", false);
 
@@ -238,7 +346,8 @@ public class GameLogic : MonoBehaviour
             //anim.Play(nombreclipLastPosition);
             await UniTask.Delay(TimeSpan.FromSeconds(anim.GetClip(clipTemp.name).length));
             cartasRect[lastPositionPlayer].rotation = Quaternion.Euler(0, 0, 0);
-            cartas[lastPositionPlayer].sprite = blackBackgroundCard;
+            SetBlackBackgrounAllCards();
+            //cartas[lastPositionPlayer].sprite = blackBackgroundCard;
             anim.RemoveClip(clipTemp);
 
         }
@@ -269,10 +378,22 @@ public class GameLogic : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromMilliseconds(fullDurationClip - 100));
 
         currentPositionPlayer = posicion - 1;
-        
-        clickedCardButtons[currentPositionPlayer].cartasBosque.isVisited = true;
 
-        cartas[currentPositionPlayer].sprite = poolImages[currentPositionPlayer];
+        cartasStats[currentPositionPlayer].isVisited = true;
+        cartasStats[currentPositionPlayer].whatPasoIsVisited = countPasos;
+
+        //desactivar los visitados
+        for (ushort i = 0; i < cartasStats.Length; i++)
+        { 
+            if (((countPasos - 2) < cartasStats[i].whatPasoIsVisited) && (cartasStats[i].isVisited == true))
+            {
+                print("cambiado=" + cartasStats[i].name);
+                cartasStats[i].whatPasoIsVisited = 0;
+                cartasStats[i].isVisited = false;
+            }
+        }
+
+        cartas[currentPositionPlayer].sprite = cartasStats[currentPositionPlayer].imagenBosque; // poolImages[currentPositionPlayer];
 
         await UniTask.Delay(TimeSpan.FromMilliseconds(restDurationClip + 200));
 
@@ -297,6 +418,25 @@ public class GameLogic : MonoBehaviour
         //clickedCard = false;
 
 
+        if (cartasStats[posicion - 1].startNewGame == true)
+        {
+            GameOver();
+            return;
+
+        }
+
+        if (countPasos >= MAXPASOS)
+        {
+            countPasos = 0;
+            ShowGanador();
+            return;
+        
+        }
+
+
+        
+
+        estaMezclando = false;
 
 
     }
@@ -307,6 +447,7 @@ public class GameLogic : MonoBehaviour
     private async void SeccionElegirPersonaje()
     {
 
+        estaMezclando = true;
 
         for (ushort i = 0; i < cartasPersonajes.Length; i++)
         {
@@ -333,7 +474,6 @@ public class GameLogic : MonoBehaviour
         anim.Play("aparecerCanvasPersonajes");
         await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasPersonajes").length * 1000));
 
-        estaMezclando = true;
         currentPositionPlayer = -1;
         isAugmented = false;
 
@@ -375,6 +515,17 @@ public class GameLogic : MonoBehaviour
     
     }
 
+    private void SetBlackBackgrounAllCards()
+    {
+
+        for (ushort i = 0; i < cartas.Length; i++)
+        {
+            cartas[i].sprite = blackBackgroundCard;
+            canvasCartas[i].sortingOrder = 0;
+
+        }
+
+    }
 
     private void SetBackgroundSpecificCards(int[] posiciones)
     {
@@ -386,6 +537,40 @@ public class GameLogic : MonoBehaviour
             cartas[index].sprite = blackBackgroundCard;
             canvasCartas[index].sortingOrder = 0;
 
+
+        }
+
+    }
+
+    private void SuffleSelectedCards(int[] posiciones)
+    {
+
+        panelVovlerElegir.SetActive(true);
+        textoVolverElegir.text = Localization.Get("mezclar_cartas");
+
+
+        //jl 13/07/2020. quedado aqui
+        for (ushort i = 0; i < posiciones.Length - 1; i++)
+        {
+
+            cartasRect[posiciones[i] - 1].rotation = Quaternion.Euler(0, 0, 0);
+
+            int rndPos = UnityEngine.Random.Range(i, posiciones.Length - 1);
+
+            int indexRandom = posiciones[rndPos] - 1;
+            int indexCurrent = posiciones[i] - 1;
+
+            //var tempSprite = poolImages[indexRandom];
+            //poolImages[indexRandom] = poolImages[indexCurrent];
+            //poolImages[indexCurrent] = tempSprite;
+
+            var tempCartaStat = cartasStats[indexRandom];
+            cartasStats[indexRandom] = cartasStats[indexCurrent];
+            cartasStats[indexCurrent] = tempCartaStat;
+
+            var value = posiciones[rndPos];
+            posiciones[rndPos] = posiciones[i];
+            posiciones[i] = value;  
 
         }
 
@@ -406,7 +591,7 @@ public class GameLogic : MonoBehaviour
         isCanvasElegirPersonajeActive = false;
         isCanvasJuegoActive = true;
 
-        poolImages.Clear();
+        //poolImages.Clear();
 
         estaMezclando = true;
         lastPositionPlayer = 8;
@@ -444,21 +629,24 @@ public class GameLogic : MonoBehaviour
 
         List<Sprite> rndImgaes = new List<Sprite>();
 
-        for (ushort i = 0; i < bosqueStats.cartasBosque.Length; i++)
+        for (ushort i = 0; i < bosqueStats.cartasBosqueFijas.Length; i++)
         {
-            rndImgaes.Add(bosqueStats.cartasBosque[i].imagenBosque );
-            //rndImgaes.AddRange(imagesCartas);
-        
+            rndImgaes.Add(bosqueStats.cartasBosqueFijas[i].imagenBosque );
+            cartasStats[i] = bosqueStats.cartasBosqueFijas[i];
+            listCards.Add(i);
         }
 
 
-        listCards.AddRange(new int[9] { 0, 1, 2, 3, 4, 5, 6, 7, 8 }); 
-
-        for (ushort i = 0; i < bosqueStats.cartasBosque.Length; i++)
+        //listCards.AddRange(new int[9] { 0, 1, 2, 3, 4, 5, 6, 7, 8 }); 
+        //jl 24/07/2020. quedado aqui------------
+        for (ushort i = 0; i < bosqueStats.cartasBosqueFijas.Length; i++)
         {
             cartasRect[i].rotation = Quaternion.Euler(0, 0, 0);
 
-            int rnd = UnityEngine.Random.Range(i, bosqueStats.cartasBosque.Length - 1);
+            int rnd = UnityEngine.Random.Range(i, bosqueStats.cartasBosqueFijas.Length - 1);
+
+           
+
 
             var tempCard = listCards[rnd];
             listCards[rnd] = listCards[i];
@@ -472,7 +660,7 @@ public class GameLogic : MonoBehaviour
         }
 
 
-        poolImages.AddRange(rndImgaes);
+        //poolImages.AddRange(rndImgaes);
 
         outlineCards[outlineCards.Length - 1].enabled = true;
         outlineCards[outlineCards.Length - 1].GetComponent<Image>().enabled = true;
@@ -483,9 +671,9 @@ public class GameLogic : MonoBehaviour
         for (ushort i = 0; i < listCards.Count; i++)
         {
             int posicionCartasBosque = listCards[i];
-            clickedCardButtons[i].cartasBosque = bosqueStats.cartasBosque[posicionCartasBosque];
+            cartasStats[i] = bosqueStats.cartasBosqueFijas[posicionCartasBosque];
 
-            clickedCardButtons[i].cartasBosque.isVisited = false;
+            cartasStats[i].isVisited = false;
 
 
         }
@@ -537,6 +725,9 @@ public class GameLogic : MonoBehaviour
     public async void ClickedSelectPersonaje(int posicion)
     {
         print("cliecked seelect personaje");
+
+        if (estaMezclando == true) return;
+
         if (isAugmented == true)
         {
             currentPositionPlayer = -1;
@@ -669,9 +860,12 @@ public class GameLogic : MonoBehaviour
 
     }
 
+
+    
+
     private void ShowPasos(ushort contadorPasos)
     {
-        textoPasos.text = Localization.Get("pasos") + " " + contadorPasos + " / 10";
+        textoPasos.text = Localization.Get("pasos") + " " + contadorPasos + " / " + MAXPASOS;
     
     
     }
@@ -699,7 +893,7 @@ public class GameLogic : MonoBehaviour
 
     private async void MalClick(int posicion)
     {
-
+        estaMezclando = false;
         //int pos = posicion - 1;
         var tempSprite = cartas[posicion].sprite;
         cartas[posicion].sprite = malClickSprite;
@@ -707,6 +901,47 @@ public class GameLogic : MonoBehaviour
         cartas[posicion].sprite = tempSprite;
 
 
+
+
+    }
+
+
+  
+
+    private void GameOver()
+    {
+
+        isGameOver = true;
+        estaMezclando = false;
+
+        //await UniTask.Delay(TimeSpan.FromMilliseconds(500));
+
+        canvasTextoGameOver.sortingOrder = 100;
+        canvasNewGame.sortingOrder = 100;
+        canvasQuit.sortingOrder = 100;
+
+
+        textoGameOver.text = Localization.Get("gameover");
+        anim.Play("gameover");
+    
+    
+    }
+
+
+    private void ShowGanador()
+    {
+
+        isGameOver = true;
+        estaMezclando = false;
+        countPasos = 0;
+
+        canvasTextoGameOver.sortingOrder = 100;
+        canvasNewGame.sortingOrder = 100;
+        canvasQuit.sortingOrder = 100;
+
+
+        textoGameOver.text = Localization.Get("ganador");
+        anim.Play("gameover");
 
 
     }

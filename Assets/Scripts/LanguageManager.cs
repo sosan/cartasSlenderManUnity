@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using System;
-using UniRx.Async;
+using Cysharp.Threading.Tasks;
 
 public class LanguageManager : MonoBehaviour
 {

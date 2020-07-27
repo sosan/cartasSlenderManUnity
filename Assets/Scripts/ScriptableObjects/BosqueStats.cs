@@ -14,6 +14,7 @@ public struct CartasBosque
     public bool startPosition;
     public bool startNewGame;
     public bool isVisited;
+    public int whatPasoIsVisited;
     public Sprite imagenBosque;
 
     
@@ -25,6 +26,6 @@ public struct CartasBosque
 public sealed class BosqueStats : ScriptableObject
 {
     [Header("[Cartas Bosque]")]
-    public CartasBosque[] cartasBosque;
+    public CartasBosque[] cartasBosqueFijas;
 
 }

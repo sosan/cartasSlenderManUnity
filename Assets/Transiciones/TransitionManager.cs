@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
-using UniRx.Async;
+using Cysharp.Threading.Tasks;
 
 [ExecuteInEditMode]
 public class TransitionManager : MonoBehaviour

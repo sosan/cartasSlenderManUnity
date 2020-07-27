@@ -41,11 +41,6 @@ public class MouseManager : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void MouseMovement(InputAction.CallbackContext obj)
     {
@@ -55,11 +50,12 @@ public class MouseManager : MonoBehaviour
 
     private void Clicked(InputAction.CallbackContext obj)
     {
-
+        if (gameLogic.isGameOver == true) return;
+        if (gameLogic.estaMezclando == true) return;
         
 
 #if UNITY_EDITOR
-        print("clicked from mousemanager");
+        //print("clicked from mousemanager");
 #endif
 
 #if UNITY_ANDROID && !(UNITY_STANDALONE || UNITY_EDITOR)
@@ -68,18 +64,18 @@ public class MouseManager : MonoBehaviour
 #endif
 
 
-        if (gameLogic.isAugmented == true && gameLogic.isCanvasJuegoActive == true)
-        {
-            gameLogic.ProcessAugmentedCard(gameLogic.currentPositionPlayer);
-
-
-            //generateAnimations.GenerateAnimationDesAumentar(gameLogic.currentPositionPlayer, "desaugmentar_carta");
-        }
+        //if (gameLogic.isAugmented == true && gameLogic.isCanvasJuegoActive == true)
+        //{
+        //    gameLogic.ProcessAugmentedCard(gameLogic.currentPositionPlayer);
+        //}
 
         if (gameLogic.isAugmented == true && gameLogic.isCanvasElegirPersonajeActive == true)
         {
+
+            print("es augemented desde mousemanager");
             gameLogic.DesactivarCanvasElegirPersonaje();
             gameLogic.SeccionJuego();
+            
         }
 
 

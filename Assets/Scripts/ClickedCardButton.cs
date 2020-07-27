@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ClickedCardButton : MonoBehaviour, IPointerClickHandler
+public class ClickedCardButton : MonoBehaviour //, IPointerClickHandler
 {
     //[SerializeField] private RectTransform viewport = null;
 
@@ -13,7 +13,7 @@ public class ClickedCardButton : MonoBehaviour, IPointerClickHandler
 
     [SerializeField] private GameLogic gameLogic = null;
 
-    public CartasBosque cartasBosque = new CartasBosque();
+    //public CartasBosque cartasBosque = new CartasBosque();
 
 
     private void Start()
@@ -23,24 +23,24 @@ public class ClickedCardButton : MonoBehaviour, IPointerClickHandler
 
 
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
+    //public void OnPointerClick(PointerEventData eventData)
+    //{
+    //    print("onpointerclick");
+    //    //if (clickParticle == false || gameLogic == false) return;
 
-        if (clickParticle == false || gameLogic == false) return;
+    //    //if (gameLogic.clickedCard == true || gameLogic.estaMezclando == true || gameLogi.isGameOver == true) return;
 
-        if (gameLogic.clickedCard == true || gameLogic.estaMezclando == true) return;
+    //    //if (clickParticle.isPlaying == false)
+    //    //{
 
-        if (clickParticle.isPlaying == false)
-        {
+    //    //    var pos = eventData.pressEventCamera.ScreenToWorldPoint(eventData.position);
+    //    //    pos.z = 0;
+    //    //    particleRec.position = pos;
+    //    //    clickParticle.Play();
 
-            var pos = eventData.pressEventCamera.ScreenToWorldPoint(eventData.position);
-            pos.z = 0;
-            particleRec.position = pos;
-            clickParticle.Play();
+    //    //}
 
-        }
-
-    }
+    //}
 
    
 
