@@ -10,6 +10,7 @@ using UnityEngine.InputSystem;
 using UnityEditor;
 using System.Linq;
 using TMPro;
+using System.Reflection;
 
 public class GameLogic : MonoBehaviour
 {
@@ -89,6 +90,8 @@ public class GameLogic : MonoBehaviour
 
     private List<int[]> queueSuffle = new List<int[]>();
     private bool volverElegir = false;
+    private const ushort MAX_RONDAS = 2;
+
 
     private void Awake()
     {
@@ -149,6 +152,92 @@ public class GameLogic : MonoBehaviour
         canvasTextoGameOver.sortingOrder = 0;
     }
 
+
+    public async void SeccionJuego()
+    {
+
+        SetBackgroundAllCards();
+        await UniTask.Delay(TimeSpan.FromMilliseconds(150));
+
+        anim.Play("aparecerCanvasJuego");
+        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasJuego").length * 1000));
+
+        ActivarCanvasJuego();
+
+        isCanvasElegirPersonajeActive = false;
+        isCanvasJuegoActive = true;
+
+        estaMezclando = true;
+        lastPositionPlayer = 8;
+        currentPositionPlayer = -1;
+        isAugmented = false;
+
+        EnableRaycastTarget();
+
+
+        cartas[cartas.Length - 1].sprite = spritePuntoInicio;
+        ScaleAllGameCards(1);
+
+        anim.RemoveClip("cartas_mezcla_runtime");
+        generateAnimations.GenerateCartasJuegosMezcla();
+
+        anim.Play("cartas_mezcla_runtime");
+        await UniTask.Delay(TimeSpan.FromSeconds(anim.GetClip("cartas_mezcla_runtime").length));
+
+        listCards.Clear();
+
+        List<Sprite> rndImgaes = new List<Sprite>();
+
+        for (ushort i = 0; i < bosqueStats.cartasBosqueFijas.Length; i++)
+        {
+            rndImgaes.Add(bosqueStats.cartasBosqueFijas[i].imagenBosque);
+            cartasStats[i] = bosqueStats.cartasBosqueFijas[i];
+
+            listCards.Add(i);
+        }
+
+
+        for (ushort i = 0; i < bosqueStats.cartasBosqueFijas.Length; i++)
+        {
+            cartasRect[i].rotation = Quaternion.Euler(0, 0, 0);
+
+            int rnd = UnityEngine.Random.Range(i, bosqueStats.cartasBosqueFijas.Length - 1);
+
+            var tempCard = listCards[rnd];
+            listCards[rnd] = listCards[i];
+            listCards[i] = tempCard;
+
+            var tempSpite = rndImgaes[rnd];
+            rndImgaes[rnd] = rndImgaes[i];
+            rndImgaes[i] = tempSpite;
+
+
+        }
+
+
+        outlineCards[outlineCards.Length - 1].enabled = true;
+        outlineCards[outlineCards.Length - 1].GetComponent<Image>().enabled = true;
+
+        animsCards[outlineCards.Length - 1].Play("carta_outline");
+
+
+        for (ushort i = 0; i < listCards.Count; i++)
+        {
+            int posicionCartasBosque = listCards[i];
+            cartasStats[i] = bosqueStats.cartasBosqueFijas[posicionCartasBosque];
+
+            cartasStats[i].isVisited = false;
+
+
+        }
+
+        ActualizarImagenes();
+
+        estaMezclando = false;
+    }
+
+
+
     public async void ProcessAugmentedCard(int posicion)
     {
         print("bombilla=" + cartasStats[currentPositionPlayer].bombilla +
@@ -163,7 +252,7 @@ public class GameLogic : MonoBehaviour
             panelVovlerElegir.SetActive(true);
         }
 
-            isAugmented = false;
+        isAugmented = false;
         currentPositionPlayer = posicion;
         AnimationClip clip = generateAnimations.GenerateAnimationDesAumentar(currentPositionPlayer, "desaugmentar_carta");
 
@@ -205,16 +294,20 @@ public class GameLogic : MonoBehaviour
 
     }
 
-    public async void Click_Carta(int posicion)
+
+   
+
+
+    public async void Click_Carta(int currentPosition)
     {
 
 # if UNITY_EDITOR
-        print("clicked from gamelogic" + "// position=" + posicion + " lastPositionPlayer=" + lastPositionPlayer + " estamezclado=" + estaMezclando);
+        print("clicked from gamelogic" + "// position=" + currentPosition + " lastPositionPlayer=" + lastPositionPlayer + " estamezclado=" + estaMezclando);
 #endif
 
         if (isGameOver == true) return;
         if (estaMezclando == true) return;
-        if (posicion < 1 || posicion > 8) return;
+        if (currentPosition < 0 || currentPosition > 8) return;
 
         estaMezclando = true;
 
@@ -223,7 +316,7 @@ public class GameLogic : MonoBehaviour
 
             print("is augmented desde gamelogic");
             estaMezclando = false;
-            ProcessAugmentedCard(posicion - 1);
+            ProcessAugmentedCard(currentPosition);
             
 
             if (queueSuffle.Count > 0)
@@ -245,21 +338,7 @@ public class GameLogic : MonoBehaviour
                 //si esta en caraA volver a background
                 SetBackgroundSpecificCards(queueSuffle[0]);
 
-                //print("antes");
-                //for (ushort i = 0; i < cartasStats.Length; i++)
-                //{
-                //    print("i=" + i + " name=" + cartasStats[i].name);
-                //}
-
-
                 SuffleSelectedCards(queueSuffle[0]);
-
-                //print("despues");
-                //for (ushort i = 0; i < cartasStats.Length; i++)
-                //{
-                //    print("i=" + i + " name=" + cartasStats[i].name);
-                //}
-
 
                 for (ushort i = 0; i < cartas.Length; i++)
                 {
@@ -295,42 +374,39 @@ public class GameLogic : MonoBehaviour
         }
 
 
-        if (lastPositionPlayer == -1)
+        if (lastPositionPlayer == currentPosition)
         {
-            lastPositionPlayer = posicion - 1;
+            //lastPositionPlayer = currentPosition - 1;
+            estaMezclando = false;
+            return;
 
         }
         else
         {
 
-            if (lastPositionPlayer == posicion - 1) 
-            {
-                estaMezclando = false; 
-                return; 
-            };
 
-            if (cartasStats[posicion - 1].isVisited == true)
+            if (cartasStats[currentPosition].isVisited == true)
             {
                 estaMezclando = false;
-                MalClick(posicion - 1);
+                MalClick(currentPosition);
                 return;
 
             }
 
-           
 
 
+            //jl. matriz corregida
             switch (lastPositionPlayer)
             {
-                case 0: if (posicion == 5 || posicion == 6 || posicion == 8 || posicion == 9) { estaMezclando = false; MalClick(posicion - 1); return; } break;
-                case 1: if (posicion == 4 || posicion == 6 || posicion == 7 || posicion == 9) { estaMezclando = false; MalClick(posicion - 1); return; } break;
-                case 2: if (posicion == 4 || posicion == 5 || posicion == 7 || posicion == 8) { estaMezclando = false; MalClick(posicion - 1); return; } break;
-                case 3: if (posicion == 2 || posicion == 3 || posicion == 8 || posicion == 9) { estaMezclando = false; MalClick(posicion - 1); return; } break;
-                case 4: if (posicion == 1 || posicion == 3 || posicion == 7 || posicion == 9) { estaMezclando = false; MalClick(posicion - 1); return; } break;
-                case 5: if (posicion == 1 || posicion == 2 || posicion == 7 || posicion == 8) { estaMezclando = false; MalClick(posicion - 1); return; } break;
-                case 6: if (posicion == 2 || posicion == 3 || posicion == 5 || posicion == 6) { estaMezclando = false; MalClick(posicion - 1); return; } break;
-                case 7: if (posicion == 1 || posicion == 3 || posicion == 4 || posicion == 6) { estaMezclando = false; MalClick(posicion - 1); return; } break;
-                case 8: if (posicion == 1 || posicion == 2 || posicion == 4 || posicion == 5) { estaMezclando = false; MalClick(posicion - 1); return; } break;
+                case 0: if (currentPosition != 1 & currentPosition != 3) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                case 1: if (currentPosition != 0 && currentPosition != 2 && currentPosition != 4) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                case 2: if (currentPosition != 1 && currentPosition != 5) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                case 3: if (currentPosition != 0 && currentPosition != 4 && currentPosition != 6) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                case 4: if (currentPosition != 1 && currentPosition != 7 && currentPosition != 3 && currentPosition != 5) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                case 5: if (currentPosition != 2 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                case 6: if (currentPosition != 3 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                case 7: if (currentPosition != 6 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                case 8: if (currentPosition != 5 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
 
             }
 
@@ -343,16 +419,14 @@ public class GameLogic : MonoBehaviour
             anim.AddClip(clipTemp, clipTemp.name);
             anim.Play(clipTemp.name);
 
-            //anim.Play(nombreclipLastPosition);
             await UniTask.Delay(TimeSpan.FromSeconds(anim.GetClip(clipTemp.name).length));
             cartasRect[lastPositionPlayer].rotation = Quaternion.Euler(0, 0, 0);
             SetBlackBackgrounAllCards();
-            //cartas[lastPositionPlayer].sprite = blackBackgroundCard;
             anim.RemoveClip(clipTemp);
 
         }
 
-        
+        //var ptr = typeof(Application).GetMethod("Click_Carta").MethodHandle.GetFunctionPointer();
 
         isAugmented = true;
         countPasos++;
@@ -364,40 +438,39 @@ public class GameLogic : MonoBehaviour
         animsCards[outlineCards.Length - 1].Stop("carta_outline");
         
         DisableRaycastTarget();
-        
 
-        canvasCartas[posicion - 1].sortingOrder = 1;
+        canvasCartas[currentPosition].sortingOrder = 1;
 
-        AnimationClip clip = generateAnimations.GenerateClipAnimation(posicion - 1, "giro_carta_siguiente", true);
+        AnimationClip clip = generateAnimations.GenerateClipAnimation(currentPosition, "giro_carta_siguiente", true);
 
-        float fullDurationClip = clip.length * 1000; //anim.GetClip("carta_giro").length * 1000;
+        float fullDurationClip = clip.length * 1000;
         float restDurationClip = fullDurationClip - 100;
 
         anim.AddClip(clip, clip.name);
         anim.Play(clip.name);
         await UniTask.Delay(TimeSpan.FromMilliseconds(fullDurationClip - 100));
 
-        currentPositionPlayer = posicion - 1;
+        currentPositionPlayer = currentPosition;
 
         cartasStats[currentPositionPlayer].isVisited = true;
         cartasStats[currentPositionPlayer].whatPasoIsVisited = countPasos;
 
-        //desactivar los visitados
-        for (ushort i = 0; i < cartasStats.Length; i++)
-        { 
-            if (((countPasos - 2) < cartasStats[i].whatPasoIsVisited) && (cartasStats[i].isVisited == true))
+        //desactivar los visitados despues de 2 rondas
+        for (ushort j = 0; j < cartasStats.Length; j++)
+        {
+            if (cartasStats[j].whatPasoIsVisited == countPasos) continue;
+
+            if ((countPasos - cartasStats[j].whatPasoIsVisited) > MAX_RONDAS)
             {
-                print("cambiado=" + cartasStats[i].name);
-                cartasStats[i].whatPasoIsVisited = 0;
-                cartasStats[i].isVisited = false;
+                print("cambiado=" + cartasStats[j].name);
+                cartasStats[j].whatPasoIsVisited = 0;
+                cartasStats[j].isVisited = false;
             }
         }
 
-        cartas[currentPositionPlayer].sprite = cartasStats[currentPositionPlayer].imagenBosque; // poolImages[currentPositionPlayer];
-
+        cartas[currentPositionPlayer].sprite = cartasStats[currentPositionPlayer].imagenBosque;
         await UniTask.Delay(TimeSpan.FromMilliseconds(restDurationClip + 200));
 
-        //comentario temporal
         anim.RemoveClip(clip);
 
         cartasRect[currentPositionPlayer].rotation = Quaternion.Euler(0, 0, 0);
@@ -418,7 +491,7 @@ public class GameLogic : MonoBehaviour
         //clickedCard = false;
 
 
-        if (cartasStats[posicion - 1].startNewGame == true)
+        if (cartasStats[currentPositionPlayer].startNewGame == true)
         {
             GameOver();
             return;
@@ -434,7 +507,7 @@ public class GameLogic : MonoBehaviour
         }
 
 
-        
+        ActualizarImagenes();
 
         estaMezclando = false;
 
@@ -505,7 +578,7 @@ public class GameLogic : MonoBehaviour
         {
             outlineCards[i].enabled = false;
             outlineCards[i].GetComponent<Image>().enabled = false;
-            cartas[i].sprite = blackBackgroundCard;
+            //cartas[i].sprite = blackBackgroundCard;
             canvasCartas[i].sortingOrder = 0;
 
             
@@ -520,7 +593,7 @@ public class GameLogic : MonoBehaviour
 
         for (ushort i = 0; i < cartas.Length; i++)
         {
-            cartas[i].sprite = blackBackgroundCard;
+            //cartas[i].sprite = blackBackgroundCard;
             canvasCartas[i].sortingOrder = 0;
 
         }
@@ -534,7 +607,7 @@ public class GameLogic : MonoBehaviour
         {
 
             int index = posiciones[i] - 1;
-            cartas[index].sprite = blackBackgroundCard;
+            //cartas[index].sprite = blackBackgroundCard;
             canvasCartas[index].sortingOrder = 0;
 
 
@@ -550,12 +623,12 @@ public class GameLogic : MonoBehaviour
 
 
         //jl 13/07/2020. quedado aqui
-        for (ushort i = 0; i < posiciones.Length - 1; i++)
+        for (ushort i = 0; i < posiciones.Length ; i++)
         {
 
             cartasRect[posiciones[i] - 1].rotation = Quaternion.Euler(0, 0, 0);
 
-            int rndPos = UnityEngine.Random.Range(i, posiciones.Length - 1);
+            int rndPos = UnityEngine.Random.Range(i, posiciones.Length);
 
             int indexRandom = posiciones[rndPos] - 1;
             int indexCurrent = posiciones[i] - 1;
@@ -567,6 +640,7 @@ public class GameLogic : MonoBehaviour
             var tempCartaStat = cartasStats[indexRandom];
             cartasStats[indexRandom] = cartasStats[indexCurrent];
             cartasStats[indexCurrent] = tempCartaStat;
+            cartasStats[indexCurrent].isVisited = false;
 
             var value = posiciones[rndPos];
             posiciones[rndPos] = posiciones[i];
@@ -574,115 +648,21 @@ public class GameLogic : MonoBehaviour
 
         }
 
+        //TODO: quitar
+        ActualizarImagenes();
+
+
     }
 
-    public async void SeccionJuego()
+    private void ActualizarImagenes()
     {
 
-
-        SetBackgroundAllCards();
-        await UniTask.Delay(TimeSpan.FromMilliseconds(150));
-
-        anim.Play("aparecerCanvasJuego");
-        await UniTask.Delay(TimeSpan.FromMilliseconds(anim.GetClip("aparecerCanvasJuego").length * 1000));
-
-        ActivarCanvasJuego();
-
-        isCanvasElegirPersonajeActive = false;
-        isCanvasJuegoActive = true;
-
-        //poolImages.Clear();
-
-        estaMezclando = true;
-        lastPositionPlayer = 8;
-        currentPositionPlayer = -1;
-        isAugmented = false;
-
-        EnableRaycastTarget();
-
-
-        cartas[cartas.Length - 1].sprite = spritePuntoInicio;
-
-
-        ScaleAllGameCards(1);
-
-        anim.RemoveClip("cartas_mezcla_runtime");
-        generateAnimations.GenerateCartasJuegosMezcla();
-
-        anim.Play("cartas_mezcla_runtime");
-        await UniTask.Delay(TimeSpan.FromSeconds(anim.GetClip("cartas_mezcla_runtime").length));
-
+        for (ushort i = 0; i < cartasStats.Length; i++)
+        {
+            cartas[i].sprite = cartasStats[i].imagenBosque;
         
-
-        listCards.Clear();
-
-
-        //for (ushort i = 0; i < cartas.Length; i++)
-        //{
-        //    cartasRect[i].rotation = Quaternion.Euler(0, 0, 0);
-        //    InsertarCarta();
-
-
-        //}
-
-        //---
-
-        List<Sprite> rndImgaes = new List<Sprite>();
-
-        for (ushort i = 0; i < bosqueStats.cartasBosqueFijas.Length; i++)
-        {
-            rndImgaes.Add(bosqueStats.cartasBosqueFijas[i].imagenBosque );
-            cartasStats[i] = bosqueStats.cartasBosqueFijas[i];
-            listCards.Add(i);
         }
-
-
-        //listCards.AddRange(new int[9] { 0, 1, 2, 3, 4, 5, 6, 7, 8 }); 
-        //jl 24/07/2020. quedado aqui------------
-        for (ushort i = 0; i < bosqueStats.cartasBosqueFijas.Length; i++)
-        {
-            cartasRect[i].rotation = Quaternion.Euler(0, 0, 0);
-
-            int rnd = UnityEngine.Random.Range(i, bosqueStats.cartasBosqueFijas.Length - 1);
-
-           
-
-
-            var tempCard = listCards[rnd];
-            listCards[rnd] = listCards[i];
-            listCards[i] = tempCard;
-
-            var tempSpite = rndImgaes[rnd];
-            rndImgaes[rnd] = rndImgaes[i];
-            rndImgaes[i] = tempSpite;
-
-
-        }
-
-
-        //poolImages.AddRange(rndImgaes);
-
-        outlineCards[outlineCards.Length - 1].enabled = true;
-        outlineCards[outlineCards.Length - 1].GetComponent<Image>().enabled = true;
-
-        animsCards[outlineCards.Length - 1].Play("carta_outline");
-
-
-        for (ushort i = 0; i < listCards.Count; i++)
-        {
-            int posicionCartasBosque = listCards[i];
-            cartasStats[i] = bosqueStats.cartasBosqueFijas[posicionCartasBosque];
-
-            cartasStats[i].isVisited = false;
-
-
-        }
-
-        //clickedCardButtons[clickedCardButtons.Length - 1].cartasBosque.isVisited = false;
-        //clickedCardButtons[clickedCardButtons.Length - 1].cartasBosque.startPosition = true;
-
-
-        estaMezclando = false;
+    
     }
 
    
