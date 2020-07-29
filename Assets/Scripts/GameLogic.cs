@@ -69,6 +69,10 @@ public class GameLogic : MonoBehaviour
     [SerializeField] private GameObject panelGameover = null;
     [SerializeField] private TextMeshProUGUI textoGameOver = null;
     [SerializeField] private Canvas canvasTextoGameOver = null;
+    [SerializeField] private TextMeshProUGUI textoBotonNuevaPartida = null;
+    
+    
+    //public ushort currentRondas = 0;
 
     [Header("Panel Volver a elegir")]
     [SerializeField] private GameObject panelVovlerElegir = null;
@@ -81,6 +85,7 @@ public class GameLogic : MonoBehaviour
     public bool estaMezclando = false;
 
 
+    public bool isRoundOver = false;
     public bool isGameOver = false;
     public bool isAugmented = false;
     public bool isCanvasJuegoActive = false;
@@ -90,7 +95,7 @@ public class GameLogic : MonoBehaviour
 
     private List<int[]> queueSuffle = new List<int[]>();
     private bool volverElegir = false;
-    private const ushort MAX_RONDAS = 2;
+    private const ushort MAX_TIRADAS = 2;
 
 
     private void Awake()
@@ -113,6 +118,8 @@ public class GameLogic : MonoBehaviour
 
         //GenerateCartasPersonajesMezcla("cartaspersonajes_mezcla_runtime");
         generateAnimations.GenerateCartasJuegosMezcla();
+        textoBotonNuevaPartida.text = Localization.Get("newgame");
+
 
     }
 
@@ -125,16 +132,59 @@ public class GameLogic : MonoBehaviour
     {
     }
 
-    public async void Click_NewGame()
+    public async void Click_NewGame(bool isClicked)
     {
         //if (estaMezclando == true) return;
 
+        if (isClicked == true)
+        {
+            if (isGameOver == true)
+            {
+                InitNewGame();
+                return;
+
+            }
+
+        }
+
+        if (isRoundOver == true)
+        {
+            isRoundOver = false;
+            isGameOver = false;
+            countPasos = 0;
+            queueSuffle.Clear();
+            panelVovlerElegir.SetActive(false);
+            textoVolverElegir.text = "";
+            textoBotonNuevaPartida.text = Localization.Get("newgame");
+            await UniTask.Delay(TimeSpan.FromMilliseconds(300));
+
+
+            currentPositionPlayer = -1;
+            DesactivarCanvasElegirPersonaje();
+            SeccionJuego();
+            return;
+
+
+        }
+        else
+        {
+
+            InitNewGame();
+        }
+
+    }
+
+    private async void InitNewGame()
+    {
+
+        isRoundOver = false;
         isGameOver = false;
         estaMezclando = false;
         volverElegir = false;
         queueSuffle.Clear();
         panelVovlerElegir.SetActive(false);
         textoVolverElegir.text = "";
+        textoBotonNuevaPartida.text = Localization.Get("newgame");
 
         countPasos = 0;
 
@@ -150,11 +200,15 @@ public class GameLogic : MonoBehaviour
         canvasNewGame.sortingOrder = 0;
         canvasQuit.sortingOrder = 0;
         canvasTextoGameOver.sortingOrder = 0;
+
+
     }
 
 
     public async void SeccionJuego()
     {
+
+        botonesPersonaje.ShowStatsPersonajePrincipal();
 
         SetBackgroundAllCards();
         await UniTask.Delay(TimeSpan.FromMilliseconds(150));
@@ -232,6 +286,8 @@ public class GameLogic : MonoBehaviour
         }
 
         ActualizarImagenes();
+        
+        //botonesPersonaje.ShowRondas();
 
         estaMezclando = false;
     }
@@ -305,7 +361,7 @@ public class GameLogic : MonoBehaviour
         print("clicked from gamelogic" + "// position=" + currentPosition + " lastPositionPlayer=" + lastPositionPlayer + " estamezclado=" + estaMezclando);
 #endif
 
-        if (isGameOver == true) return;
+        if (isRoundOver == true) return;
         if (estaMezclando == true) return;
         if (currentPosition < 0 || currentPosition > 8) return;
 
@@ -432,6 +488,7 @@ public class GameLogic : MonoBehaviour
         countPasos++;
         ShowPasos(countPasos);
 
+        
 
         outlineCards[outlineCards.Length - 1].enabled = false;
         outlineCards[outlineCards.Length - 1].GetComponent<Image>().enabled = false;
@@ -460,7 +517,7 @@ public class GameLogic : MonoBehaviour
         {
             if (cartasStats[j].whatPasoIsVisited == countPasos) continue;
 
-            if ((countPasos - cartasStats[j].whatPasoIsVisited) > MAX_RONDAS)
+            if ((countPasos - cartasStats[j].whatPasoIsVisited) > MAX_TIRADAS)
             {
                 print("cambiado=" + cartasStats[j].name);
                 cartasStats[j].whatPasoIsVisited = 0;
@@ -488,28 +545,39 @@ public class GameLogic : MonoBehaviour
 
         animsCards[currentPositionPlayer].Play("carta_outline");
         await UniTask.Delay(TimeSpan.FromSeconds(animsCards[currentPositionPlayer].GetClip("carta_outline").length));
-        //clickedCard = false;
 
+        ActualizarImagenes();
+
+        estaMezclando = false;
 
         if (cartasStats[currentPositionPlayer].startNewGame == true)
         {
-            GameOver();
-            return;
+
+            if (botonesPersonaje.statsJugador.bombillasCurrent > 0)
+            {
+                ShowGanador();
+                return;
+            }
+            else
+            {
+               
+                RoundOver();
+                return;
+            
+            }
+
+            //return;
 
         }
 
         if (countPasos >= MAXPASOS)
         {
-            countPasos = 0;
             ShowGanador();
             return;
         
         }
 
 
-        ActualizarImagenes();
-
-        estaMezclando = false;
 
 
     }
@@ -888,38 +956,54 @@ public class GameLogic : MonoBehaviour
 
   
 
-    private void GameOver()
+    private void RoundOver()
     {
-
-        isGameOver = true;
+        
+        countPasos = 0;
+        isRoundOver = true;
         estaMezclando = false;
-
-        //await UniTask.Delay(TimeSpan.FromMilliseconds(500));
 
         canvasTextoGameOver.sortingOrder = 100;
         canvasNewGame.sortingOrder = 100;
         canvasQuit.sortingOrder = 100;
+        botonesPersonaje.statsJugador.tokensCurrent++;
 
+        if (botonesPersonaje.statsJugador.tokensCurrent >= botonesPersonaje.statsJugador.tokensMax)
+        {
+            isGameOver = true;
+            botonesPersonaje.statsJugador.tokensCurrent = 0;
+            textoBotonNuevaPartida.text = Localization.Get("newgame");
+            textoGameOver.text = Localization.Get("gameover");
 
-        textoGameOver.text = Localization.Get("gameover");
+        }
+        else
+        {
+            textoGameOver.text = Localization.Get("siguienteronda");
+            textoBotonNuevaPartida.text = Localization.Get("nextround");
+            botonesPersonaje.ShowStatsPersonajePrincipal();
+        }
+
         anim.Play("gameover");
-    
+
     
     }
+
 
 
     private void ShowGanador()
     {
 
+        isRoundOver = true;
         isGameOver = true;
         estaMezclando = false;
         countPasos = 0;
+        botonesPersonaje.statsJugador.tokensCurrent = 0;
 
         canvasTextoGameOver.sortingOrder = 100;
         canvasNewGame.sortingOrder = 100;
         canvasQuit.sortingOrder = 100;
 
-
+        textoBotonNuevaPartida.text = Localization.Get("newgame");
         textoGameOver.text = Localization.Get("ganador");
         anim.Play("gameover");
 

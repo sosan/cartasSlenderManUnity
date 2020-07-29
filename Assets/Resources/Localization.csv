@@ -11,10 +11,10 @@ ganador,HAS GANADO!,YOU WIN!!
 gameover,HAS PERDIDO!,GAME OVER!
 volver_escoger,VUELVE A ESCOGER UNA CARTA,CHOOSE NEW CARD
 mezclar_cartas,MEZCLAR CARTAS,SUFFLE CARDS
-,,
-,,
-,,
-,,
+siguienteronda,SIGUIENTE RONDA >,NEXT ROUND >
+rondas,RONDAS:,ROUNDS:
+newgame,NUEVO JUEGO,NEW GAME
+nextround,SIGUIENTE RONDA,NEXT ROUND
 ,,
 ,,
 ,,

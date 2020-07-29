@@ -42,7 +42,7 @@ public class LanguageManager : MonoBehaviour
             }
 
             DesactivarCanvasIdiomas();
-            gameLogic.Click_NewGame();
+            gameLogic.Click_NewGame(false);
 
         }
         else
@@ -77,7 +77,7 @@ public class LanguageManager : MonoBehaviour
         PlayerPrefs.SetString("idioma", "english");
         particulas[0].Play();
         await UniTask.Delay(300);
-        gameLogic.Click_NewGame();
+        gameLogic.Click_NewGame(false);
     }
 
 
@@ -91,7 +91,7 @@ public class LanguageManager : MonoBehaviour
         await UniTask.Delay(300);
 
         
-        gameLogic.Click_NewGame();
+        gameLogic.Click_NewGame(false);
 
     }
 

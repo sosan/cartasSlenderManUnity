@@ -2017,10 +2017,12 @@ MonoBehaviour:
   panelGameover: {fileID: 0}
   textoGameOver: {fileID: 707184689}
   canvasTextoGameOver: {fileID: 707184693}
+  textoBotonNuevaPartida: {fileID: 977053185}
   panelVovlerElegir: {fileID: 1799688557}
   textoVolverElegir: {fileID: 973619770}
   clickedCard: 0
   estaMezclando: 1
+  isRoundOver: 0
   isGameOver: 0
   isAugmented: 0
   isCanvasJuegoActive: 0
@@ -8055,7 +8057,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: NEW GAME
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -9030,16 +9032,16 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 608581419}
-          m_TargetAssemblyTypeName: 
+          m_TargetAssemblyTypeName: GameLogic, Assembly-CSharp
           m_MethodName: Click_NewGame
-          m_Mode: 1
+          m_Mode: 6
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
             m_StringArgument: 
-            m_BoolArgument: 0
+            m_BoolArgument: 1
           m_CallState: 2
 --- !u!114 &1151623657
 MonoBehaviour:
@@ -13312,6 +13314,7 @@ MonoBehaviour:
   tokensText: {fileID: 1244575447}
   bombillasText: {fileID: 1681795793}
   personajeSeleccionado: {fileID: 180270317}
+  textoRondas: {fileID: 0}
 --- !u!1 &2014113483
 GameObject:
   m_ObjectHideFlags: 0

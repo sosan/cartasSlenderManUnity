@@ -50,7 +50,7 @@ public class MouseManager : MonoBehaviour
 
     private void Clicked(InputAction.CallbackContext obj)
     {
-        if (gameLogic.isGameOver == true) return;
+        if (gameLogic.isRoundOver == true) return;
         if (gameLogic.estaMezclando == true) return;
         
 

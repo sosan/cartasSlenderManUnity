@@ -12,15 +12,17 @@ public class StatsJugador
     public short bombillasMax;
     public short bombillasCurrent;
 
+    public short movimientoMaximoCuadros;
+
     public StatsJugador() { }
 
-    public StatsJugador(short tokensMax, short tokensCurrent, short bombillaMax, short bombillasCurrent)
+    public StatsJugador(short tokensMax, short tokensCurrent, short bombillaMax, short bombillasCurrent, short movimientoMax)
     {
         this.tokensMax = tokensMax;
         this.tokensCurrent = tokensCurrent;
-
         this.bombillasMax = bombillaMax;
         this.bombillasCurrent = bombillasCurrent;
+        this.movimientoMaximoCuadros = movimientoMax;
     
     }
 
@@ -39,8 +41,10 @@ public class BotonesPersonaje : MonoBehaviour
     [SerializeField] private TextMeshProUGUI bombillasText = null;
     [SerializeField] private Image personajeSeleccionado = null;
 
+    [Header("Texto Rondas")]
+    [SerializeField] private TextMeshProUGUI textoRondas = null;
 
-    public StatsJugador statsJugador = new StatsJugador(2, 0, 2, 0);
+    public StatsJugador statsJugador = new StatsJugador(tokensMax: 2, tokensCurrent: 0, bombillaMax: 2, bombillasCurrent: 0, movimientoMax: 1);
 
     // Start is called before the first frame update
     void Start()
@@ -65,7 +69,7 @@ public class BotonesPersonaje : MonoBehaviour
     {
 
         statsJugador.bombillasMax = personajePrincipalStats.bombilla;
-        statsJugador.tokensMax = personajePrincipalStats.token;
+        statsJugador.tokensMax = personajePrincipalStats.tokensNeededToLose;
         statsJugador.tokensCurrent = 0;
         statsJugador.bombillasCurrent = 0;
 
@@ -100,6 +104,14 @@ public class BotonesPersonaje : MonoBehaviour
         }
 
     }
+
+
+    //public void ShowRondas()
+    //{
+
+    //    textoRondas.text = Localization.Get("rondas") + " " + statsJugador.tokensCurrent;
+
+    //}
 
     public void ShowStatsPersonajePrincipal()
     {

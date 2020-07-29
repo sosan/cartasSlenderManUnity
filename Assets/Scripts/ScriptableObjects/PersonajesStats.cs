@@ -7,8 +7,15 @@ using UnityEngine.UI;
 public struct Personajes
 {
     public string name;
-    public short token;
+    public short tokensNeededToLose;
     public short bombilla;
+    public short movimientoOriginal;
+    public short movimientoMax;
+    public bool isMaxMovementUsed;
+    public bool mezclarEncuentroSlimmer;
+
+    public bool canRemoveToken;
+    public bool isPosibleShowNextCard;
     public Sprite imagenPersonaje;
 
 }

@@ -14,34 +14,82 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   personajes:
   - name: athlete
-    token: 3
+    tokensNeededToLose: 3
     bombilla: 2
+    movimientoOriginal: 1
+    movimientoMax: 2
+    isMaxMovementUsed: 1
+    mezclarEncuentroSlimmer: 0
+    canRemoveToken: 0
+    isPosibleShowNextCard: 0
     imagenPersonaje: {fileID: 21300000, guid: 06f318cc698151744afe2e1e6ba6a3a4, type: 3}
   - name: badass
-    token: 4
+    tokensNeededToLose: 4
     bombilla: 2
+    movimientoOriginal: 1
+    movimientoMax: 1
+    isMaxMovementUsed: 0
+    mezclarEncuentroSlimmer: 0
+    canRemoveToken: 0
+    isPosibleShowNextCard: 0
     imagenPersonaje: {fileID: 21300000, guid: 170b305047d33d14fa3afb1d83bf721d, type: 3}
   - name: blonde
-    token: 3
+    tokensNeededToLose: 3
     bombilla: 2
+    movimientoOriginal: 1
+    movimientoMax: 1
+    isMaxMovementUsed: 0
+    mezclarEncuentroSlimmer: 0
+    canRemoveToken: 0
+    isPosibleShowNextCard: 0
     imagenPersonaje: {fileID: 21300000, guid: f07cdf7640a005645b363f0692e58ac3, type: 3}
   - name: coward
-    token: 2
+    tokensNeededToLose: 2
     bombilla: 2
+    movimientoOriginal: 1
+    movimientoMax: 1
+    isMaxMovementUsed: 0
+    mezclarEncuentroSlimmer: 0
+    canRemoveToken: 0
+    isPosibleShowNextCard: 0
     imagenPersonaje: {fileID: 21300000, guid: c42a6bf8550ab6f4e9261d795f8e3810, type: 3}
   - name: explorer
-    token: 3
+    tokensNeededToLose: 3
     bombilla: 3
+    movimientoOriginal: 1
+    movimientoMax: 1
+    isMaxMovementUsed: 0
+    mezclarEncuentroSlimmer: 0
+    canRemoveToken: 0
+    isPosibleShowNextCard: 0
     imagenPersonaje: {fileID: 21300000, guid: 0e65faaee3374c54fac02ad6a0b79c9c, type: 3}
   - name: investigator
-    token: 3
+    tokensNeededToLose: 3
     bombilla: 2
+    movimientoOriginal: 1
+    movimientoMax: 1
+    isMaxMovementUsed: 0
+    mezclarEncuentroSlimmer: 0
+    canRemoveToken: 0
+    isPosibleShowNextCard: 0
     imagenPersonaje: {fileID: 21300000, guid: 89c84731fd38fe34eaff6cdb34a4b838, type: 3}
   - name: psychologist
-    token: 3
+    tokensNeededToLose: 3
     bombilla: 2
+    movimientoOriginal: 1
+    movimientoMax: 1
+    isMaxMovementUsed: 0
+    mezclarEncuentroSlimmer: 0
+    canRemoveToken: 1
+    isPosibleShowNextCard: 0
     imagenPersonaje: {fileID: 21300000, guid: 5e23eef8c5950fd4190d714b90f4629d, type: 3}
   - name: seer
-    token: 3
+    tokensNeededToLose: 0
     bombilla: 2
+    movimientoOriginal: 1
+    movimientoMax: 1
+    isMaxMovementUsed: 0
+    mezclarEncuentroSlimmer: 0
+    canRemoveToken: 0
+    isPosibleShowNextCard: 1
     imagenPersonaje: {fileID: 21300000, guid: b3c26d1d8adf79c44a6fb43603bcdd81, type: 3}
