@@ -12,6 +12,7 @@ public struct Personajes
     public short movimientoOriginal;
     public short movimientoMax;
     public bool isMaxMovementUsed;
+    public bool isMaxMovementCanBeUsed;
     public bool mezclarEncuentroSlimmer;
 
     public bool canRemoveToken;

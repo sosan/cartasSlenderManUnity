@@ -450,22 +450,45 @@ public class GameLogic : MonoBehaviour
             }
 
 
-
-            //jl. matriz corregida
-            switch (lastPositionPlayer)
+            if (botonesPersonaje.statsJugador.isMaxMovementCanBeUsed == true)
             {
-                case 0: if (currentPosition != 1 & currentPosition != 3) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                case 1: if (currentPosition != 0 && currentPosition != 2 && currentPosition != 4) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                case 2: if (currentPosition != 1 && currentPosition != 5) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                case 3: if (currentPosition != 0 && currentPosition != 4 && currentPosition != 6) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                case 4: if (currentPosition != 1 && currentPosition != 7 && currentPosition != 3 && currentPosition != 5) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                case 5: if (currentPosition != 2 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                case 6: if (currentPosition != 3 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                case 7: if (currentPosition != 6 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                case 8: if (currentPosition != 5 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                switch (lastPositionPlayer)
+                {
+                    case 0: if (currentPosition != 1 && currentPosition != 2 && currentPosition != 3 && currentPosition != 6) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 1: if (currentPosition != 0 && currentPosition != 2 && currentPosition != 4 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 2: if (currentPosition != 0 && currentPosition != 1 && currentPosition != 5 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 3: if (currentPosition != 0 && currentPosition != 4 && currentPosition != 5 && currentPosition != 6) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 4: if (currentPosition != 1 && currentPosition != 7 && currentPosition != 3 && currentPosition != 5) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 5: if (currentPosition != 2 && currentPosition != 3 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 6: if (currentPosition != 0 && currentPosition != 3 && currentPosition != 7 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 7: if (currentPosition != 6 && currentPosition != 1 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 8: if (currentPosition != 2 && currentPosition != 5 && currentPosition != 6 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
+
+                }
+
 
             }
+            else
+            { 
+            
+                //jl. matriz corregida
+                switch (lastPositionPlayer)
+                {
+                    case 0: if (currentPosition != 1 && currentPosition != 3) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 1: if (currentPosition != 0 && currentPosition != 2 && currentPosition != 4) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 2: if (currentPosition != 1 && currentPosition != 5) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 3: if (currentPosition != 0 && currentPosition != 4 && currentPosition != 6) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 4: if (currentPosition != 1 && currentPosition != 7 && currentPosition != 3 && currentPosition != 5) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 5: if (currentPosition != 2 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 6: if (currentPosition != 3 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 7: if (currentPosition != 6 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    case 8: if (currentPosition != 5 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
 
+                }
+
+            
+            
+            }
 
             outlineCards[lastPositionPlayer].GetComponent<Image>().enabled = false;
 
@@ -560,13 +583,47 @@ public class GameLogic : MonoBehaviour
             }
             else
             {
-               
-                RoundOver();
-                return;
+
+                if (botonesPersonaje.statsJugador.mezclarEncuentroSlimmer == true)
+                {
+
+                    for (ushort i = 0; i < cartas.Length; i++)
+                    {
+                        cartas[i].raycastTarget = false;
+                    }
+
+                    await UniTask.Delay(1000);
+                    //panelVovlerElegir.SetActive(true);
+                    //print("mezlcar anim");
+                    int[] allPositions = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+                    AnimationClip clipo = generateAnimations.GenerateAnimationCartasMezclar(allPositions);
+                    anim.AddClip(clipo, clipo.name);
+                    anim.Play(clipo.name);
+
+                    //si esta en caraA volver a background
+                    SetBackgroundSpecificCards(allPositions);
+
+                    SuffleSelectedCards(allPositions);
+
+                    for (ushort i = 0; i < cartas.Length; i++)
+                    {
+                        cartas[i].raycastTarget = true;
+
+                    }
+
+
+                }
+                else
+                { 
+                
+                    RoundOverOrGameOver();
+                    return;
             
+                
+                }
+               
             }
 
-            //return;
 
         }
 
@@ -956,7 +1013,7 @@ public class GameLogic : MonoBehaviour
 
   
 
-    private void RoundOver()
+    private void RoundOverOrGameOver()
     {
         
         countPasos = 0;
@@ -970,6 +1027,10 @@ public class GameLogic : MonoBehaviour
 
         if (botonesPersonaje.statsJugador.tokensCurrent >= botonesPersonaje.statsJugador.tokensMax)
         {
+            botonesPersonaje.statsJugador.tokensCurrent = botonesPersonaje.statsJugador.tokensMax;
+            botonesPersonaje.ShowStatsPersonajePrincipal();
+            panelVovlerElegir.SetActive(false);
+            textoVolverElegir.text = "";
             isGameOver = true;
             botonesPersonaje.statsJugador.tokensCurrent = 0;
             textoBotonNuevaPartida.text = Localization.Get("newgame");

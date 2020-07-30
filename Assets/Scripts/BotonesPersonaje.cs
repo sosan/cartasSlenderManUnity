@@ -12,7 +12,13 @@ public class StatsJugador
     public short bombillasMax;
     public short bombillasCurrent;
 
+    public bool isMaxMovementUsed;
+    public bool isMaxMovementCanBeUsed;
+    public short movimientoOriginal;
+    public bool canRemoveToken;
+    public bool isPosibleShowNextCard;
     public short movimientoMaximoCuadros;
+    public bool mezclarEncuentroSlimmer;
 
     public StatsJugador() { }
 
@@ -72,6 +78,13 @@ public class BotonesPersonaje : MonoBehaviour
         statsJugador.tokensMax = personajePrincipalStats.tokensNeededToLose;
         statsJugador.tokensCurrent = 0;
         statsJugador.bombillasCurrent = 0;
+        statsJugador.isMaxMovementCanBeUsed = personajePrincipalStats.isMaxMovementCanBeUsed;
+        statsJugador.isPosibleShowNextCard = personajePrincipalStats.isPosibleShowNextCard;
+        statsJugador.mezclarEncuentroSlimmer = personajePrincipalStats.mezclarEncuentroSlimmer;
+        statsJugador.movimientoMaximoCuadros = personajePrincipalStats.movimientoMax;
+        statsJugador.movimientoOriginal = personajePrincipalStats.movimientoOriginal;
+        statsJugador.canRemoveToken = personajePrincipalStats.canRemoveToken;
+        
 
         ShowStatsPersonajePrincipal();
 
@@ -91,19 +104,19 @@ public class BotonesPersonaje : MonoBehaviour
     }
 
 
-    public void SumarFear()
-    {
+    //public void SumarFear()
+    //{
 
-        if (statsJugador.tokensCurrent < statsJugador.tokensMax)
-        { 
+    //    if (statsJugador.tokensCurrent < statsJugador.tokensMax)
+    //    { 
         
-            statsJugador.tokensCurrent++;
-            ShowStatsPersonajePrincipal();
+    //        statsJugador.tokensCurrent++;
+    //        ShowStatsPersonajePrincipal();
     
         
-        }
+    //    }
 
-    }
+    //}
 
 
     //public void ShowRondas()
