@@ -638,6 +638,8 @@ public class GameLogic : MonoBehaviour
 
                     }
 
+                    botonesPersonaje.statsJugador.isUsedMezclarEncuentroSlimmer = true;
+
 
                 }
                 else
@@ -1051,6 +1053,8 @@ public class GameLogic : MonoBehaviour
         canvasNewGame.sortingOrder = 100;
         canvasQuit.sortingOrder = 100;
         botonesPersonaje.statsJugador.tokensCurrent++;
+        botonesPersonaje.statsJugador.isMaxMovementUsed = false;
+        botonesPersonaje.statsJugador.isUsedMezclarEncuentroSlimmer = false;
 
         if (botonesPersonaje.statsJugador.tokensCurrent >= botonesPersonaje.statsJugador.tokensMax)
         {
