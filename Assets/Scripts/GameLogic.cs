@@ -452,20 +452,47 @@ public class GameLogic : MonoBehaviour
 
             if (botonesPersonaje.statsJugador.isMaxMovementCanBeUsed == true)
             {
-                switch (lastPositionPlayer)
+                if (botonesPersonaje.statsJugador.isMaxMovementUsed == true)
                 {
-                    case 0: if (currentPosition != 1 && currentPosition != 2 && currentPosition != 3 && currentPosition != 6) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                    case 1: if (currentPosition != 0 && currentPosition != 2 && currentPosition != 4 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                    case 2: if (currentPosition != 0 && currentPosition != 1 && currentPosition != 5 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                    case 3: if (currentPosition != 0 && currentPosition != 4 && currentPosition != 5 && currentPosition != 6) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                    case 4: if (currentPosition != 1 && currentPosition != 7 && currentPosition != 3 && currentPosition != 5) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                    case 5: if (currentPosition != 2 && currentPosition != 3 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                    case 6: if (currentPosition != 0 && currentPosition != 3 && currentPosition != 7 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                    case 7: if (currentPosition != 6 && currentPosition != 1 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
-                    case 8: if (currentPosition != 2 && currentPosition != 5 && currentPosition != 6 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                    //jl. matriz corregida
+                    switch (lastPositionPlayer)
+                    {
+                        case 0: if (currentPosition != 1 && currentPosition != 3) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 1: if (currentPosition != 0 && currentPosition != 2 && currentPosition != 4) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 2: if (currentPosition != 1 && currentPosition != 5) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 3: if (currentPosition != 0 && currentPosition != 4 && currentPosition != 6) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 4: if (currentPosition != 1 && currentPosition != 7 && currentPosition != 3 && currentPosition != 5) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 5: if (currentPosition != 2 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 6: if (currentPosition != 3 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 7: if (currentPosition != 6 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 8: if (currentPosition != 5 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
+
+                    }
 
                 }
+                else
+                { 
+                    switch (lastPositionPlayer)
+                    {
+                        case 0: if (currentPosition != 1 && currentPosition != 2 && currentPosition != 3 && currentPosition != 6) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 1: if (currentPosition != 0 && currentPosition != 2 && currentPosition != 4 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 2: if (currentPosition != 0 && currentPosition != 1 && currentPosition != 5 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 3: if (currentPosition != 0 && currentPosition != 4 && currentPosition != 5 && currentPosition != 6) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 4: if (currentPosition != 1 && currentPosition != 7 && currentPosition != 3 && currentPosition != 5) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 5: if (currentPosition != 2 && currentPosition != 3 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 6: if (currentPosition != 0 && currentPosition != 3 && currentPosition != 7 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 7: if (currentPosition != 6 && currentPosition != 1 && currentPosition != 4 && currentPosition != 8) { estaMezclando = false; MalClick(currentPosition); return; } break;
+                        case 8: if (currentPosition != 2 && currentPosition != 5 && currentPosition != 6 && currentPosition != 7) { estaMezclando = false; MalClick(currentPosition); return; } break;
 
+                    }
+
+                    botonesPersonaje.statsJugador.isMaxMovementUsed = true;
+
+                
+                
+                }
+
+                
 
             }
             else
